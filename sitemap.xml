@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.codeiqholdings.co.uk/</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.codeiqholdings.co.uk/legal.html</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
+  <url><loc>https://www.contractiq.example/</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/features.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/pricing.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/security.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/about.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/contact.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/dpa.html</loc><lastmod>2026-07-29</lastmod></url>
+  <url><loc>https://www.contractiq.example/terms.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.contractiq.example/privacy.html</loc><lastmod>2026-07-29</lastmod><changefreq>monthly</changefreq></url>
 </urlset>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contract Analysis Features — ContractIQ Platform</title>
+<meta name="description" content="Pre-counsel audits, playbook rules, A–F risk grading, compliance clause checklists, obligations tracking, renewal alerts and the Cedric assistant." />
+<link rel="canonical" href="https://www.contractiq.example/features.html" />
+<meta name="theme-color" content="#152238" />
+<meta property="og:type" content="website" /><meta property="og:site_name" content="ContractIQ Platform" />
+<meta property="og:title" content="Contract Analysis Features — ContractIQ Platform" /><meta property="og:description" content="Pre-counsel audits, playbook rules, A–F risk grading, compliance clause checklists, obligations tracking, renewal alerts and the Cedric assistant." />
+<meta property="og:url" content="https://www.contractiq.example/features.html" /><meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy-950: #081627; --navy-900: #0B1D33; --navy-800: #0F2B4C; --navy-700: #163B66;
+    --blue: #2F7BD9; --blue-light: #5FA8F5; --sky: #A9CFF6; --teal: #37D5C3;
+    --ink: #16283E; --grey: #62748B; --line: #E1EAF6; --wash: #F5F9FE;
+  }
+  body { font-family: 'Quicksand', 'Trebuchet MS', 'Segoe UI', Verdana, sans-serif; color: var(--ink); background: #fff; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--blue); text-decoration: none; }
+  b, strong, h1, h2, h3 { font-weight: 700; }
+  /* ── Nav ── */
+  .nav { position: sticky; top: 0; z-index: 60; background: rgba(8,22,39,0.92); backdrop-filter: blur(14px); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid rgba(95,168,245,0.14); }
+  .brand { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; letter-spacing: 0.02em; color: #fff; }
+  .brand span { color: var(--blue-light); }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; font-weight: 600; }
+  .nav-links a { color: #C7D8EE; letter-spacing: 0.02em; }
+  .nav-links a:hover { color: #fff; }
+  .btn { display: inline-block; background: var(--blue); color: #fff; border: none; border-radius: 100px; padding: 13px 30px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.02em; transition: all .18s; }
+  .btn:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 10px 26px rgba(47,123,217,0.35); }
+  .btn.ghost { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.55); }
+  .btn.ghost:hover { border-color: #fff; background: rgba(255,255,255,0.08); box-shadow: none; }
+  .btn.sm { padding: 9px 20px; font-size: 13px; }
+  .light-scope .btn.ghost, .price .btn.ghost { color: var(--blue); border-color: rgba(47,123,217,0.5); }
+  .light-scope .btn.ghost:hover { background: rgba(47,123,217,0.07); }
+  /* ── Dark hero band ── */
+  .hero, .page-hero { position: relative; color: #fff; background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-800) 55%, #1C4E8F 100%); overflow: hidden; }
+  .hero::before, .page-hero::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat; pointer-events: none; }
+  .hero { padding: 0; }
+  .hero-inner { position: relative; max-width: 1160px; margin: 0 auto; padding: 84px 5vw 96px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sky); margin-bottom: 18px; }
+  .eyebrow::before { content: ""; width: 3px; height: 34px; background: var(--teal); border-radius: 2px; }
+  .hero h1 { font-size: clamp(38px, 4.6vw, 58px); line-height: 1.08; letter-spacing: -0.01em; font-weight: 700; }
+  .hero h1 em { font-style: normal; color: var(--blue-light); }
+  .hero p { font-size: 17px; color: #BFD5EF; margin: 20px 0 30px; max-width: 480px; }
+  .hero .cta { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero .note { font-size: 13px; color: #7E9CC4; margin-top: 18px; font-weight: 600; }
+  .hero-art { position: relative; display: flex; justify-content: center; }
+  .hero-art svg { width: min(440px, 90%); height: auto; filter: drop-shadow(0 24px 60px rgba(47,123,217,0.45)); animation: floaty 7s ease-in-out infinite; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  .page-hero { text-align: center; padding: 76px 5vw 64px; }
+  .page-hero h1 { position: relative; font-size: clamp(32px, 4.2vw, 48px); line-height: 1.1; }
+  .page-hero h1 em { font-style: normal; color: var(--blue-light); }
+  .page-hero p { position: relative; font-size: 17px; color: #BFD5EF; margin: 14px auto 0; max-width: 620px; }
+  /* ── Sections ── */
+  section { padding: 68px 5vw; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  .kicker { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); text-align: center; }
+  .kicker::before { content: ""; width: 26px; height: 26px; background: url("data:image/svg+xml,%3Csvg%20width%3D%2234%22%20height%3D%2234%22%20viewBox%3D%220%200%2048%2048%22%20fill%3D%22none%22%20aria-hidden%3D%22true%22%3E%3Cpath%20d%3D%22M24%203%20L42%2013.5%20V34.5%20L24%2045%20L6%2034.5%20V13.5%20Z%22%20stroke%3D%22%235FA8F5%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M24%2013%20L33%2018%20V28%20L24%2033%20L15%2028%20V18%20Z%20M24%2013%20V23%20M24%2023%20L33%2018%20M24%2023%20L15%2018%22%20stroke%3D%22%235FA8F5%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E") center/contain no-repeat; }
+  h2.head { font-size: clamp(26px, 3.4vw, 38px); font-weight: 700; text-align: center; margin: 12px 0 10px; color: var(--navy-900); line-height: 1.15; }
+  .lead { text-align: center; color: var(--grey); font-size: 16.5px; max-width: 640px; margin: 0 auto 34px; }
+  /* ── Cards + hex icons ── */
+  .feat-grid, .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  .feat { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 22px 22px 20px; display: grid; grid-template-columns: 38px 1fr; column-gap: 16px; align-items: start; text-align: left; transition: all .2s; }
+  .feat:hover { box-shadow: 0 12px 30px rgba(15,43,76,0.10); transform: translateY(-2px); border-color: rgba(95,168,245,0.5); }
+  .feat .hexic { grid-row: 1 / 3; margin-top: 2px; }
+  .feat h3 { grid-column: 2; font-size: 16.5px; color: var(--navy-900); margin-bottom: 6px; }
+  .feat p { grid-column: 2; font-size: 14px; color: var(--grey); line-height: 1.6; }
+  .feat a { font-weight: 700; }
+  /* ── Zigzag timeline (roadmap style) ── */
+  .steps { position: relative; max-width: 860px; margin: 0 auto; padding: 10px 0; }
+  .steps::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--line); transform: translateX(-50%); }
+  .step { position: relative; width: calc(50% - 56px); background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 26px 26px 22px; margin-bottom: 46px; box-shadow: 0 10px 30px rgba(15,43,76,0.06); }
+  .step:nth-child(odd) { margin-left: 0; text-align: right; }
+  .step:nth-child(even) { margin-left: calc(50% + 56px); }
+  .step b { display: block; font-size: 17px; color: var(--navy-900); margin-bottom: 5px; }
+  .step p { font-size: 14px; color: var(--grey); }
+  .step::before { counter-increment: none; content: attr(data-n); position: absolute; top: 50%; width: 44px; height: 50px; transform: translateY(-50%); background: linear-gradient(160deg, var(--blue) 0%, var(--blue-light) 100%); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .step:nth-child(odd)::before { right: -78px; }
+  .step:nth-child(even)::before { left: -78px; }
+  .step::after { content: ""; position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 3px solid var(--blue); transform: translateY(-50%); }
+  .step:nth-child(odd)::after { right: -62px; }
+  .step:nth-child(even)::after { left: -62px; }
+  /* ── Navy striped band (comparison) ── */
+  .band { position: relative; color: #fff; background: linear-gradient(120deg, var(--navy-900), var(--navy-700)); overflow: hidden; }
+  .band::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat; }
+  .band .wrap { position: relative; }
+  .band .kicker { color: var(--sky); }
+  .band h2.head { color: #fff; }
+  .band .lead { color: #A9C4E6; }
+  .striped { max-width: 880px; margin: 0 auto; }
+  .striped .row { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 26px; font-size: 15.5px; font-weight: 600; margin-bottom: 12px; }
+  .striped .row:nth-child(odd) { background: #fff; color: var(--navy-900); }
+  .striped .row:nth-child(even) { background: rgba(8,22,39,0.55); color: #fff; border: 1px solid rgba(95,168,245,0.25); }
+  .striped .row .r { font-weight: 500; font-size: 14px; opacity: 0.85; text-align: right; }
+  .striped .row.hl { outline: 2px solid var(--teal); }
+  /* ── Pricing ── */
+  .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: stretch; }
+  .price { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 40px 32px; display: flex; flex-direction: column; text-align: center; }
+  .price.pop { border: 2px solid var(--blue); box-shadow: 0 24px 56px rgba(47,123,217,0.18); position: relative; }
+  .badge-pop { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--blue), var(--blue-light)); color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 100px; padding: 6px 16px; }
+  .price .tier { font-size: 12.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); }
+  .price .tier::after { content: ""; display: block; width: 34px; height: 3px; background: var(--teal); margin: 8px auto 0; border-radius: 2px; }
+  .price .amt { font-size: 44px; font-weight: 700; margin: 16px 0 2px; color: var(--navy-900); }
+  .price .amt small { font-size: 15px; font-weight: 600; color: var(--grey); }
+  .price .per { color: var(--grey); font-size: 13.5px; margin-bottom: 20px; }
+  .price ul { list-style: none; margin-bottom: 26px; flex: 1; text-align: left; }
+  .price li { font-size: 14.5px; color: var(--ink); padding: 8px 0 8px 28px; position: relative; }
+  .price li::before { content: ""; position: absolute; left: 0; top: 11px; width: 14px; height: 16px; background: var(--blue); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+  /* ── FAQ (numbered) ── */
+  .faq { max-width: 760px; margin: 0 auto; counter-reset: faq; }
+  .faq details { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 20px 24px; margin-bottom: 12px; }
+  .faq summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 18px; font-weight: 700; font-size: 16px; color: var(--navy-900); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::before { counter-increment: faq; content: "0" counter(faq); color: var(--blue-light); font-size: 15px; font-weight: 700; }
+  .faq summary::after { content: "▾"; margin-left: auto; width: 24px; height: 28px; background: linear-gradient(160deg, var(--blue), var(--blue-light)); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: transform .2s; }
+  .faq details[open] summary::after { transform: rotate(180deg); }
+  .faq p { color: var(--grey); font-size: 14.5px; margin-top: 14px; line-height: 1.7; padding-left: 40px; }
+  /* ── Prose (terms/privacy) ── */
+  .prose { max-width: 760px; margin: 0 auto; }
+  .prose h2 { font-size: 21px; color: var(--navy-900); margin: 36px 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+  .prose h2::first-letter { color: var(--blue); }
+  .prose p, .prose li { font-size: 15px; color: #3D4F66; line-height: 1.75; margin-bottom: 12px; }
+  .prose ul { padding-left: 22px; }
+  .prose .meta { font-size: 13px; color: var(--grey); }
+  /* ── ROI calculator ── */
+  .roi-card { background: linear-gradient(135deg, var(--navy-900), var(--navy-700)); border-radius: 6px; padding: 40px; color: #fff; position: relative; overflow: hidden; }
+  .roi-card::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover; }
+  .roi-card > * { position: relative; }
+  .roi-card label { font-size: 12.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sky); }
+  .roi-card input { width: 100%; margin-top: 10px; border: 1.5px solid rgba(95,168,245,0.4); background: rgba(8,22,39,0.5); color: #fff; border-radius: 6px; padding: 14px 16px; font-size: 18px; font-family: inherit; font-weight: 600; outline: none; }
+  .roi-card input:focus { border-color: var(--teal); }
+  .roi-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 22px; text-align: center; }
+  .roi-grid > div { background: rgba(255,255,255,0.06); border: 1px solid rgba(95,168,245,0.25); border-radius: 6px; padding: 18px 10px; }
+  .roi-grid > div.mid { border-color: var(--teal); }
+  .roi-grid b { display: block; font-size: 22px; }
+  .roi-grid span { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sky); font-weight: 700; }
+  .roi-note { font-size: 12px; color: #7E9CC4; margin-top: 16px; text-align: center; }
+  /* ── Product mock ── */
+  .shot { max-width: 940px; margin: 64px auto 0; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 34px 90px rgba(4,14,28,0.55); text-align: left; position: relative; }
+  .shot-bar { height: 40px; background: var(--navy-900); display: flex; align-items: center; gap: 8px; padding: 0 18px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,0.22); }
+  .shot-body { padding: 26px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .mini-stat { background: var(--wash); border-radius: 6px; padding: 16px; border-left: 3px solid var(--blue); }
+  .mini-stat .v { font-size: 20px; font-weight: 700; color: var(--navy-900); }
+  .mini-stat .l { font-size: 10px; color: var(--grey); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-top: 3px; }
+  .mini-card { grid-column: span 2; border: 1px solid var(--line); border-radius: 6px; padding: 16px; }
+  .mini-card .t { font-size: 10px; color: var(--blue); font-weight: 700; letter-spacing: 0.12em; }
+  .mini-card b { display: block; font-size: 15px; margin: 4px 0 8px; color: var(--navy-900); }
+  .pill { display: inline-block; font-size: 10.5px; font-weight: 700; border-radius: 100px; padding: 4px 10px; margin-right: 5px; }
+  .pill.ok { background: #E4F8F0; color: #14805E; } .pill.warn { background: #FFF2E0; color: #A85A00; } .pill.blue { background: #E5F0FD; color: #1D5FB8; }
+  /* ── Founding / final CTA ── */
+  .final { position: relative; text-align: center; color: #fff; background: linear-gradient(135deg, var(--navy-950), var(--navy-700)); overflow: hidden; }
+  .final::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover; }
+  .final .wrap { position: relative; }
+  .final h2.head { color: #fff; }
+  .final .lead { color: #A9C4E6; }
+  .final .kicker { color: var(--sky); }
+  /* ── Footer ── */
+  .footer { position: relative; background: var(--navy-950); color: #A9C4E6; padding: 64px 5vw 0; overflow: hidden; }
+  .footer::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover; opacity: 0.6; }
+  .foot-grid { position: relative; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 44px; padding-bottom: 44px; }
+  .foot-grid h4 { color: #fff; font-size: 16px; margin-bottom: 8px; }
+  .foot-grid h4::after { content: ""; display: block; width: 30px; height: 3px; background: var(--teal); border-radius: 2px; margin-top: 9px; }
+  .foot-grid a { display: block; color: #A9C4E6; font-size: 14px; padding: 6px 0; font-weight: 500; }
+  .foot-grid a:hover { color: #fff; }
+  .foot-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 14px; }
+  .foot-brand span { color: var(--blue-light); }
+  .foot-grid p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
+  .foot-base { position: relative; border-top: 1px solid rgba(95,168,245,0.18); max-width: 1100px; margin: 0 auto; padding: 20px 0 26px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12.5px; color: #6E8CB4; }
+  .foot-base a { color: #A9C4E6; }
+  .legal { position: relative; font-size: 12px; color: #7E9CC4; max-width: 780px; margin: 0 auto; line-height: 1.6; text-align: center; }
+  section .legal { color: var(--grey); }
+  @media (max-width: 880px) {
+    .hero-inner { grid-template-columns: 1fr; padding: 60px 5vw 70px; }
+    .hero-art { order: -1; } .hero-art svg { width: 260px; }
+    .nav-links a.hide-m { display: none; }
+    .steps::before { left: 20px; }
+    .step, .step:nth-child(even) { width: calc(100% - 70px); margin-left: 70px; text-align: left; }
+    .step:nth-child(odd) { text-align: left; }
+    .step:nth-child(odd)::before, .step:nth-child(even)::before { left: -66px; right: auto; width: 40px; height: 46px; font-size: 12.5px; }
+    .step::after { display: none; }
+    .foot-grid { grid-template-columns: 1fr; gap: 28px; }
+    .roi-grid { grid-template-columns: 1fr; }
+    .shot-body { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── Hex icon rows (hexgrid / hcard / hexicon) ── */
+  .hexgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  .hcard { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 20px 22px 18px; display: grid; grid-template-columns: 38px 1fr; column-gap: 15px; align-items: start; text-align: left; transition: all .2s; }
+  .hcard:hover { box-shadow: 0 12px 30px rgba(15,43,76,0.10); transform: translateY(-2px); border-color: rgba(95,168,245,0.5); }
+  .hexicon { grid-row: 1 / 3; width: 38px; height: 38px; display: block; margin-top: 2px; }
+  .hexicon svg { width: 38px; height: 38px; display: block; }
+  .hcard h3 { grid-column: 2; font-size: 16px; color: var(--navy-900); margin: 0 0 5px; font-weight: 700; }
+  .hcard p { grid-column: 2; font-size: 13.5px; color: var(--grey); line-height: 1.6; margin: 0; }
+  .hcard a { font-weight: 700; }
+  .band .hcard { background: rgba(255,255,255,0.05); border-color: rgba(95,168,245,0.25); }
+  .band .hcard h3 { color: #fff; }
+  .band .hcard p { color: #A9C4E6; }
+
+  /* ── Unified styles for restructured sections (audit fix) ── */
+  .center { text-align: center; } .mt40 { margin-top: 40px; }
+  .soft-band { background: var(--wash); }
+  .sec-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 34px; }
+  .sec-head .hexmark { width: 30px; height: 30px; }
+  .sec-head .k { font-size: 12.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); }
+  .sec-head h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 700; color: var(--navy-900); line-height: 1.15; }
+  .band .sec-head h2, .final .sec-head h2 { color: #fff; }
+  .band .sec-head .k, .final .sec-head .k { color: var(--sky); }
+  .sec-head .s { color: var(--grey); font-size: 16px; max-width: 620px; }
+  .band .sec-head .s, .final .sec-head .s { color: #A9C4E6; }
+  /* Pricing plans */
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: stretch; }
+  .plan { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 38px 30px; display: flex; flex-direction: column; text-align: center; position: relative; }
+  .plan.pop { border: 2px solid var(--blue); box-shadow: 0 24px 56px rgba(47,123,217,0.16); }
+  .plan .tier { font-size: 12.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); }
+  .plan .tier::after { content: ""; display: block; width: 34px; height: 3px; background: var(--teal); margin: 8px auto 0; border-radius: 2px; }
+  .plan .amt { font-size: 42px; font-weight: 700; margin: 16px 0 2px; color: var(--navy-900); }
+  .plan .amt small { font-size: 15px; font-weight: 600; color: var(--grey); }
+  .plan .per { color: var(--grey); font-size: 13.5px; margin-bottom: 20px; }
+  .plan ul { list-style: none; margin: 0 0 26px; padding: 0; flex: 1; text-align: left; }
+  .plan li { font-size: 14.5px; color: var(--ink); padding: 8px 0 8px 26px; position: relative; }
+  .plan li::before { content: ""; position: absolute; left: 0; top: 12px; width: 13px; height: 15px; background: var(--blue); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+  .legal-note { text-align: center; color: var(--grey); font-size: 13px; margin-top: 24px; }
+  /* FAQ numbering: explicit .num spans replace auto-counters */
+  .faq summary::before { content: none; }
+  .faq .num { color: var(--blue-light); font-weight: 700; font-size: 14.5px; margin-right: 16px; }
+  .faq .fp { color: var(--grey); font-size: 14.5px; margin-top: 14px; line-height: 1.7; padding-left: 34px; }
+  /* Horizontal timeline (tl) */
+  .tl { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; max-width: 1060px; margin: 0 auto; }
+  .tl-item { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; transition: all .2s; }
+  .tl-item:hover { box-shadow: 0 12px 30px rgba(15,43,76,0.10); transform: translateY(-2px); }
+  .hexq { flex-shrink: 0; width: 46px; height: 52px; background: linear-gradient(160deg, var(--blue), var(--blue-light)); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; }
+  .hexq b { font-size: 14px; } .hexq span { font-size: 6.5px; letter-spacing: 0.16em; font-weight: 700; opacity: 0.9; }
+  .tl-card b { display: block; font-size: 15.5px; color: var(--navy-900); margin-bottom: 4px; }
+  .tl-card p { font-size: 13.5px; color: var(--grey); line-height: 1.55; margin: 0; }
+  /* Band split + comparison table (ztable) */
+  .band-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; align-items: center; }
+  .band-grid .bp { color: #A9C4E6; font-size: 15.5px; line-height: 1.7; margin: 14px 0 22px; }
+  .band-grid h2 { color: #fff; font-size: clamp(24px, 3vw, 34px); line-height: 1.18; }
+  .ztable { border-radius: 6px; overflow: hidden; border: 1px solid rgba(95,168,245,0.3); }
+  .zhead { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; padding: 13px 22px; background: rgba(8,22,39,0.75); color: var(--sky); font-size: 11.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+  .zrow { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; padding: 17px 22px; font-size: 14px; align-items: center; }
+  .zrow > span:first-child { font-weight: 700; }
+  .zrow:nth-of-type(odd) { background: #fff; color: var(--navy-900); }
+  .zrow:nth-of-type(even) { background: rgba(8,22,39,0.5); color: #E7F0FB; }
+  .zrow.hl { box-shadow: inset 0 0 0 2px var(--teal); }
+  /* ROI numbers */
+  .roi-nums { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 22px; text-align: center; }
+  .roi-nums > div { background: rgba(255,255,255,0.06); border: 1px solid rgba(95,168,245,0.25); border-radius: 6px; padding: 18px 10px; }
+  .roi-nums > div.hi { border-color: var(--teal); }
+  .roi-nums b { display: block; font-size: 22px; color: #fff; }
+  .roi-nums .hi b { color: var(--teal); }
+  .roi-nums small { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sky); font-weight: 700; }
+  @media (max-width: 880px) {
+    .band-grid { grid-template-columns: 1fr; gap: 26px; }
+    .roi-nums { grid-template-columns: 1fr; }
+    .plans { grid-template-columns: 1fr; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />  <link rel="stylesheet" href="assets/motion.css" />
+  <script src="assets/motion.js" defer></script>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</a>
+  <div class="nav-links">
+    <a href="index.html" class="hide-m">Home</a><a href="features.html" style="color:#fff" class="hide-m">Features</a><a href="pricing.html" class="hide-m">Pricing</a><a href="security.html" class="hide-m">Security</a><a href="about.html" class="hide-m">About</a><a href="contact.html" class="hide-m">Contact</a>
+    <a class="btn sm" href="app/">Start free</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="kick">Capabilities</div>
+  <h1>Everything it finds. And how it <em>shows its working</em>.</h1>
+  <p>ContractIQ reads your contracts, purchase orders, statements of work, trackers and meeting transcripts — then tells you what it found, how confident it is, and exactly where it read it.</p>
+</header>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="k">Ingestion</div><h2>It reads what you actually have.</h2><p class="s">Real contract estates are messy — scanned PDFs, spreadsheets nobody maintains, transcripts of the meeting where it was really decided. All of it is readable.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="30" y="26" width="40" height="48" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 40h24M38 50h24M38 60h14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Every format that matters</h3><p>PDFs, Word documents, Excel and CSV trackers, purchase orders, statements of work and plain text — read in the browser, page positions preserved.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="26" y="30" width="48" height="40" rx="4" fill="none" stroke="#fff" stroke-width="5"/><path d="M26 50h48" stroke="#fff" stroke-width="5"/><path d="M34 24v-6h10M66 24v-6H56M34 76v6h10M66 76v6H56" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/></svg></span><h3>OCR for scanned contracts<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Photocopied and image-only PDFs used to be invisible to contract tools. ContractIQ detects them and reads them with on-device OCR — the document never leaves your machine.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="42" y="24" width="16" height="30" rx="8" fill="none" stroke="#fff" stroke-width="5"/><path d="M32 48c0 10 8 18 18 18s18-8 18-18M50 66v10M40 76h20" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/></svg></span><h3>Teams and Zoom transcripts</h3><p>Ingest the meeting, not just the paperwork. Speaker attribution is preserved so a commitment can be traced to the person who made it.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="28" y="46" width="44" height="28" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 22v28M40 34l10-12 10 12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Bulk import</h3><p>Drop in a CSV of your estate and every record is created at once, with renewal exposure visible before a single analysis has run.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="k">Analysis</div><h2>Ten views of one agreement.</h2><p class="s">Each analysis produces a complete commercial picture, not a summary — costed, graded and evidenced.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 34v32M42 42h12a6 6 0 010 12h-8M42 58h14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span><h3>Cost position</h3><p>Effective unit cost, uplift history, benchmark position and the specific lines where you are paying above the market.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="40" cy="40" r="9" fill="none" stroke="#fff" stroke-width="4.5"/><circle cx="62" cy="44" r="7" fill="none" stroke="#fff" stroke-width="4"/><path d="M26 72c0-9 6-15 14-15s14 6 14 15M56 72c0-7 4-12 10-12s8 4 8 10" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/></svg></span><h3>Licence and user reality</h3><p>Contracted volume against actual consumption. Dormant licences and unused modules are where the fastest savings usually sit.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 24l8 16 18 3-13 12 3 18-16-8-16 8 3-18-13-12 18-3z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg></span><h3>A–F risk grade and health score</h3><p>An instant grade and a 0–100 score, so low-risk agreements can be waved through and attention goes where it earns its keep.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 24c-10 0-17 8-17 17 0 8 5 12 6 17h22c1-5 6-9 6-17 0-9-7-17-17-17z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/><path d="M42 66h16M44 74h12" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Savings opportunities</h3><p>Each with an estimated value, the leverage behind it and the argument to use — ranked by what is realistically winnable.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="30" y="28" width="34" height="46" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 44l6 6 12-12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 62h18" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Compliance clause checklist</h3><p>Liability, indemnity, termination, data protection, audit rights, benchmarking, exit assistance and more — each marked present, missing or unclear with a suggested position.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 62a24 24 0 0148 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M50 62L64 44" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="62" r="4" fill="#fff"/></svg></span><h3>Executive summary</h3><p>The position in a paragraph a director can read, with the negotiation plan underneath it.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="k">Accuracy</div><h2>Every number shows its working.</h2><p class="s">AI that cannot be checked cannot be trusted with a negotiation. Every value ContractIQ produces carries a confidence score, the reasoning behind it and a quote from the source document.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 62a24 24 0 0148 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M50 62L64 44" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="62" r="4" fill="#fff"/></svg></span><h3>Confidence on every data point<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Not one score for the contract — a score for each extracted value, clause and risk, judged independently.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="34" cy="32" r="5" fill="#fff"/><circle cx="34" cy="50" r="5" fill="#fff"/><circle cx="34" cy="68" r="5" fill="#fff"/><path d="M34 37v8M34 55v8M46 32h22M46 50h22M46 68h14" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span><h3>Human-in-the-loop routing<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Below 50% goes to mandatory review. 51–80% gets a one-click accept or correct. Above 80% passes automatically and is logged. Nothing uncertain reaches a decision unchecked.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M28 32h44v28H46l-10 10V60h-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M38 44h24M38 52h14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Traceable to the source</h3><p>Each finding cites the document and the exact phrase it came from — or states plainly that it was inferred, or absent. A reviewer can verify it in seconds.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 22l22 8v20c0 14-10 24-22 28-12-4-22-14-22-28V30z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M41 50l7 7 12-13" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Unverified values are held back<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>A low-confidence extraction never silently becomes part of the contract record. It waits for a human.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 30h20a8 8 0 018 8v36a8 8 0 00-8-8H26zM74 30H54a8 8 0 00-8 8v36a8 8 0 018-8h20z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg></span><h3>Verification audit trail</h3><p>Who accepted what, when, and what the value was before and after. Exported with the report.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 22l24 12-24 12-24-12z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/><path d="M26 50l24 12 24-12M26 64l24 12 24-12" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg></span><h3>Honest about its limits</h3><p>Where a document contradicts itself, ContractIQ reports the conflict rather than picking a number. Where it truncated a long document, it says so.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="k">Institutional knowledge</div><h2>The part that walks out of the door.</h2><p class="s">Every contract tool reads contracts. Almost nothing captures what your people know that the paperwork never said — and that knowledge leaves when they do.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 26c-12 0-20 9-20 21v27l7-6 6 6 7-6 7 6 6-6 7 6V47c0-12-8-21-20-21z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><circle cx="43" cy="46" r="3" fill="#fff"/><circle cx="57" cy="46" r="3" fill="#fff"/></svg></span><h3>Knowledge captured from meetings</h3><p>Concessions granted, precedents set, history that explains why a clause reads the way it does — extracted from transcripts and held against the contract.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M28 32h44v28H46l-10 10V60h-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M38 44h24M38 52h14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Said, but not in any contract</h3><p>Verbal commitments checked against the signed terms and flagged where they do not appear. Unenforceable as they stand — paper them or lose them.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="38" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M28 76c0-13 10-22 22-22s22 9 22 22" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg></span><h3>Key-person risk, ranked</h3><p>Who holds undocumented context, across how many agreements. The top of that list is your succession risk, and it is usually a surprise.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 22l22 8v20c0 14-10 24-22 28-12-4-22-14-22-28V30z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="46" r="6" fill="none" stroke="#fff" stroke-width="4"/><path d="M50 52v12" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span><h3>Recording consent, enforced<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Transcripts carry other people's personal data. Before the first upload, ContractIQ requires an explicit acknowledgement that participants were informed and a lawful basis existed — recorded against the user and the date.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="k">Portfolio intelligence</div><h2>The findings no single contract can show you.</h2><p class="s">Looking at agreements one at a time hides the expensive patterns. These views work across the whole estate.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="28" y="32" width="44" height="40" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M28 44h44M38 26v10M62 26v10" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="58" cy="58" r="3.5" fill="#fff"/></svg></span><h3>Renewal runway<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Twelve months plotted by notice deadline — the date you must act by, not the date the contract ends. Windows already closed are flagged in red, with how long ago they passed.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="30" cy="34" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><circle cx="70" cy="34" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><circle cx="50" cy="70" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><path d="M37 34h26M34 40l12 24M66 40L54 64" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span><h3>Supplier intelligence<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Groups contracts by supplier and merges name variants automatically, so the same company bought twice under two legal names becomes one line. Near-miss names are flagged for review, and two suppliers serving the same category surface as a consolidation question.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="28" y="28" width="18" height="18" rx="3" fill="none" stroke="#fff" stroke-width="4.5"/><rect x="54" y="28" width="18" height="18" rx="3" fill="none" stroke="#fff" stroke-width="4.5"/><rect x="28" y="54" width="18" height="18" rx="3" fill="none" stroke="#fff" stroke-width="4.5"/><path d="M58 58l6 6 8-10" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Clause matrix<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Every analysed contract against every clause in one grid. Gaps down a column are your exposure on that agreement; gaps across a row are your negotiating pattern.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="30" y="28" width="34" height="46" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 44l6 6 12-12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 62h18" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Obligations register<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Every commitment from every contract in one list, with an owner, a due date and a completion state. Overdue and unassigned counts at the top, because an obligation nobody owns is an obligation nobody does.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="45" cy="45" r="15" fill="none" stroke="#fff" stroke-width="5"/><path d="M56 56l16 16" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg></span><h3>Search across everything<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>One box searches record details, the full text of every ingested document, and every analysis finding — returning the surrounding passage, not just a file name.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="sec-head"><div class="k">Workflow</div><h2>Built for an estate, not a document.</h2><p class="s">Analysing forty contracts one at a time is the reason most tools get abandoned.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 22l24 12-24 12-24-12z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/><path d="M26 50l24 12 24-12M26 64l24 12 24-12" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg></span><h3>Bulk analysis<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Select as many records as you like and run them in one pass. The credit cost is shown before you start, and the run stops cleanly rather than failing halfway.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M28 32h44v28H46l-10 10V60h-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M38 44h24M38 52h14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Ask Cedric</h3><p>A conversational analyst on every contract. Renewal dates, missing clauses, obligations due this quarter, the strongest lever — answered only from your ingested documents, never invented.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 34v32M42 42h12a6 6 0 010 12h-8M42 58h14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span><h3>Transparent metering</h3><p>Usage is measured in credits: ten for a full analysis, two for a question, nothing for storage, ingestion, alerts or exports. Re-running an analysis inside your revision window is free.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 22a16 16 0 00-16 16c0 14-6 18-6 22h44c0-4-6-8-6-22a16 16 0 00-16-16z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/><path d="M43 68a7 7 0 0014 0" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Renewal alerts and calendar export</h3><p>Notice deadlines exported straight to your calendar, so the date lives where you will actually see it.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="28" y="40" width="44" height="34" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 24v30M40 44l10 10 10-10" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Boardroom exports</h3><p>One click turns any analysis into a formatted Word report, PDF or presentation outline — cost position, compliance checklist, obligations and negotiation plan included.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+          <div class="sec-head"><div class="k">Supplier exposure</div><h2>The contract is only half the question</h2><p class="s">A signed agreement tells you what was agreed. It does not tell you how badly it would hurt if that supplier stopped tomorrow, or what they have actually committed to in writing. That is a different question, and it is the one procurement gets asked in the room.</p></div>
+      <div class="hexgrid">
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 38v16M50 62v2" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg></span><h3>Vendor risk score&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Every supplier scored out of 100 from what is missing in the paperwork, how concentrated your spend is with them, the worst risk grade across their contracts, and how much you have not yet analysed.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M32 50l12 12 24-26" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Eight protection checks&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Liability cap, insurance, data protection, security commitments, business continuity, exit assistance, audit rights and subcontracting — each marked present, missing or not yet assessed.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 68V44M42 68V32M58 68V50M74 68V38" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg></span><h3>Nothing hidden in the score&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Every component that made the number is shown with its weight and its reasoning. An opaque risk score is not something you can take to a supplier meeting and defend.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="24" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 26v24l16 10" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span><h3>Not yet looked is not the same as absent&nbsp;<span class="pill">New</span>&nbsp;</h3><p>A dash means the contract has not been analysed for that protection. A cross means it was looked for and is not there. Conflating those two is how false confidence gets built.</p></div>
+      </div>
+
+      <div class="sec-head"><div class="k">Consistency</div><h2>Thirty questions that answer the same way every time</h2><p class="s">A blank chat box teaches nobody what a product can do, and free-form questions give different answers depending on how they are phrased. Ask Cedric actions are ready-made questions, grouped by what you are trying to find out.</p></div>
+      <div class="hexgrid">
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M28 32h44M28 46h44M28 60h28" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/></svg></span><h3>A library, not a blank box&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Thirty questions across renewal, cost, risk, compliance, obligations, suppliers, institutional knowledge and cross-document checks. One click runs it against the contract you have open.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M34 34h32v32H34z" fill="none" stroke="#fff" stroke-width="5"/><path d="M42 26h32v32" fill="none" stroke="#fff" stroke-width="5"/></svg></span><h3>Copy anywhere&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Every question is deliberately generic — no company names, no figures, nothing specific to you. Copy one and it works in any tool, and it leaks nothing about your estate.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="6" fill="#fff"/><circle cx="50" cy="50" r="20" fill="none" stroke="#fff" stroke-width="4"/><circle cx="50" cy="50" r="32" fill="none" stroke="#fff" stroke-width="3" opacity=".55"/></svg></span><h3>The same answer twice&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Running a fixed question across forty contracts gives you forty comparable answers. Phrasing it slightly differently each time does not.</p></div>
+      </div>
+
+      <div class="sec-head"><div class="k">Accounts and access</div><h2>Real accounts, with the roles you would expect</h2><p class="s">Sign-in is not a shared password. Everyone has their own verified account, and what they can do depends on what they are.</p></div>
+      <div class="hexgrid">
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="26" y="36" width="48" height="34" rx="4" fill="none" stroke="#fff" stroke-width="5"/><path d="M26 40l24 18 24-18" fill="none" stroke="#fff" stroke-width="5"/></svg></span><h3>Verified by a six-digit code&nbsp;<span class="pill">New</span>&nbsp;</h3><p>A code rather than a link, because corporate mail scanners routinely pre-fetch links and consume them before the recipient ever clicks. Codes do not have that problem.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="38" r="12" fill="none" stroke="#fff" stroke-width="5"/><path d="M28 74c0-13 10-20 22-20s22 7 22 20" fill="none" stroke="#fff" stroke-width="5"/></svg></span><h3>Google and Microsoft sign-in&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Most people in a procurement team already have a Microsoft or Google identity. Let them use it rather than inventing another password.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 24l22 10v18c0 14-9 22-22 26-13-4-22-12-22-26V34z" fill="none" stroke="#fff" stroke-width="5"/></svg></span><h3>Owner, admin, member, viewer&nbsp;<span class="pill">New</span>&nbsp;</h3><p>A viewer can read the portfolio but cannot change a record or delete one. Enforced in the database itself, not just hidden in the interface.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M30 50h40M56 34l16 16-16 16" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Invitations that expire&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Invite a colleague by email with the role they should have. The invitation is valid for seven days and only for the address it was sent to.</p></div>
+      </div>
+
+      <div class="sec-head"><div class="k">Scale</div><h2>Forty contracts, and you can close the laptop</h2><p class="s">Analysis does not run in your browser tab waiting for you. Work is queued and handled in the background, so a large run finishes whether you are watching or not.</p></div>
+      <div class="hexgrid">
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 36h48M26 50h48M26 64h48" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/><circle cx="76" cy="36" r="7" fill="#37D5C3"/></svg></span><h3>Queue it and walk away&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Select forty contracts, start the run, and shut the lid. The work carries on and the results are waiting when you come back.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 26a24 24 0 1 1-24 24" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/><path d="M50 18v16l12-8z" fill="#fff"/></svg></span><h3>Failures retry themselves&nbsp;<span class="pill">New</span>&nbsp;</h3><p>A model that is briefly busy is not a lost analysis. Failed work backs off and tries again, with an increasing gap so a struggling service gets room to recover.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="26" y="30" width="48" height="40" rx="4" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 50h24M50 40v20" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg></span><h3>Nothing disappears quietly&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Work that fails repeatedly is parked in a dead-letter queue with the reason attached, so somebody can look at why rather than wondering where it went.</p></div>
+        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M28 62l14-16 12 10 18-24" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Credits spent only on success&nbsp;<span class="pill">New</span>&nbsp;</h3><p>Metering happens on the server, after the work completes. A failed analysis costs you nothing, and the balance cannot be edited from a browser.</p></div>
+      </div>
+
+<div class="sec-head"><div class="k">Governance and control</div><h2>Configurable, isolated, auditable.</h2><p class="s">The controls a procurement director, a DPO and an IT reviewer each need before this gets near a real contract.</p></div>
+    <div class="hexgrid">
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 30h20a8 8 0 018 8v36a8 8 0 00-8-8H26zM74 30H54a8 8 0 00-8 8v36a8 8 0 018-8h20z" fill="none" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg></span><h3>Regulatory policy packs<span class="pill" style="margin-left:9px;font-size:10px;vertical-align:middle;font-weight:700">&nbsp;New&nbsp;</span></h3><p>Compliance rules are configuration, not code. Toggle UK statutory, EU GDPR, US state privacy or your own commercial guardrails, and the next analysis grades against them — no release, no redeployment. Packs are versioned, so a historic analysis can be explained against the rules in force at the time.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="30" y="26" width="40" height="48" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 40h24M38 50h24M38 60h14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Your playbook, your positions</h3><p>Calibrate the checking rules to your own risk appetite. Every clause is examined against your standard positions, so nobody accidentally signs unlimited liability or 90-day payment terms.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 26c-12 0-20 9-20 21v27l7-6 6 6 7-6 7 6 6-6 7 6V47c0-12-8-21-20-21z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><circle cx="43" cy="46" r="3" fill="#fff"/><circle cx="57" cy="46" r="3" fill="#fff"/></svg></span><h3>Zero-Retention mode</h3><p>For compliance-focused environments: document and transcript text is purged the instant analysis completes, keeping only the extracted detail.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="32" y="46" width="36" height="28" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M40 46V38a10 10 0 0120 0v8" fill="none" stroke="#fff" stroke-width="5"/><circle cx="50" cy="60" r="4" fill="#fff"/></svg></span><h3>Separation between customers</h3><p>Isolation is enforced at the database level, not in application code — one customer's data cannot be reached from another's session.</p></div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="wrap" style="max-width:780px">
+    <div style="background:#F5F9FE;border-left:4px solid var(--blue);border-radius:6px;padding:20px 24px">
+      <b style="color:var(--navy-900);font-size:15px">What ContractIQ is not</b>
+      <p style="margin-top:8px;color:var(--grey);font-size:14px;line-height:1.65">
+        It is an automated screening aid, not legal advice, and we are not a law firm. Its output is generated by
+        artificial intelligence: it is probabilistic, it can be wrong, and it must be verified before you rely on it.
+        The confidence scores above are the model's own estimate that a value is correct — they route how much human
+        attention each finding gets. They are not a measured accuracy rate, and we do not publish one until it has been
+        established against a labelled benchmark. We would rather tell you that than imply a precision we have not proven.
+      </p>
+    </div>
+    <div class="center mt40"><a class="btn pri" href="app/">Start free</a></div>
+  </div>
+</section>
+<footer class="footer">
+  <div class="foot-grid">
+    <div>
+      <div class="foot-brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</div>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk, opportunity and legal compliance — before the renewal clock runs out.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="security.html">Security</a><a href="about.html">About</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="contact.html">Contact</a><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a><a href="dpa.html">Data Processing (DPA)</a>
+    </div>
+  </div>
+  <div class="foot-base">
+    <div>© 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.</div>
+    <div><a href="privacy.html">Privacy</a> &nbsp;|&nbsp; <a href="terms.html">Terms</a></div>
+  </div>
+</footer>
+<script>
+/* Failsafe: never let a motion bug leave content hidden. */
+setTimeout(function(){
+  var h=document.querySelectorAll('.reveal:not(.is-in)');
+  for(var i=0;i<h.length;i++) h[i].classList.add('is-in');
+}, 2600);
+</script>
+</body>
+</html>

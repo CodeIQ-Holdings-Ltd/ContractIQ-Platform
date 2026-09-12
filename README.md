@@ -1,123 +1,140 @@
-# codeiqholdings-website
+# ContractIQ
 
-The CodeIQ Holdings Ltd website. Private repository, deployed to IONOS webspace
-by GitHub Actions on every push to `main`.
-
-CodeIQ Holdings Ltd · Registered in England and Wales, company no. 17454743
-103 Battalion Drive, Northampton NN4 6RX · info@codeiqholdings.co.uk
+The marketing site and the full application, ready to deploy to GitHub Pages.
 
 ---
 
-## What is here
+## Two ways in
 
-```
-index.html                     the one-page site
-legal.html                     the Legal Centre (17 documents)
-404.html                       not-found page
-robots.txt                     crawl rules, including AI answer engines
-sitemap.xml                    sitemap
-llms.txt                       plain-text summary written for AI assistants
-site.webmanifest               icons and theme colours
-.htaccess                      HTTPS + www, security headers, caching, 404
-assets/                        logo files, favicons, social card
-assets/screenshots/            ContractIQ screenshots (see README there)
-.github/workflows/deploy.yml   deploys to IONOS on push to main
-```
+| URL | What it is | Needs setup? |
+|---|---|---|
+| `/demo/` | **The full app with sample analysis.** Every feature works — ingestion, OCR, search, obligations, clause matrix, knowledge, verification, exports. The AI returns realistic pre-written output instead of calling a model. | **No.** Works the moment the site is live. |
+| `/app/` | **The same app with real AI.** Identical in every other way. | Yes — a Supabase project (about 20 minutes). |
 
-Both pages are self-contained: all CSS and JavaScript are inline. The only
-external request is the Google Fonts stylesheet; everything else, including the
-ContractIQ screenshots, is served from this folder. There is no build step, no
-package manager and no dependencies to keep patched. Editing a page means
-editing one file.
+Both run the **Enterprise edition**, so nothing is feature-gated. Sign in
+with `admin` / `ContractIQ2026!`
+
+**Start with `/demo/`.** It exercises everything except the model call, so
+you can judge the whole product before spending anything or configuring
+anything.
 
 ---
 
-## Why the repository is private and the site is still public
+## Deploying
 
-GitHub Pages only serves from a **public** repository on the GitHub Free plan.
-Publishing Pages from a private repository requires GitHub Pro.
+1. Create a repository and upload **the contents of this folder** (not the
+   folder itself).
+2. Settings → Pages → Source: *Deploy from a branch*, Branch `main`,
+   Folder `/ (root)`. Save.
+3. Wait a minute. You are live at `https://YOURNAME.github.io/REPO/`
 
-This setup avoids that entirely. The repository stays private on the Free plan,
-and GitHub Actions copies the finished files to the IONOS webspace you are
-already paying for. GitHub never hosts anything. The source is never public.
+> **Check `.nojekyll` made it.** Browsers hide dotfiles and drag-and-drop
+> often skips them. If it is missing from the file list: **Add file →
+> Create new file**, name it `.nojekyll`, leave it empty, commit. With
+> Git, use `git add -A` rather than `git add .`
+>
+> The app is pre-compiled so it no longer contains anything Jekyll would
+> choke on — but `.nojekyll` also stops Jekyll rewriting other files, so
+> it is still worth having.
 
-GitHub Free includes 2,000 Actions minutes per month for private repositories.
-This workflow takes roughly one minute per deploy, so a few dozen deploys a
-month uses a small fraction of the allowance.
+### If the build fails
 
----
+Check <https://www.githubstatus.com> first. If **Actions** or **Pages**
+show anything other than Operational, the failure is not yours — wait and
+use **Re-run jobs**. Errors reading *"The job was not acquired by Runner
+of type hosted"* always mean this: the job never started, so nothing in
+your files caused it.
 
-## First-time setup
-
-1. Create a **private** repository on GitHub and push this folder to `main`.
-
-2. Generate a deploy key on your own machine:
-
-   ```bash
-   ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/codeiq_deploy
-   ```
-
-   This produces `codeiq_deploy` (private) and `codeiq_deploy.pub` (public).
-
-3. In the IONOS control panel, go to **Hosting → SFTP & SSH** and add the
-   contents of `codeiq_deploy.pub` as an authorised key. Note the server
-   address (it looks like `access123456789.webspace-data.io`) and the username.
-
-4. In GitHub, go to **Settings → Secrets and variables → Actions** and add four
-   repository secrets:
-
-   | Secret | Value |
-   |---|---|
-   | `IONOS_HOST` | `access123456789.webspace-data.io` |
-   | `IONOS_USER` | your SFTP username |
-   | `IONOS_SSH_KEY` | the whole contents of `codeiq_deploy`, including the BEGIN and END lines |
-   | `IONOS_TARGET_DIR` | the document root, e.g. `/` or `/codeiqholdings.co.uk` |
-
-   Check the document root in the IONOS panel before the first deploy. Pointing
-   it at the wrong folder is the one mistake that wastes an afternoon.
-
-5. Push to `main`, or run the workflow manually from the **Actions** tab. Watch
-   the run; the last step reports the HTTP status of the live pages.
+If GitHub is healthy and it still fails: Settings → Pages → set Source to
+**None**, save, set it back. That clears stuck deployments.
 
 ---
 
-## Making a change
+## Turning on real AI (the `/app/` build)
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. SQL Editor → paste all of `supabase/schema.sql` → Run.
+3. Project Settings → API → copy the **Project URL** and the **anon**
+   key. (The *service role* key on that page must never go in the app.)
+4. Get an Anthropic API key at
+   [console.anthropic.com](https://console.anthropic.com), add a small
+   amount of credit, and **set a spend limit**.
+5. Deploy the proxy that holds your key:
 
 ```bash
-git checkout -b update-the-contractiq-screenshots
-# edit index.html, or replace files in assets/screenshots/
-git commit -am "Refresh the ContractIQ screenshots"
-git push -u origin update-the-contractiq-screenshots
+npm install -g supabase
+supabase login
+supabase link --project-ref YOUR_PROJECT_REF
+
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-your-key
+supabase secrets set ALLOWED_ORIGIN=https://YOURNAME.github.io
+supabase secrets set MAX_CALLS_PER_HOUR=60
+
+supabase functions deploy anthropic-proxy --no-verify-jwt
 ```
 
-Open a pull request, or merge straight to `main` if you are working alone.
-Merging to `main` deploys. There is no staging environment; if you want one,
-add a second IONOS subdomain and a second workflow triggered on a `staging`
-branch.
+6. Open `/app/`, sign in, **Settings** → paste the Supabase URL and anon
+   key. The AI endpoint is derived from that URL automatically.
+
+`ALLOWED_ORIGIN` must be the origin the **app** is served from — for
+GitHub Pages that is `https://YOURNAME.github.io`, with no path and no
+trailing slash. Get this wrong and every AI call returns 403.
+
+### Cost
+
+Hosting is free. The AI is not: roughly **£0.05 per contract analysis**
+and **£0.01 per question**. Twenty contracts and fifty questions comes to
+about **£1.50**.
 
 ---
 
-## Before the first real deploy
+## What to test
 
-- [x] ICO registration reference inserted — ICO:00015500673
-- [ ] Fill in the sub-processor table in `legal.html`: hosting, email, payment providers, Supabase region
-- [ ] Confirm the VAT position in `legal.html`
-- [x] Cookie consent banner implemented — blocks non-essential storage until consent
-- [ ] Upload `assets/codeiq-icon-108.png` and point the email signature at it
-- [x] Four ContractIQ screenshots added to `assets/screenshots/`
-- [ ] Add insurance details once you have them (search `ins-slot` in index.html)
+Fifteen minutes, in this order:
 
-Search for `tofill`, `to be inserted` and `To confirm` to find every one of
-these. The deploy workflow warns if any are still present, but does not block.
+1. **Sign in.** The Terms tick box is required — that is deliberate.
+2. **Load a sample portfolio** from the welcome panel. Look at the
+   **renewal runway** immediately: contracts are plotted by *notice
+   deadline*, and anything already past it is red.
+3. **Select all → Analyse.** Watch the credit cost appear before it runs.
+4. **Verify tab** on any record. Every value carries a confidence score,
+   its reasoning and a quote from the source. Below 80% it is held back
+   until you accept it.
+5. **Suppliers.** Name variants merge into one row; near-misses are
+   flagged for review.
+6. **Clause matrix.** Gaps down a column are exposure; gaps across a row
+   are your negotiating pattern.
+7. **Knowledge.** Who holds undocumented context, and every verbal
+   commitment that never reached a contract.
+8. **Upload a transcript** to a record. A consent dialogue blocks the
+   upload until you confirm participants were informed.
+9. **Upload a scanned PDF.** It is flagged amber with a *Run OCR* button;
+   OCR runs in your browser and the file is never transmitted.
+10. **Ctrl+K** searches records, document text and every finding.
+11. **Settings** → clear the workspace and start clean.
+
+The stress-test pack (38 fictional documents with a 37-finding answer
+key) is in the main package if you want something harder to throw at it.
 
 ---
 
-## Security notes
+## Notes
 
-- Never commit the private key, or anything else with a credential in it. The
-  `.gitignore` covers the usual accidents but is not a substitute for looking.
-- If the deploy key is ever exposed, remove it in the IONOS panel first, then
-  rotate the GitHub secret. Revoking access at IONOS is what actually stops it.
-- Keep the repository private even though the site is public. The repository
-  history is the evidence of authorship for the IP assignment, and it should
-  not be readable by anyone who asks.
+**Pre-compiled.** The app ships as plain JavaScript rather than JSX
+transformed in the browser, so it loads faster and needs no Babel.
+
+**If the app shows "Loading ContractIQ…" and stops**, your network is
+blocking `cdnjs.cloudflare.com`. That is common on corporate machines.
+Use the offline build from the main package — it has every library
+embedded and needs no internet.
+
+**Sign-in is demo-grade.** The credentials are inside the HTML, so anyone
+with the URL can sign in. Fine for testing; before real users this moves
+to Supabase Auth.
+
+**Credits are display-only.** The balance is not enforced server-side
+yet, so a modified client could exceed it. Fine while it is just you.
+
+`supabase/` is reference material — it is not served to visitors.
+
+ContractIQ is an automated screening aid, not legal advice.
