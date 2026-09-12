@@ -1,0 +1,1075 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CodeIQ Legal Centre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --obsidian:#0A0B0D;--carbon:#111317;--slate:#191C22;--line:rgba(244,241,234,.11);
+  --bone:#F4F1EA;--steel:#8A919C;--steel-dim:#6B727D;--copper:#E0642F;--copper-deep:#B44E1E;--ember:#F5A65B;
+  --disp:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;--body:"Inter",ui-sans-serif,system-ui,sans-serif;
+  --gut:clamp(18px,4vw,56px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:90px}
+body{margin:0;background:var(--obsidian);color:var(--bone);font-family:var(--body);font-weight:300;
+  line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15px}
+a{color:var(--copper)}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+h1,h2,h3,h4{font-family:var(--disp);font-weight:500;letter-spacing:-.022em;line-height:1.12;margin:0}
+p{margin:0 0 14px}
+p:last-child{margin-bottom:0}
+strong{font-weight:500;color:var(--bone)}
+
+/* topbar */
+.top{position:sticky;top:0;z-index:60;background:rgba(10,11,13,.9);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:14px var(--gut);
+  display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--bone)}
+.brand svg{width:30px;height:30px;flex:none}
+.brand .wm{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1;display:block}
+.brand .sb{font-family:var(--disp);font-weight:500;font-size:7px;letter-spacing:.42em;line-height:1;
+  text-transform:uppercase;margin-top:4px;display:block}
+.brand i{font-style:normal;color:var(--copper)}
+.top .tag{font-family:var(--disp);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--steel-dim)}
+
+.shell{display:grid;grid-template-columns:268px minmax(0,1fr);gap:clamp(24px,4vw,60px);
+  max-width:1340px;margin:0 auto;padding:0 var(--gut) 100px}
+@media(max-width:980px){.shell{grid-template-columns:1fr;padding-top:8px}}
+
+/* sidebar */
+.side{position:sticky;top:72px;align-self:start;max-height:calc(100vh - 92px);overflow-y:auto;
+  padding:34px 0 30px;scrollbar-width:thin}
+@media(max-width:980px){.side{position:static;max-height:none;border-bottom:1px solid var(--line);padding-bottom:22px}}
+.side .grp{font-family:var(--disp);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--copper);margin:26px 0 11px}
+.side .grp:first-child{margin-top:0}
+.side a{display:block;text-decoration:none;color:var(--steel);font-size:13.2px;padding:5px 0 5px 12px;
+  border-left:1px solid var(--line);transition:all .3s;line-height:1.45}
+.side a:hover{color:var(--bone);border-left-color:var(--copper)}
+.side a.on{color:var(--bone);border-left-color:var(--copper)}
+
+/* content */
+.main{padding-top:clamp(30px,4vw,50px);min-width:0}
+.lead{border-bottom:1px solid var(--line);padding-bottom:clamp(30px,4vw,44px);margin-bottom:clamp(30px,4vw,44px)}
+.eyebrow{font-family:var(--disp);font-size:10px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--copper);margin:0 0 16px;display:flex;align-items:center;gap:11px}
+.eyebrow::before{content:"";width:24px;height:1px;background:var(--copper);flex:none}
+.lead h1{font-size:clamp(30px,4.6vw,50px);letter-spacing:-.032em;line-height:1.03;max-width:16ch}
+.lead p{color:var(--steel);max-width:66ch;margin-top:18px;font-size:16px}
+
+.doc{border-top:1px solid var(--line);padding-top:clamp(34px,4vw,48px);margin-top:clamp(34px,4vw,48px);scroll-margin-top:86px}
+.doc:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.doc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:8px}
+.doc-num{font-family:var(--disp);font-size:10.5px;letter-spacing:.24em;color:var(--copper)}
+.doc h2{font-size:clamp(22px,3vw,33px);letter-spacing:-.028em}
+.doc .stamp{font-size:12px;color:var(--steel-dim);margin-bottom:22px;font-family:var(--disp);letter-spacing:.02em}
+.doc h3{font-size:16.5px;margin:30px 0 12px;letter-spacing:-.012em}
+.doc h4{font-size:14px;margin:20px 0 8px;font-weight:500;color:var(--ember);letter-spacing:0}
+.doc p,.doc li{color:var(--steel)}
+.doc>p:first-of-type{max-width:none}
+
+ol.cl{counter-reset:c;list-style:none;margin:0;padding:0}
+ol.cl>li{counter-increment:c;position:relative;padding-left:40px;margin-bottom:16px}
+ol.cl>li::before{content:counter(c);position:absolute;left:0;top:0;font-family:var(--disp);font-size:12px;
+  color:var(--copper);font-variant-numeric:tabular-nums}
+ol.sub{counter-reset:s;list-style:none;margin:10px 0 0;padding:0}
+ol.sub>li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:10px}
+ol.sub>li::before{content:"(" counter(s, lower-alpha) ")";position:absolute;left:0;top:0;font-size:12.5px;
+  color:var(--steel-dim);font-variant-numeric:tabular-nums}
+ul.pl{margin:10px 0 0;padding:0;list-style:none}
+ul.pl li{position:relative;padding-left:20px;margin-bottom:9px}
+ul.pl li::before{content:"";position:absolute;left:0;top:12px;width:9px;height:1px;background:var(--copper)}
+
+.box{border:1px solid var(--line);border-radius:16px;background:var(--carbon);padding:22px 24px;margin:22px 0}
+.box h4{margin-top:0}
+.box.warn{border-color:rgba(224,100,47,.42);background:rgba(224,100,47,.06)}
+.box.warn h4{color:var(--copper)}
+.fill{color:var(--obsidian);background:var(--ember);padding:1px 7px;border-radius:4px;font-weight:500;
+  font-family:var(--disp);font-size:12.5px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+.tblwrap{overflow-x:auto;margin:18px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+th{font-family:var(--disp);text-align:left;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--steel-dim);font-weight:500;padding:0 16px 12px 0}
+td{padding:12px 16px 12px 0;border-top:1px solid var(--line);vertical-align:top;color:var(--steel)}
+td strong{color:var(--bone)}
+
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:22px 0}
+.kv div{background:var(--obsidian);padding:19px 21px}
+.kv .k{font-family:var(--disp);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel-dim);margin-bottom:7px}
+.kv .v{font-size:14px;color:var(--bone);line-height:1.55}
+
+footer{border-top:1px solid var(--line);padding:40px var(--gut) 70px;color:var(--steel-dim);font-size:12.5px;
+  max-width:1340px;margin:0 auto;line-height:1.8}
+footer a{color:var(--steel-dim);text-decoration:none}
+footer a:hover{color:var(--copper)}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition-duration:.001ms !important}}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="brand" href="#top">
+    <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <g stroke="#F4F1EA" stroke-width="10" stroke-linecap="round" fill="none">
+        <path d="M60 19 A41 41 0 0 1 88.48 30.51"/>
+        <path d="M95.51 39.5 A41 41 0 0 1 99.78 69.92" stroke="#E0642F"/>
+        <path d="M95.51 80.5 A41 41 0 0 1 71.3 99.41"/>
+        <path d="M60 101 A41 41 0 0 1 31.52 89.49"/>
+        <path d="M24.49 80.5 A41 41 0 0 1 20.22 50.08"/>
+        <path d="M24.49 39.5 A41 41 0 0 1 48.7 20.59"/>
+      </g><circle cx="60" cy="60" r="10" fill="#E0642F"/>
+    </svg>
+    <span><span class="wm">CODE<i>IQ</i></span><span class="sb">Holdings</span></span>
+  </a>
+  <span class="tag">Legal Centre</span>
+</div>
+
+<div class="shell" id="top">
+  <nav class="side" id="side">
+    <div class="grp">Company</div>
+    <a href="#company">Company information</a>
+    <div class="grp">Using our services</div>
+    <a href="#msa">Master Subscription Agreement</a>
+    <a href="#schedule-contractiq">Schedule 1 &mdash; ContractIQ</a>
+    <a href="#aup">Acceptable Use Policy</a>
+    <a href="#ai">AI Use &amp; Limitations</a>
+    <a href="#sla">Service Level Agreement</a>
+    <a href="#beta">Beta &amp; Early Access Terms</a>
+    <a href="#website">Website Terms of Use</a>
+    <div class="grp">Data</div>
+    <a href="#privacy">Privacy Policy</a>
+    <a href="#dpa">Data Processing Agreement</a>
+    <a href="#subprocessors">Sub-processors</a>
+    <a href="#cookies">Cookie Policy</a>
+    <div class="grp">Protection</div>
+    <a href="#ip">Intellectual Property Notice</a>
+    <a href="#security">Security Statement</a>
+    <a href="#disclosure">Responsible Disclosure</a>
+    <a href="#complaints">Complaints Procedure</a>
+    <div class="grp">Admin</div>
+    <a href="#changes">Changes &amp; versions</a>
+  </nav>
+
+  <main class="main">
+    <div class="lead">
+      <p class="eyebrow">CodeIQ Holdings Ltd &middot; Legal Centre</p>
+      <h1>The terms that govern everything we build.</h1>
+      <p>One Master Subscription Agreement covers every CodeIQ product. Each product adds a short Schedule for anything specific to it, so a new product does not mean a new contract. Everything on this page is written for business customers in England and Wales.</p>
+    </div>
+
+<!-- ================================================================ -->
+<section class="doc" id="company">
+  <div class="doc-head"><span class="doc-num">01</span><h2>Company information</h2></div>
+  <p class="stamp">Trading disclosures under the Companies Act 2006, s.82</p>
+  <div class="kv">
+    <div><div class="k">Registered name</div><div class="v">CodeIQ Holdings Ltd</div></div>
+    <div><div class="k">Company number</div><div class="v">17454743</div></div>
+    <div><div class="k">Place of registration</div><div class="v">England and Wales</div></div>
+    <div><div class="k">Registered office</div><div class="v">103 Battalion Drive<br>Northampton NN4 6RX<br>United Kingdom</div></div>
+    <div><div class="k">Contact</div><div class="v">info@codeiqholdings.co.uk</div></div>
+    <div><div class="k">Websites</div><div class="v">codeiqholdings.co.uk<br>codeiqholdings.com</div></div>
+    <div><div class="k">ICO registration</div><div class="v">ICO:00015500673</div></div>
+    <div><div class="k">VAT number</div><div class="v"><span class="fill">If and when registered</span></div></div>
+  </div>
+  <p>CodeIQ Holdings Ltd is the contracting entity for all products described on this page. Where a product is operated by a subsidiary of CodeIQ Holdings Ltd, the relevant Product Schedule will name that entity and these terms apply to it as though it were named throughout.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="msa">
+  <div class="doc-head"><span class="doc-num">02</span><h2>Master Subscription Agreement</h2></div>
+  <p class="stamp">Version 1.0 &middot; Business customers only &middot; Governed by the laws of England and Wales</p>
+
+  <div class="box warn">
+    <h4>Read this first</h4>
+    <p>This Agreement is offered to businesses only. By entering into it you confirm you are acting in the course of a business, trade, craft or profession and not as a consumer. Nothing in this Agreement is intended to affect the statutory rights of a consumer, and if you are a consumer you may not use the Services under these terms.</p>
+    <p>This Agreement limits our liability to you and excludes certain warranties. Those clauses are set out in <strong>clause 11</strong> and <strong>clause 12</strong> and you should read them before agreeing.</p>
+  </div>
+
+  <h3>1. The agreement and how it fits together</h3>
+  <ol class="cl">
+    <li>This Master Subscription Agreement (<strong>"Agreement"</strong>) is made between CodeIQ Holdings Ltd, company number 17454743, whose registered office is at 103 Battalion Drive, Northampton NN4 6RX (<strong>"CodeIQ", "we", "us"</strong>) and the business entity identified on the Order Form (<strong>"Customer", "you"</strong>).</li>
+    <li>The Agreement consists of, in descending order of precedence where they conflict: (i) the Order Form; (ii) the applicable Product Schedule; (iii) the Data Processing Agreement; (iv) this Master Subscription Agreement; and (v) the Acceptable Use Policy, AI Use &amp; Limitations Notice and Service Level Agreement. Where the Order Form departs from this Agreement it prevails only where it expressly says so and is signed by both parties.</li>
+    <li><strong>One agreement, many products.</strong> This Agreement governs every product and service made available by CodeIQ or any member of its group. Each product is described in a Product Schedule. Subscribing to an additional product adds that Schedule to this Agreement; it does not create a separate contract and does not require this Agreement to be renegotiated.</li>
+    <li>We may introduce new products and Schedules at any time. A new Schedule binds you only in respect of a product you have ordered.</li>
+  </ol>
+
+  <h3>2. Definitions</h3>
+  <ul class="pl">
+    <li><strong>Authorised User</strong> &mdash; an individual employee, worker or contractor of the Customer whom the Customer permits to use the Services and for whom a subscription has been purchased.</li>
+    <li><strong>Customer Data</strong> &mdash; all data, documents, files, records and other content uploaded to, submitted to, or generated by the Customer or its Authorised Users through the Services, excluding Output and excluding Usage Data.</li>
+    <li><strong>Documentation</strong> &mdash; the user guides and technical documentation we make generally available for a Product.</li>
+    <li><strong>Intellectual Property Rights</strong> &mdash; patents, rights to inventions, copyright and related rights, trade marks, business names and domain names, goodwill, rights in designs, database rights, rights in computer software, rights to use and protect confidential information (including know-how and trade secrets), and all other intellectual property rights, in each case whether registered or unregistered and including all applications and rights to apply.</li>
+    <li><strong>Output</strong> &mdash; any analysis, extraction, summary, classification, score, draft, report or other material generated by the Services, including by an AI model, in response to Customer Data or an instruction from an Authorised User.</li>
+    <li><strong>Product</strong> &mdash; a software product made available by CodeIQ and described in a Product Schedule.</li>
+    <li><strong>Services</strong> &mdash; the Products ordered by the Customer, together with any support, hosting and related services we provide.</li>
+    <li><strong>Subscription Term</strong> &mdash; the initial term stated on the Order Form and each renewal term.</li>
+    <li><strong>Usage Data</strong> &mdash; technical and operational data generated by the use of the Services, such as event logs, error traces, performance measurements, feature usage counts and volumes, which does not identify the Customer, any Authorised User or any individual, and does not contain or reveal the substance of Customer Data.</li>
+  </ul>
+
+  <h3>3. Licence and right to use</h3>
+  <ol class="cl">
+    <li>Subject to payment and to compliance with this Agreement, we grant the Customer a non-exclusive, non-transferable, non-sublicensable, revocable right during the Subscription Term for its Authorised Users to access and use the Services for the Customer's own internal business purposes, up to the limits stated on the Order Form.</li>
+    <li>The Services are licensed, not sold. No right, title or interest in the Services or in any Intellectual Property Rights in them passes to the Customer.</li>
+    <li>No source code is supplied, and nothing in this Agreement obliges us to supply, deposit in escrow, or provide access to source code.</li>
+    <li>Access credentials are personal to each Authorised User and must not be shared. The Customer is responsible for all activity conducted under its account, including by anyone using credentials it has issued.</li>
+  </ol>
+
+  <h3>4. Restrictions</h3>
+  <p>The Customer shall not, and shall not permit any other person to:</p>
+  <ol class="sub">
+    <li>copy, modify, translate, adapt or create derivative works of the Services;</li>
+    <li>decompile, disassemble or reverse engineer any part of the Services, or attempt to derive their source code, structure, algorithms, prompts, model configuration or underlying ideas, except strictly to the extent that such activity cannot lawfully be prohibited under sections 50B or 296A of the Copyright, Designs and Patents Act 1988 and then only after giving us written notice and a reasonable opportunity to supply the interoperability information sought;</li>
+    <li>use the Services, the Output, or any information derived from them to design, develop, train, improve, benchmark against or market any product or service that competes with any CodeIQ Product;</li>
+    <li>use the Output or Customer Data processed by the Services to train, fine-tune or evaluate any machine learning model other than within the Services;</li>
+    <li>rent, lease, lend, resell, sublicense, distribute, or make the Services available to any third party, or use them on behalf of or for the benefit of any third party, including as a bureau, agency or managed service, except as expressly permitted on the Order Form;</li>
+    <li>remove, obscure or alter any proprietary notice, trade mark or attribution in the Services or the Output;</li>
+    <li>scrape, crawl, harvest or use any automated means to extract data from the Services other than through an interface we have documented for that purpose;</li>
+    <li>circumvent or attempt to circumvent any usage limit, credit allowance, access control, rate limit or security measure;</li>
+    <li>publish or disclose to any third party the results of any performance, accuracy, load or security testing of the Services without our prior written consent; or</li>
+    <li>use the Services otherwise than in accordance with the Acceptable Use Policy and the AI Use &amp; Limitations Notice.</li>
+  </ol>
+  <p>Each of the restrictions in this clause 4 is a condition of the licence granted in clause 3. Breach of any of them entitles us to suspend the Services immediately under clause 14.</p>
+
+  <h3>5. Customer obligations</h3>
+  <ol class="cl">
+    <li>The Customer shall provide all cooperation, access and information reasonably required for us to supply the Services, and is responsible for its own network, devices and internet connectivity.</li>
+    <li>The Customer warrants that it has all rights, consents, licences and lawful bases necessary for Customer Data to be uploaded to and processed by the Services, including in respect of any document belonging to or containing information about a third party, and including any recording or transcript of a meeting.</li>
+    <li>Where Customer Data includes a recording or transcript of any conversation, the Customer warrants that every participant was informed and that any consent required by law was obtained before the recording was made.</li>
+    <li>The Customer shall keep its own independent copies of anything it uploads. The Services are not a system of record and are not a substitute for the Customer's own backups.</li>
+    <li>The Customer shall notify us without undue delay of any unauthorised access to or use of the Services of which it becomes aware.</li>
+  </ol>
+
+  <h3>6. Intellectual property</h3>
+  <ol class="cl">
+    <li><strong>Ours stays ours.</strong> We and our licensors own all Intellectual Property Rights in and to the Services, the Documentation, the underlying software, models, prompts, methodologies, interfaces, designs, databases, trade marks and all improvements to any of them. Nothing in this Agreement transfers any of those rights, and all rights not expressly granted are reserved.</li>
+    <li><strong>Yours stays yours.</strong> The Customer retains all Intellectual Property Rights in Customer Data. The Customer grants us a non-exclusive, worldwide, royalty-free licence to host, copy, transmit, display and process Customer Data solely to the extent necessary to provide, secure, support and maintain the Services during the Subscription Term, and to comply with law.</li>
+    <li><strong>Output.</strong> Subject to payment and to clause 6.1, the Customer may use Output for its own internal business purposes. Output is generated in response to the Customer's data and instructions and may not be unique; substantially similar Output may be generated for other customers, and nothing in this Agreement grants the Customer exclusivity in Output.</li>
+    <li><strong>Feedback.</strong> If the Customer or any Authorised User gives us suggestions, feature requests, bug reports, ideas or other feedback about the Services, the Customer assigns to us with full title guarantee all Intellectual Property Rights in that feedback, free of charge, and we may use it without restriction or obligation. This clause does not give us any right in Customer Data.</li>
+    <li><strong>Usage Data.</strong> We may collect and use Usage Data to operate, secure, support, analyse and improve the Services and to produce statistics about our business. Usage Data as defined does not include Customer Data or Output, and we will not publish anything that identifies the Customer without its written consent.</li>
+    <li><strong>No model training.</strong> We do not use Customer Data or Output to train, fine-tune or otherwise improve any machine learning model, whether our own or a third party's, and we contract with our AI sub-processors on terms that prohibit them from doing so.</li>
+  </ol>
+
+  <h3>7. Confidentiality</h3>
+  <ol class="cl">
+    <li>Each party shall keep confidential all information disclosed by the other that is marked confidential or that a reasonable person would regard as confidential, and shall use it only for the purposes of this Agreement. Our Confidential Information includes the Services, the Documentation, pricing, and any non-public information about how the Services work.</li>
+    <li>Each party may disclose the other's Confidential Information to its personnel and professional advisers who need to know it and who are bound by equivalent obligations, and as required by law, a court or a regulator, giving the other party as much notice as is lawfully possible.</li>
+    <li>These obligations do not apply to information that is or becomes public through no breach of this clause, was lawfully known before disclosure, is independently developed without use of the other's Confidential Information, or is lawfully received from a third party without restriction.</li>
+    <li>These obligations continue for five years after the end of this Agreement, and indefinitely in respect of anything that constitutes a trade secret.</li>
+  </ol>
+
+  <h3>8. Fees, payment and tax</h3>
+  <ol class="cl">
+    <li>Fees are as stated on the Order Form. Unless the Order Form says otherwise, fees are payable annually in advance, and subscriptions are for a minimum of the initial Subscription Term.</li>
+    <li>Invoices are payable within 30 days of the date of invoice. Time for payment is of the essence.</li>
+    <li>All fees are exclusive of VAT and any other applicable tax, which the Customer shall pay in addition at the prevailing rate.</li>
+    <li>If any undisputed sum is not paid when due we may, without limiting our other rights: (i) charge interest on the overdue amount at 4% per annum above the Bank of England base rate from time to time, accruing daily, or claim interest and compensation under the Late Payment of Commercial Debts (Interest) Act 1998; and (ii) on 14 days' written notice, suspend the Services until payment is received.</li>
+    <li>The Customer shall pay all sums due without set-off, counterclaim, deduction or withholding except as required by law.</li>
+    <li>Fees are non-refundable except where this Agreement expressly says otherwise. Downgrading a subscription mid-term does not generate a refund or credit.</li>
+    <li>We may increase fees with effect from the start of any renewal term on at least 60 days' written notice. If the Customer does not accept the increase it may elect not to renew by giving notice before the renewal date.</li>
+    <li>Where a Product includes a credit, usage or volume allowance, that allowance is as stated on the Order Form or in the Product Schedule. Allowances do not carry over between periods unless expressly stated, and unused allowances have no cash value.</li>
+  </ol>
+
+  <h3>9. Warranties</h3>
+  <ol class="cl">
+    <li>We warrant that: (i) we have the right to enter into this Agreement and to grant the licence in clause 3; (ii) the Services will be provided with reasonable care and skill by suitably qualified personnel; and (iii) during the Subscription Term the Services will perform materially in accordance with the Documentation.</li>
+    <li>The Customer's sole and exclusive remedy for breach of clause 9.1(iii) is that we will, at our option and at our cost, correct the non-conformity within a reasonable period, or if we cannot do so within 30 days of written notice, terminate the affected Product and refund fees paid in advance for the unexpired part of the Subscription Term for that Product.</li>
+    <li>The warranty in clause 9.1(iii) does not apply where the non-conformity arises from Customer Data, the Customer's own systems, use contrary to this Agreement or the Documentation, modification by anyone other than us, or a third-party service outside our control.</li>
+    <li>Each party warrants that it will comply with all applicable laws in performing this Agreement, including the Bribery Act 2010, applicable anti-money-laundering, export control and sanctions laws, and applicable data protection law.</li>
+  </ol>
+
+  <h3>10. What we do not warrant</h3>
+  <ol class="cl">
+    <li><strong>No warranty of accuracy.</strong> The Services use artificial intelligence and probabilistic techniques. We do not warrant that any Output is accurate, complete, current, reliable or fit for any particular purpose. Confidence indicators displayed by the Services express a model's estimate of its own certainty; they are not a measure of verified accuracy and must not be relied on as one. The AI Use &amp; Limitations Notice forms part of this Agreement and sets this out in full.</li>
+    <li><strong>Not advice.</strong> The Services do not provide legal, financial, tax, accounting, regulatory or professional advice of any kind. No part of the Output is a substitute for advice from a qualified professional, and no relationship of adviser and client arises between us and the Customer.</li>
+    <li><strong>Human decision-making.</strong> The Customer is solely responsible for every decision it takes, or omits to take, in reliance on the Services, and for verifying Output before relying on it for any purpose that carries legal, financial, contractual, regulatory or safety consequences.</li>
+    <li><strong>Availability.</strong> We do not warrant that the Services will be uninterrupted or error-free. Availability commitments, where they are given at all, are given only in the Service Level Agreement and only for the subscription tiers stated there.</li>
+    <li>Except as expressly set out in clause 9, all warranties, conditions, terms and representations, whether express or implied by statute, common law or otherwise, including any implied term as to satisfactory quality, fitness for a particular purpose or conformity with description, are excluded to the fullest extent permitted by law.</li>
+  </ol>
+
+  <h3>11. Liability</h3>
+  <ol class="cl">
+    <li><strong>Nothing is excluded that cannot be.</strong> Nothing in this Agreement limits or excludes either party's liability for: death or personal injury caused by negligence; fraud or fraudulent misrepresentation; breach of the terms implied by section 12 of the Sale of Goods Act 1979 or section 2 of the Supply of Goods and Services Act 1982; or any other liability that cannot lawfully be limited or excluded.</li>
+    <li><strong>Excluded losses.</strong> Subject to clause 11.1, neither party is liable to the other, whether in contract, tort (including negligence), breach of statutory duty or otherwise, for any: loss of profit; loss of revenue; loss of business, contracts or opportunity; loss of anticipated savings; loss of or damage to goodwill or reputation; loss, corruption or inability to access data, to the extent it would have been prevented by the Customer maintaining its own backups as required by clause 5.4; wasted management or staff time; or any indirect or consequential loss, in each case however arising and whether or not foreseeable.</li>
+    <li><strong>Financial cap.</strong> Subject to clauses 11.1 and 11.4, each party's total aggregate liability arising out of or in connection with this Agreement in any period of 12 months is limited to the total fees paid or payable by the Customer under this Agreement in the 12 months immediately preceding the first event giving rise to the claim, or £5,000, whichever is the greater.</li>
+    <li>The Customer's obligation to pay fees properly due, and the Customer's liability under the indemnity in clause 12.3, are not subject to the cap in clause 11.3.</li>
+    <li>The Customer acknowledges that the fees have been set on the basis of the allocation of risk in this clause 11, that it has had the opportunity to take independent advice, and that a different allocation would carry a materially different price.</li>
+    <li>No claim may be brought under this Agreement more than 12 months after the claiming party first became aware, or ought reasonably to have become aware, of the circumstances giving rise to it.</li>
+  </ol>
+
+  <h3>12. Indemnities</h3>
+  <ol class="cl">
+    <li><strong>Our IP indemnity.</strong> We will defend the Customer against any third-party claim that the Customer's permitted use of the Services infringes that third party's Intellectual Property Rights in the United Kingdom, and will pay damages finally awarded or amounts agreed in settlement by us, provided the Customer notifies us promptly in writing, gives us sole conduct of the defence and settlement, and provides reasonable assistance at our cost.</li>
+    <li>Clause 12.1 does not apply to a claim arising from: Customer Data; Output, to the extent the claim arises from the Customer Data submitted or the instruction given; combination of the Services with anything not supplied by us; modification of the Services by anyone other than us; use outside this Agreement or the Documentation; or use of a version of the Services after we have notified the Customer of a modification or replacement that would have avoided the claim. If the Services become, or in our reasonable opinion are likely to become, the subject of such a claim, we may at our option modify them, replace them with functionally equivalent services, procure a licence, or terminate the affected Product on notice with a pro-rata refund of prepaid fees. Clauses 12.1 and 12.2 state our entire liability and the Customer's sole remedy for intellectual property infringement.</li>
+    <li><strong>Customer indemnity.</strong> The Customer shall indemnify us against all losses, liabilities, damages, costs and expenses (including reasonable legal fees) arising out of or in connection with: (i) any claim that Customer Data, or our processing of it in accordance with this Agreement, infringes the rights of a third party or breaches applicable law; (ii) any breach by the Customer of clause 4, clause 5.2, clause 5.3 or the Acceptable Use Policy; and (iii) any decision the Customer takes in reliance on the Output.</li>
+  </ol>
+
+  <h3>13. Term and renewal</h3>
+  <ol class="cl">
+    <li>This Agreement begins on the date stated on the Order Form and continues for the initial Subscription Term.</li>
+    <li>Unless the Order Form says otherwise, the Subscription Term renews automatically for successive periods equal to the initial term unless either party gives written notice of non-renewal at least 30 days before the end of the then-current term.</li>
+    <li>Free, trial, sandbox and beta subscriptions may be terminated by either party at any time on notice, and clause 13.2 does not apply to them.</li>
+  </ol>
+
+  <h3>14. Suspension and termination</h3>
+  <ol class="cl">
+    <li>We may suspend access to the Services, in whole or in part, immediately on notice where: the Customer is in breach of clause 4 or the Acceptable Use Policy; we reasonably believe the Services are being used in a way that threatens the security, integrity or availability of the Services or of any other customer; we are required to do so by law or by a supplier; or fees remain unpaid under clause 8.4. We will restore access promptly once the cause is resolved.</li>
+    <li>Either party may terminate this Agreement or any affected Product immediately on written notice if the other: commits a material breach that is not remediable, or is remediable and not remedied within 30 days of written notice; or becomes insolvent, enters administration, has a receiver appointed, ceases or threatens to cease to carry on business, or suffers any analogous event.</li>
+    <li>On termination or expiry: all licences end immediately; the Customer shall stop using the Services; and each party shall return or destroy the other's Confidential Information on request, save for copies required by law or held in routine backups, which remain subject to clause 7.</li>
+    <li><strong>Data on exit.</strong> For 30 days after termination or expiry, the Customer may export Customer Data using the export functions in the Services. After that period we will delete Customer Data in accordance with the Data Processing Agreement. We are not obliged to retain Customer Data beyond that period and will not be liable for deleting it in accordance with this clause.</li>
+    <li>Termination does not affect any right or liability accrued before it. Clauses 2, 6, 7, 10, 11, 12, 14.3, 14.4, 14.5 and 16 survive.</li>
+  </ol>
+
+  <h3>15. Changes to the Services and these terms</h3>
+  <ol class="cl">
+    <li>We may modify the Services from time to time, including adding, changing or removing features, provided we do not materially reduce the core functionality of a Product during a paid Subscription Term. Where we do materially reduce core functionality, the Customer may terminate the affected Product within 30 days of notice and receive a pro-rata refund of prepaid fees.</li>
+    <li>We may amend this Agreement and the policies that form part of it. We will give at least 30 days' notice of any amendment that materially and adversely affects the Customer, by email to the account's registered address and by posting the revised version here. If the Customer objects, it may terminate the affected Product before the change takes effect; continued use after that date constitutes acceptance.</li>
+    <li>Changes required by law, by a regulator or to address a security risk may take effect immediately.</li>
+  </ol>
+
+  <h3>16. General</h3>
+  <ol class="cl">
+    <li><strong>Assignment.</strong> The Customer may not assign, transfer, charge or deal in any other manner with any of its rights or obligations without our prior written consent. We may assign or novate this Agreement to any member of our group, or to a purchaser of the business or assets to which it relates, on notice.</li>
+    <li><strong>Subcontracting.</strong> We may subcontract performance, including to the sub-processors listed in this Legal Centre, and remain responsible for their acts and omissions in performing the Services.</li>
+    <li><strong>Non-solicitation.</strong> During the Subscription Term and for six months afterwards, neither party shall knowingly solicit for employment any individual employed or engaged by the other who has been directly involved in the Services, except through a general advertisement not targeted at that individual.</li>
+    <li><strong>Publicity.</strong> Neither party may use the other's name or logo in publicity without prior written consent, except that we may identify the Customer as a customer in a list of customers where the Customer has given written consent, which it may withdraw on 30 days' notice.</li>
+    <li><strong>Force majeure.</strong> Neither party is liable for any failure or delay caused by an event beyond its reasonable control, including failure of public telecommunications networks, failure of a third-party hosting or AI provider, cyber attack, act of government, epidemic, industrial action not involving that party's own workforce, fire, flood or natural disaster. If the event continues for more than 60 days either party may terminate on notice.</li>
+    <li><strong>Notices.</strong> Notices must be in writing and sent to our registered office or to info@codeiqholdings.co.uk, and to the Customer at the address or email on the Order Form. Email notices are deemed received at 9.00am on the next business day after sending, provided no delivery failure is received.</li>
+    <li><strong>Entire agreement.</strong> This Agreement constitutes the entire agreement between the parties and supersedes all previous agreements, representations and understandings relating to its subject matter. Each party acknowledges that it has not relied on any statement or representation not set out in this Agreement, but nothing limits liability for fraudulent misrepresentation. Any purchase order, supplier portal terms or standard conditions put forward by the Customer have no effect.</li>
+    <li><strong>Waiver and severance.</strong> No failure or delay in exercising a right is a waiver of it. If any provision is held invalid or unenforceable, it shall be modified to the minimum extent necessary to make it enforceable, or if that is not possible, deleted, and the remainder shall continue in force.</li>
+    <li><strong>No partnership.</strong> Nothing in this Agreement creates a partnership, joint venture, agency or employment relationship.</li>
+    <li><strong>Third parties.</strong> A person who is not a party to this Agreement has no rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any of its terms, save that any member of our group may enforce clauses 6, 7 and 11.</li>
+    <li><strong>Governing law and jurisdiction.</strong> This Agreement and any dispute or claim arising out of it, including non-contractual disputes, are governed by the law of England and Wales. The parties submit to the exclusive jurisdiction of the courts of England and Wales.</li>
+  </ol>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="schedule-contractiq">
+  <div class="doc-head"><span class="doc-num">03</span><h2>Product Schedule 1 &mdash; ContractIQ</h2></div>
+  <p class="stamp">Forms part of the Master Subscription Agreement</p>
+
+  <h3>1. Description</h3>
+  <p>ContractIQ is a web-based application with integrated artificial intelligence. It ingests contracts, purchase orders, statements of work, tracking spreadsheets, scanned documents and meeting transcripts, extracts structured information from them, and presents that information as contract records, registers, portfolio views, scores and reports. It includes a conversational interface for asking questions of a document portfolio.</p>
+
+  <h3>2. What ContractIQ is not</h3>
+  <ol class="cl">
+    <li>ContractIQ is a procurement and commercial-management tool. It is <strong>not</strong> a legal advice service, a contract lifecycle management system of record, a signing or execution platform, or a compliance certification.</li>
+    <li>Nothing produced by ContractIQ constitutes legal advice. Reviewing a contract with ContractIQ is not a substitute for review by a qualified lawyer, and the Customer must not represent to any third party that it is.</li>
+    <li>Dates, deadlines, values, obligations and risk scores presented by ContractIQ are extracted by automated means and may be wrong, missing or misattributed. The Customer must verify any date or figure against the source document before acting on it, and in particular before allowing a notice period or renewal deadline to pass.</li>
+  </ol>
+
+  <h3>3. Editions and allowances</h3>
+  <p>ContractIQ is offered in the editions stated on the Order Form. Each edition carries a credit allowance which is consumed by chargeable operations. The current consumption rates, the operations that consume no credits, and the allowance for each edition are set out in the Documentation and on the Order Form. We may change consumption rates on 30 days' notice with effect from the next renewal.</p>
+
+  <h3>4. Transcripts and recordings</h3>
+  <ol class="cl">
+    <li>Where the Customer uploads a recording or transcript, the Services require an Authorised User to confirm that all necessary notices were given and consents obtained. That confirmation is recorded with the identity of the user, the time, and the version of the consent wording.</li>
+    <li>That confirmation is a warranty by the Customer under clause 5.3 of the Master Subscription Agreement. We do not verify it and we do not accept responsibility for the lawfulness of any recording the Customer uploads.</li>
+  </ol>
+
+  <h3>5. Optical character recognition</h3>
+  <p>Scanned documents are processed using optical character recognition. Recognition of poor-quality scans, handwriting, stamps, marginalia, tables and signatures is unreliable. Where text cannot be extracted reliably the Services will indicate this, but the absence of an indication is not a warranty that recognition was complete or correct.</p>
+
+  <h3>6. Current status</h3>
+  <div class="box warn">
+    <h4>Stated plainly</h4>
+    <p>ContractIQ is pre-launch. It has been built and tested but has not yet been operated across a paying customer's live contract portfolio. We publish no accuracy percentage because we have not measured accuracy against a labelled reference set, and a model's confidence score is not the same thing. Any customer contracting with us before we do publish a measured figure is doing so on that basis, and we will say so again in writing before taking payment.</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="aup">
+  <div class="doc-head"><span class="doc-num">04</span><h2>Acceptable Use Policy</h2></div>
+  <p class="stamp">Forms part of the Master Subscription Agreement &middot; Breach permits immediate suspension</p>
+  <p>This policy applies to every person who uses any CodeIQ service. It exists so that one customer's conduct cannot damage another's service, our infrastructure, or anyone's rights.</p>
+
+  <h3>1. You must not use the Services to</h3>
+  <ol class="sub">
+    <li>break any law, or facilitate anyone else in doing so;</li>
+    <li>infringe any person's intellectual property, privacy, confidentiality or contractual rights;</li>
+    <li>upload material you do not have the right to upload, including a third party's confidential documents obtained without authority;</li>
+    <li>upload, store or transmit any material that is unlawful, defamatory, harassing, abusive, obscene, or that depicts or facilitates the abuse or exploitation of children;</li>
+    <li>upload any virus, worm, trojan, logic bomb or other malicious code;</li>
+    <li>impersonate any person or misrepresent your affiliation with any person or organisation;</li>
+    <li>send unsolicited commercial communications;</li>
+    <li>process special category personal data, criminal offence data, or payment card data, unless the Order Form expressly permits it and appropriate safeguards have been agreed in writing;</li>
+    <li>interfere with, disrupt, probe, scan or test the vulnerability of the Services or any network or system connected to them, except strictly in accordance with our Responsible Disclosure Policy; or</li>
+    <li>place an unreasonable or disproportionate load on the Services, including by exceeding documented rate limits or by automating requests beyond a documented interface.</li>
+  </ol>
+
+  <h3>2. Restrictions specific to AI features</h3>
+  <ol class="sub">
+    <li>You must not use Output as the sole basis for any decision that produces legal effects concerning an individual, or that similarly significantly affects an individual, without meaningful human review by a person with the authority and competence to change the outcome.</li>
+    <li>You must not present Output to any third party as though it were human-authored professional advice, or as though it had been verified by us.</li>
+    <li>You must not use the Services to generate material designed to deceive, including fabricated records, forged documents, or content falsely attributed to a real person or organisation.</li>
+    <li>You must not attempt to extract, reconstruct or reverse engineer any system prompt, model weight, model configuration or training data through the Services, including by prompt injection.</li>
+    <li>You must not use the Services, or Output from them, to develop, train, benchmark or market any competing product, as set out in clause 4 of the Master Subscription Agreement.</li>
+  </ol>
+
+  <h3>3. Enforcement</h3>
+  <p>We may investigate suspected breaches and may suspend or restrict access immediately, without notice where the risk requires it. We will tell you what we have done and why as soon as we reasonably can. Repeated or serious breach is a material breach of the Agreement under clause 14.2. Where we are required to report conduct to a law enforcement agency or regulator, we will do so.</p>
+
+  <h3>4. Reporting</h3>
+  <p>Report misuse to <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>. Report security vulnerabilities under the Responsible Disclosure Policy instead.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="ai">
+  <div class="doc-head"><span class="doc-num">05</span><h2>AI Use &amp; Limitations Notice</h2></div>
+  <p class="stamp">Forms part of the Master Subscription Agreement &middot; Applies to every CodeIQ product</p>
+  <p>Every CodeIQ product is a web-based application with artificial intelligence built into it. This notice explains what that means, what it cannot do, and where responsibility sits. It is written to be understood, not to be skipped.</p>
+
+  <h3>1. How the AI is used</h3>
+  <ul class="pl">
+    <li>Documents and text you supply are sent to one or more third-party large language models, operated by the providers listed in our Sub-processor list, to be read and interpreted.</li>
+    <li>The models return structured information, summaries, classifications, drafts and answers. That is the Output.</li>
+    <li>Output is generated probabilistically. The same input may not produce identical output every time.</li>
+    <li>Your content is not used to train, fine-tune or improve any model. Our AI providers are engaged on terms that prohibit training on customer content.</li>
+  </ul>
+
+  <h3>2. What AI cannot be relied on to do</h3>
+  <ol class="cl">
+    <li><strong>It can be confidently wrong.</strong> Language models produce fluent, well-formatted output whether or not the underlying reading was correct. Presentation quality carries no information about accuracy.</li>
+    <li><strong>It can omit.</strong> A clause, date, party or obligation that exists in a document may simply not appear in the Output. An empty field means "not found", never "not present".</li>
+    <li><strong>It can invent.</strong> A model may produce a value, a date or a quotation that does not appear in the source. Where the Services show a quoted source line, that line is intended to let you check; checking it is your responsibility, not ours.</li>
+    <li><strong>Confidence is not accuracy.</strong> Where the Services display a confidence score, it expresses the system's own estimate of its certainty. It is not a measured accuracy rate, it has not been validated against a labelled reference set, and it must never be presented to anyone as though it were.</li>
+    <li><strong>It is not current.</strong> Models are trained to a cut-off date and have no knowledge of events after it, and no knowledge of your organisation beyond what you supply.</li>
+  </ol>
+
+  <h3>3. Your obligations</h3>
+  <ol class="cl">
+    <li>Keep a human in the loop. Verify Output against the source before relying on it for anything with legal, financial, contractual, regulatory or safety consequences.</li>
+    <li>Do not use Output as the sole basis for a decision that significantly affects an individual, without meaningful human review.</li>
+    <li>Tell your own people that the Services use AI and that Output must be checked.</li>
+    <li>Where you or your customers are subject to obligations concerning AI transparency, automated decision-making or record-keeping, satisfying those obligations in respect of your own use of the Services is your responsibility. We will provide reasonable information to help.</li>
+  </ol>
+
+  <h3>4. Regulatory position</h3>
+  <ol class="cl">
+    <li>Our products are general-purpose business tools. We do not intend them to be used as, and they must not be used as, an AI system in any use case classified as high risk under the EU Artificial Intelligence Act, including employment, creditworthiness, essential services, education and law enforcement uses.</li>
+    <li>If you deploy our Services in the European Union, transparency obligations for deployers of AI systems may apply to you directly. Those obligations are yours and not ours, and you should take your own advice.</li>
+    <li>Under UK data protection law, decisions based solely on automated processing that produce legal or similarly significant effects on individuals are subject to specific safeguards. Our Services are not designed to make such decisions and you must not configure them to.</li>
+    <li>We will update this notice as the regulatory position develops.</li>
+  </ol>
+
+  <h3>5. No measured accuracy claim</h3>
+  <div class="box warn">
+    <h4>We do not publish an accuracy percentage</h4>
+    <p>Measuring accuracy properly requires a labelled reference set of documents where the correct answer is known independently, of sufficient size, and dated. Until we have built one, any percentage we published would be a guess dressed as a measurement. We will publish a figure when we can show the workings, including the sample size and the date. Until then, treat any accuracy figure you see quoted anywhere for any comparable product with the same scepticism.</p>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="sla">
+  <div class="doc-head"><span class="doc-num">06</span><h2>Service Level Agreement</h2></div>
+  <p class="stamp">Applies to paid subscriptions only &middot; Does not apply to free, sandbox, trial or beta use</p>
+
+  <h3>1. Availability commitment</h3>
+  <p>We will use commercially reasonable efforts to make the Services available at least <strong>99.5%</strong> of the time in each calendar month, measured as the percentage of minutes in the month during which the Services are reachable and able to accept requests, excluding Excluded Downtime.</p>
+
+  <h3>2. Excluded Downtime</h3>
+  <ul class="pl">
+    <li>Planned maintenance notified at least 48 hours in advance, up to 8 hours per calendar month, scheduled outside 08:00&ndash;18:00 UK time on business days wherever practicable.</li>
+    <li>Emergency maintenance required to address a security risk or prevent imminent service failure.</li>
+    <li>Failure or degradation of a third-party hosting, network, authentication or AI provider outside our reasonable control.</li>
+    <li>Anything caused by the Customer's own systems, network, configuration, data or breach of the Agreement.</li>
+    <li>Suspension permitted under clause 14.1 of the Master Subscription Agreement.</li>
+    <li>Force majeure.</li>
+  </ul>
+
+  <h3>3. Service credits</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Monthly availability</th><th>Credit</th></tr></thead>
+    <tbody>
+      <tr><td>99.5% or above</td><td>None</td></tr>
+      <tr><td>Below 99.5% but at or above 99.0%</td><td>5% of that month's fees for the affected Product</td></tr>
+      <tr><td>Below 99.0% but at or above 95.0%</td><td>10% of that month's fees for the affected Product</td></tr>
+      <tr><td>Below 95.0%</td><td>25% of that month's fees for the affected Product</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Credits must be claimed in writing within 30 days of the end of the month concerned, are applied against future fees, are not payable in cash, and are capped at 25% of the monthly fees for the affected Product in any month. <strong>Service credits are the Customer's sole and exclusive financial remedy for any failure to meet the availability commitment.</strong> Where availability falls below 95.0% in each of three consecutive months, the Customer may terminate the affected Product on notice with a pro-rata refund of prepaid fees.</p>
+
+  <h3>4. AI processing times</h3>
+  <p>Analysis and generation times depend on document size, queue depth and third-party model availability, and are not subject to any commitment. Where a queued job fails, it is retried automatically; where it cannot be completed, the credits consumed are returned. No service level applies to processing time.</p>
+
+  <h3>5. Support</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Severity</th><th>Meaning</th><th>Target first response</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1 &mdash; Critical</strong></td><td>Service wholly unavailable or data at risk</td><td>4 business hours</td></tr>
+      <tr><td><strong>2 &mdash; High</strong></td><td>Major function unusable, no workaround</td><td>1 business day</td></tr>
+      <tr><td><strong>3 &mdash; Normal</strong></td><td>Function impaired, workaround exists</td><td>3 business days</td></tr>
+      <tr><td><strong>4 &mdash; Low</strong></td><td>Question, guidance or enhancement request</td><td>5 business days</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Support is provided in English by email to <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>, during business hours (09:00&ndash;17:30 UK time, Monday to Friday, excluding England and Wales bank holidays). These are target response times, not resolution times, and they are targets rather than contractual commitments carrying a remedy.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="beta">
+  <div class="doc-head"><span class="doc-num">07</span><h2>Beta &amp; Early Access Terms</h2></div>
+  <p class="stamp">Applies to any Product or feature labelled beta, preview, early access, sandbox or trial</p>
+  <ol class="cl">
+    <li>Beta features are made available <strong>as is and as available</strong>. Clause 9.1(iii) of the Master Subscription Agreement, the Service Level Agreement and all warranties are excluded in respect of them, to the fullest extent permitted by law.</li>
+    <li>Beta features may be incomplete, may change materially, may produce unreliable results, and may be withdrawn at any time without notice and without liability.</li>
+    <li>Data held in a beta, sandbox or trial environment may be deleted at any time. Do not use a beta environment as the only home for anything you need.</li>
+    <li>Do not submit special category personal data, criminal offence data, payment card data, or material of high commercial sensitivity to a beta feature.</li>
+    <li>The existence, functionality, performance and any results of a beta feature are our Confidential Information under clause 7 until we announce the feature publicly.</li>
+    <li>All feedback about a beta feature is assigned to us under clause 6.4 of the Master Subscription Agreement.</li>
+    <li>Subject to clause 11.1 of the Master Subscription Agreement, our total aggregate liability in connection with any beta, free, sandbox or trial use is limited to £100.</li>
+    <li>Where a founding-member, early-access or introductory offer is made, its terms, duration and what happens at the end of it are stated at the point of sign-up and in the Order Form. Where such an offer converts to a paid plan, we will give at least 30 days' notice in writing before the first payment is taken.</li>
+  </ol>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="website">
+  <div class="doc-head"><span class="doc-num">08</span><h2>Website Terms of Use</h2></div>
+  <p class="stamp">Applies to codeiqholdings.co.uk, codeiqholdings.com and any subdomain</p>
+  <ol class="cl">
+    <li>This website is operated by CodeIQ Holdings Ltd. By using it you accept these terms.</li>
+    <li>All content on this website, including text, layout, graphics, the CodeIQ name, the Aperture mark and all other branding, is owned by or licensed to us and protected by intellectual property law. You may view it, and print or download extracts for your own internal business use, provided you do not modify them and you keep all proprietary notices intact. You may not otherwise copy, republish, distribute, frame, mine or exploit any part of it without our written consent.</li>
+    <li>The content of this website is provided for general information only. It does not constitute advice, and it is not an offer capable of acceptance. We give no warranty that it is accurate, complete or current, and we may change it at any time without notice.</li>
+    <li>Where this website links to a third-party site, we do so for convenience and accept no responsibility for that site or its content.</li>
+    <li>We do not guarantee that this website will be available uninterrupted. We may suspend, withdraw or restrict it without notice.</li>
+    <li>You must not misuse this website by knowingly introducing malicious code, attempting to gain unauthorised access to it or to any server or database connected to it, or attacking it by denial-of-service. Doing so may be a criminal offence under the Computer Misuse Act 1990 and will be reported.</li>
+    <li>Subject to clause 11.1 of the Master Subscription Agreement, and to the fullest extent permitted by law, we exclude all liability arising from use of this website or reliance on its content.</li>
+    <li>These terms are governed by the law of England and Wales, and the courts of England and Wales have exclusive jurisdiction.</li>
+  </ol>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="privacy">
+  <div class="doc-head"><span class="doc-num">09</span><h2>Privacy Policy</h2></div>
+  <p class="stamp">Controller: CodeIQ Holdings Ltd &middot; UK GDPR, Data Protection Act 2018 and the Data (Use and Access) Act 2025</p>
+
+  <h3>1. Who we are</h3>
+  <p>CodeIQ Holdings Ltd, company number 17454743, registered office 103 Battalion Drive, Northampton NN4 6RX, is the controller of the personal data described in this policy. Our registration reference with the Information Commissioner's Office is <strong>ICO:00015500673</strong>. Contact us about anything in this policy at <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>.</p>
+  <p>Where our customers upload documents containing personal data into our Services, we act as a <strong>processor</strong> on their behalf and not as a controller. The Data Processing Agreement below governs that relationship. This Privacy Policy concerns the personal data for which we are the controller: website visitors, enquirers, account holders and suppliers.</p>
+
+  <h3>2. What we collect and why</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Who</th><th>What</th><th>Why</th><th>Lawful basis</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Website visitors</strong></td><td>IP address, device and browser information, pages viewed, referring page</td><td>Operating and securing the site, understanding which pages are used</td><td>Legitimate interests &mdash; running and protecting our website</td></tr>
+      <tr><td><strong>Enquirers</strong></td><td>Name, email, employer, role, the content of your enquiry</td><td>Replying to you, and following up about the thing you asked about</td><td>Legitimate interests &mdash; responding to a request you made</td></tr>
+      <tr><td><strong>Account holders</strong></td><td>Name, work email, role, organisation, authentication records, sign-in events, support correspondence</td><td>Providing the Services, authenticating users, security, support, billing</td><td>Performance of a contract; legitimate interests in security</td></tr>
+      <tr><td><strong>Marketing recipients</strong></td><td>Name, email, organisation, engagement records</td><td>Sending information about our products</td><td>Consent, or legitimate interests where you are an existing business contact. You can opt out at any time</td></tr>
+      <tr><td><strong>Suppliers and contacts</strong></td><td>Name, contact details, correspondence</td><td>Managing the relationship</td><td>Performance of a contract; legitimate interests</td></tr>
+      <tr><td><strong>Everyone</strong></td><td>Records necessary for accounting, tax and legal compliance</td><td>Meeting our statutory obligations</td><td>Legal obligation</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Where we rely on legitimate interests, we have carried out a balancing assessment and are satisfied that our interests do not override your rights. You can ask us for a summary of that assessment.</p>
+
+  <h3>3. What we do not do</h3>
+  <ul class="pl">
+    <li>We do not sell personal data, and we do not share it with third parties for their own marketing.</li>
+    <li>We do not use your personal data, or our customers' uploaded content, to train machine learning models.</li>
+    <li>We do not make decisions producing legal or similarly significant effects about you by solely automated means.</li>
+  </ul>
+
+  <h3>4. Who we share it with</h3>
+  <p>We share personal data with the service providers listed in our Sub-processor list, each of which processes it only on our instructions and under a written contract. We may also disclose personal data to our professional advisers, to a purchaser in connection with a sale of our business, and where we are required to by law, a court or a regulator.</p>
+
+  <h3>5. International transfers</h3>
+  <p>Some of our providers are located outside the United Kingdom, principally in the United States and the European Economic Area. Where personal data leaves the UK we rely on UK adequacy regulations where they apply, and otherwise on the International Data Transfer Agreement or the UK Addendum to the EU Standard Contractual Clauses, together with a transfer risk assessment. Details for each provider are in the Sub-processor list.</p>
+
+  <h3>6. How long we keep it</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Record</th><th>Retention</th></tr></thead>
+    <tbody>
+      <tr><td>Website and security logs</td><td>Up to 12 months</td></tr>
+      <tr><td>Enquiries that do not become customers</td><td>24 months from last contact</td></tr>
+      <tr><td>Account and user records</td><td>Duration of the account, then 12 months</td></tr>
+      <tr><td>Customer content held on behalf of a customer</td><td>As set out in the Data Processing Agreement &mdash; 30 days after termination, then deleted</td></tr>
+      <tr><td>Contracts, invoices and accounting records</td><td>7 years, to meet statutory requirements</td></tr>
+      <tr><td>Marketing preferences and opt-outs</td><td>Indefinitely, so we can honour the opt-out</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>7. Your rights</h3>
+  <p>You have the right to be informed; to access a copy of your personal data; to have inaccurate data corrected; to have data erased in certain circumstances; to restrict processing; to data portability; to object to processing based on legitimate interests; and to object to direct marketing at any time. Where we rely on consent, you may withdraw it at any time without affecting processing carried out before withdrawal.</p>
+  <p>To exercise any right, email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>. We will respond within one month, and will tell you if we need to extend that period. We may ask for information to confirm your identity.</p>
+
+  <h3>8. Complaints</h3>
+  <p>If you are unhappy with how we have handled your personal data, tell us first using the Complaints Procedure below. We will acknowledge your complaint within <strong>30 days</strong> and respond without undue delay. You also have the right to complain to the Information Commissioner's Office at ico.org.uk, by telephone on 0303 123 1113, or at Wycliffe House, Water Lane, Wilmslow, Cheshire SK9 5AF. We would rather you came to us first, but you do not have to.</p>
+
+  <h3>9. Changes</h3>
+  <p>We will post any change to this policy here and, where the change is material and we hold your contact details, tell you directly. The version and date are shown in the Changes section below.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="dpa">
+  <div class="doc-head"><span class="doc-num">10</span><h2>Data Processing Agreement</h2></div>
+  <p class="stamp">Forms part of the Master Subscription Agreement &middot; Article 28 UK GDPR terms</p>
+  <p>This DPA applies where we process personal data contained in Customer Data on the Customer's behalf. In it, the Customer is the <strong>controller</strong> and CodeIQ is the <strong>processor</strong>. Terms defined in the Master Subscription Agreement have the same meaning here. Data protection terms have the meaning given in the UK GDPR and the Data Protection Act 2018 as amended by the Data (Use and Access) Act 2025.</p>
+
+  <h3>1. Scope of processing (Annex A)</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Subject matter</strong></td><td>Provision of the Services described in the applicable Product Schedule</td></tr>
+      <tr><td><strong>Duration</strong></td><td>The Subscription Term, plus the 30-day export window under clause 14.4</td></tr>
+      <tr><td><strong>Nature and purpose</strong></td><td>Hosting, storage, optical character recognition, automated extraction and analysis using AI models, indexing, search, reporting and export, all on the Customer's instructions</td></tr>
+      <tr><td><strong>Types of personal data</strong></td><td>Whatever the Customer chooses to upload. Typically: names, job titles, business contact details and signatures of individuals named in contracts and commercial documents; names and speech of participants in uploaded meeting transcripts; and account data for Authorised Users</td></tr>
+      <tr><td><strong>Categories of data subject</strong></td><td>The Customer's personnel; personnel of the Customer's suppliers and counterparties; individuals named in uploaded documents; participants in uploaded recordings</td></tr>
+      <tr><td><strong>Special category data</strong></td><td>Not permitted without prior written agreement (see Acceptable Use Policy, clause 1(h))</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>2. Our obligations</h3>
+  <ol class="cl">
+    <li>We shall process personal data only on the Customer's documented instructions, which are constituted by the Agreement and the Customer's use of the Services, unless required otherwise by law, in which case we will tell the Customer first unless the law prohibits it.</li>
+    <li>We shall tell the Customer if, in our opinion, an instruction infringes data protection law.</li>
+    <li>We shall ensure that everyone authorised to process personal data is subject to a duty of confidentiality.</li>
+    <li>We shall implement appropriate technical and organisational measures as set out in Annex B and in the Security Statement.</li>
+    <li>We shall assist the Customer, taking into account the nature of the processing and the information available to us, in responding to requests from data subjects, and in complying with its obligations concerning security, breach notification, data protection impact assessments and prior consultation.</li>
+    <li>We shall notify the Customer without undue delay, and in any event within <strong>48 hours</strong>, of becoming aware of a personal data breach affecting Customer Data, and shall provide the information reasonably required for the Customer to meet its own notification obligations.</li>
+    <li>At the Customer's choice, we shall delete or return personal data at the end of the provision of the Services, and delete existing copies, except where storage is required by law. Our standard practice is set out in clause 14.4 of the Master Subscription Agreement.</li>
+    <li>We shall make available the information necessary to demonstrate compliance with this DPA and allow for and contribute to audits, on reasonable written notice, not more than once in any 12 months unless a breach has occurred or a regulator requires it, during business hours, subject to confidentiality, at the Customer's cost, and in a manner that does not disrupt the Services or compromise the security of other customers.</li>
+  </ol>
+
+  <h3>3. Sub-processors</h3>
+  <ol class="cl">
+    <li>The Customer gives general written authorisation for us to appoint sub-processors. The current list is published in this Legal Centre.</li>
+    <li>We will give at least <strong>30 days' notice</strong> before adding or replacing a sub-processor, by updating the list and, where the Customer has subscribed to notifications, by email. The Customer may object on reasonable data protection grounds within that period. If we cannot resolve the objection, the Customer may terminate the affected Product on notice with a pro-rata refund of prepaid fees, and that is the Customer's sole remedy.</li>
+    <li>We shall impose on each sub-processor obligations equivalent to those in this DPA and remain fully liable to the Customer for their performance.</li>
+  </ol>
+
+  <h3>4. International transfers</h3>
+  <p>Where we transfer personal data outside the United Kingdom we will do so only where a UK adequacy regulation applies, or under the International Data Transfer Agreement or the UK Addendum to the EU Standard Contractual Clauses, supported by a transfer risk assessment, or under another lawful transfer mechanism. The Customer authorises us to enter into those instruments on its behalf with our sub-processors where required.</p>
+
+  <h3>5. Controller obligations</h3>
+  <p>The Customer warrants that it has a lawful basis for the processing it instructs, that it has provided all necessary privacy information to data subjects, and that its instructions comply with data protection law. The Customer is responsible for the accuracy, quality and legality of Customer Data and for the means by which it acquired it.</p>
+
+  <h3>6. Security measures (Annex B)</h3>
+  <ul class="pl">
+    <li>Encryption of data in transit using TLS, and encryption of data at rest.</li>
+    <li>Role-based access control, with least-privilege access and enforcement at the database layer.</li>
+    <li>Multi-factor or one-time-code authentication for account access, and support for identity provider sign-in.</li>
+    <li>Logical separation of each customer's data, enforced by row-level access policies.</li>
+    <li>Audit logging of access and of material changes to records.</li>
+    <li>Regular application of security patches to dependencies and infrastructure.</li>
+    <li>Documented procedures for incident detection, escalation and notification.</li>
+    <li>Contractual prohibition on AI sub-processors retaining or training on customer content.</li>
+  </ul>
+  <p>The measures in Annex B may change as the Services develop. We will not make a change that materially reduces the overall level of security.</p>
+
+  <h3>7. Liability</h3>
+  <p>Each party's liability under this DPA is subject to the limitations and exclusions in clause 11 of the Master Subscription Agreement, save to the extent that the law does not permit those limitations to apply.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="subprocessors">
+  <div class="doc-head"><span class="doc-num">11</span><h2>Sub-processors</h2></div>
+  <p class="stamp">Current as at the date shown below &middot; 30 days' notice given before any addition or change</p>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Provider</th><th>Purpose</th><th>Location</th><th>Transfer mechanism</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Anthropic PBC</strong></td><td>Large language model inference &mdash; reading and interpreting documents, generating analysis and answers</td><td>United States</td><td>UK Addendum to the EU SCCs, with a transfer risk assessment. Engaged on terms prohibiting training on customer content</td></tr>
+      <tr><td><strong>Supabase</strong></td><td>Database, authentication, file storage and background job processing</td><td><span class="fill">Confirm the project region</span></td><td>UK adequacy where the region is in the EEA; otherwise UK Addendum to the EU SCCs</td></tr>
+      <tr><td><strong><span class="fill">Website and application hosting provider</span></strong></td><td>Hosting the website and application front end, content delivery</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
+      <tr><td><strong><span class="fill">Email provider</span></strong></td><td>Transactional and business email</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
+      <tr><td><strong><span class="fill">Payment provider</span></strong></td><td>Collecting subscription payments. We do not store payment card details</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Optical character recognition of scanned documents is performed in the user's own browser and the image is not sent to a third party for that step.</p>
+  <p>To be notified of changes to this list, email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> asking to be added to the sub-processor notification list.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="cookies">
+  <div class="doc-head"><span class="doc-num">12</span><h2>Cookie Policy</h2></div>
+  <p class="stamp">Privacy and Electronic Communications Regulations 2003 &middot; UK GDPR &middot; Version 1.1</p>
+
+  <h3>1. What this site actually does today</h3>
+  <div class="box">
+    <h4>The honest position</h4>
+    <p>This website sets <strong>no cookies at all</strong> beyond one small entry in your browser's local storage that records your answer to the cookie banner. Nothing is loaded from an advertising network, there is no cross-site tracking, and no analytics provider is in use at the date of this version. If that changes, this page changes first and the banner asks you again.</p>
+  </div>
+
+  <h3>2. Categories, and what consent each needs</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Category</th><th>What it is for</th><th>Consent</th><th>In use today</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Strictly necessary</strong></td>
+        <td>Signing in and staying signed in, security, load balancing, and remembering your cookie choice</td>
+        <td>Not required &mdash; exempt under PECR regulation 6(4)</td><td>Yes &mdash; consent record only</td></tr>
+      <tr><td><strong>Functional</strong></td>
+        <td>Remembering a preference such as a chosen view or filter</td>
+        <td>Required before anything is set</td><td>No</td></tr>
+      <tr><td><strong>Analytics</strong></td>
+        <td>Counting visits and understanding which pages are read</td>
+        <td>Required before anything is set</td><td>No</td></tr>
+      <tr><td><strong>Advertising and cross-site tracking</strong></td>
+        <td>We do not do this and do not intend to</td>
+        <td>&mdash;</td><td>No, and not planned</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3. What we store</h3>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Purpose</th><th>Expires</th></tr></thead>
+    <tbody>
+      <tr><td><code>codeiq_consent</code></td><td>Local storage, not a cookie</td>
+        <td>Records whether you accepted, rejected or customised, and when. Without it we would have to ask on every page</td>
+        <td>6 months, after which you are asked again</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>That entry contains only your choices and a timestamp. It contains no identifier, is never sent to us or to anyone else, and stays in your browser.</p>
+
+  <h3>4. Your choices</h3>
+  <ul class="pl">
+    <li>The banner appears before anything optional is set, and <strong>Accept all</strong> and <strong>Reject all</strong> are given equal prominence. Rejecting is exactly as easy as accepting, which is what the law requires and what most sites still get wrong.</li>
+    <li>Choosing nothing and closing the banner sets nothing optional. Silence is not consent.</li>
+    <li>You can change your mind at any time using the <strong>Cookie settings</strong> link in the footer of every page.</li>
+    <li>You will be asked again after six months, and immediately if we add a category or a provider.</li>
+    <li>You can also block or delete cookies and site data in your browser. Strictly necessary items cannot be blocked without parts of the service ceasing to work.</li>
+  </ul>
+
+  <h3>5. If we add analytics</h3>
+  <p>When we add an analytics provider we will: name it in this table with its cookie names and durations; give at least the notice this Legal Centre requires; and load nothing until the analytics toggle is switched on. A script that loads and then waits for consent has already set its cookie, and that is the breach &mdash; so ours does not load at all.</p>
+
+  <h3>6. Third parties</h3>
+  <p>Our sign-in provider sets cookies necessary to keep an authenticated user signed in to the products; these are strictly necessary and exempt. Our public website loads a stylesheet from Google Fonts, which means your browser makes a request to Google's servers; that request carries your IP address but sets no cookie on this site. We permit no third party to set advertising or cross-site tracking cookies on any CodeIQ property.</p>
+
+  <h3>7. Questions</h3>
+  <p>Email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>. Complaints about cookies or tracking can also go to the Information Commissioner's Office at ico.org.uk.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="ip">
+  <div class="doc-head"><span class="doc-num">13</span><h2>Intellectual Property Notice</h2></div>
+  <h3>1. What we own</h3>
+  <p>All Intellectual Property Rights in the CodeIQ platform, in each Product, and in all software, source code, object code, databases, data models, prompts, model configurations, interfaces, workflows, methodologies, documentation, designs, copy and branding associated with them, are owned by CodeIQ Holdings Ltd or licensed to it. This includes the name <strong>CodeIQ</strong>, the name <strong>ContractIQ</strong>, the Aperture device mark, and the get-up of our products and websites, whether or not registered. &copy; CodeIQ Holdings Ltd. All rights reserved.</p>
+
+  <h3>2. What is not permitted</h3>
+  <ul class="pl">
+    <li>Copying, adapting or redistributing our software, interfaces, documentation or copy.</li>
+    <li>Reverse engineering, decompiling or disassembling any part of our products, except as clause 4(b) of the Master Subscription Agreement permits.</li>
+    <li>Using our names, marks or get-up in a way likely to cause confusion as to origin, endorsement or association, including in a domain name, app name, social account or advertising keyword.</li>
+    <li>Copying the structure, wording or presentation of the documents in this Legal Centre, which are themselves original literary works protected by copyright.</li>
+  </ul>
+
+  <h3>3. Open source</h3>
+  <p>Our products incorporate third-party open-source components, each licensed under its own terms. Nothing in our terms restricts any right you have under an open-source licence in respect of a component supplied under it. A list of components and licences is available on request to <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>.</p>
+
+  <h3>4. If you think we have infringed your rights</h3>
+  <p>Write to <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> marked "IP notice" with: your name and contact details; identification of the right you rely on and evidence of your ownership of it; identification of the material you say infringes it and where it appears; a statement that you believe in good faith that the use is not authorised; and a statement that the information in your notice is accurate. We will investigate and respond, and will remove or disable material where the notice is well founded.</p>
+
+  <h3>5. Reporting infringement of our rights</h3>
+  <p>If you become aware of anyone copying our software, branding or content, or presenting our products as their own, please tell us at the same address. We take the protection of our rights seriously and pursue infringement.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="security">
+  <div class="doc-head"><span class="doc-num">14</span><h2>Security Statement</h2></div>
+  <p class="stamp">Written to be accurate rather than impressive</p>
+
+  <h3>1. What is in place</h3>
+  <ul class="pl">
+    <li>All traffic encrypted in transit with TLS; data encrypted at rest.</li>
+    <li>Authentication with verified email, one-time codes, and support for Google and Microsoft identity sign-in. Passwords are never stored in plain text.</li>
+    <li>Four access roles, enforced in the database rather than only in the interface, so a user cannot reach another customer's data by manipulating a request.</li>
+    <li>Row-level security policies isolating each customer's workspace.</li>
+    <li>Audit trail of access and of material changes to records.</li>
+    <li>AI providers engaged on zero-retention terms, contractually prohibited from training on customer content.</li>
+    <li>Optical character recognition performed in the browser, so scanned images are not sent to a third-party OCR service.</li>
+    <li>Credits for chargeable AI operations are deducted server-side after success, not client-side, so the client cannot be manipulated to obtain free processing.</li>
+  </ul>
+
+  <h3>2. What is not in place, stated plainly</h3>
+  <div class="box warn">
+    <h4>No certification yet</h4>
+    <p>We hold no SOC 2 report, no ISO 27001 certificate and no Cyber Essentials certification at the date of this statement. We have not commissioned an independent penetration test. We do not currently offer single sign-on with SAML, a customer-managed encryption key, or a contractual data residency guarantee.</p>
+    <p>If any of those is a requirement for your organisation, tell us before you buy rather than after. We would rather lose the sale than be found out in a due diligence questionnaire, and we will tell you honestly what is planned and what is not.</p>
+  </div>
+
+  <h3>3. Incident response</h3>
+  <p>Where we become aware of a security incident affecting customer data we will investigate immediately, contain it, notify affected customers without undue delay and in any event within 48 hours as required by the Data Processing Agreement, and provide the information customers need to meet their own obligations. We will say what happened, what data was affected, and what we have changed.</p>
+
+  <h3>4. Your part</h3>
+  <p>Use unique credentials, do not share accounts, remove users who leave, and use the roles provided rather than granting everyone administrative access. Most incidents in services of this kind begin with a credential, not a vulnerability.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="disclosure">
+  <div class="doc-head"><span class="doc-num">15</span><h2>Responsible Disclosure Policy</h2></div>
+  <p>If you believe you have found a security vulnerability in any CodeIQ service, we want to hear about it and we will not take action against you for telling us, provided you act in good faith and within this policy.</p>
+
+  <h3>1. How to report</h3>
+  <p>Email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> with the subject line "Security". Include enough detail to reproduce the issue, its impact, and how we can contact you. We will acknowledge within 5 business days, keep you informed, and credit you publicly if you would like that and the report is valid.</p>
+
+  <h3>2. What we ask</h3>
+  <ul class="pl">
+    <li>Give us reasonable time to investigate and fix before disclosing to anyone else.</li>
+    <li>Do not access, modify, delete or exfiltrate data belonging to anyone else. If you encounter personal data, stop and tell us.</li>
+    <li>Do not degrade the service: no denial-of-service, no automated scanning at volume, no social engineering of our people or suppliers, no physical attacks.</li>
+    <li>Test only against your own account and data.</li>
+  </ul>
+
+  <h3>3. Our undertaking</h3>
+  <p>Where you comply with this policy, we will not pursue or support any legal claim against you in connection with your research, including under the Computer Misuse Act 1990, and we will say so to any third party who asks. We do not currently operate a paid bug bounty.</p>
+
+  <h3>4. Out of scope</h3>
+  <p>Reports generated solely by an automated scanner without demonstrated impact; missing security headers with no exploitable consequence; issues in third-party services we do not control; social engineering; and anything requiring physical access to a user's unlocked device.</p>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="complaints">
+  <div class="doc-head"><span class="doc-num">16</span><h2>Complaints Procedure</h2></div>
+  <p class="stamp">Includes the data protection complaints route required from June 2026</p>
+  <ol class="cl">
+    <li><strong>Tell us.</strong> Email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> with "Complaint" in the subject line, or write to us at our registered office. Tell us what happened, when, and what you would like us to do about it.</li>
+    <li><strong>We acknowledge.</strong> We will acknowledge every complaint in writing. Data protection complaints are acknowledged within <strong>30 days</strong> of receipt, as required by the Data (Use and Access) Act 2025.</li>
+    <li><strong>We investigate.</strong> We aim to give a substantive response within 30 days, and in any event without undue delay. Where a matter is complex we will tell you why more time is needed and when to expect our response.</li>
+    <li><strong>If you are still unhappy.</strong> Ask for the matter to be reviewed by a director. We will respond within a further 20 business days.</li>
+    <li><strong>External routes.</strong> For data protection complaints you may complain to the Information Commissioner's Office at any time, at ico.org.uk or 0303 123 1113. For contractual disputes, the parties may agree to mediation before issuing proceedings, and nothing in this procedure affects either party's right to bring a claim.</li>
+  </ol>
+</section>
+
+<!-- ================================================================ -->
+<section class="doc" id="changes">
+  <div class="doc-head"><span class="doc-num">17</span><h2>Changes &amp; versions</h2></div>
+  <p>The documents in this Legal Centre are versioned together. When we change any of them we will record it here, and where clause 15.2 of the Master Subscription Agreement requires it, we will give notice before the change takes effect.</p>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1.2</strong></td><td>12 September 2026</td><td>ICO registration reference inserted</td></tr>
+      <tr><td><strong>1.1</strong></td><td>11 September 2026</td><td>Cookie Policy rewritten to match the consent banner now implemented; consent banner added to all pages</td></tr>
+      <tr><td><strong>1.0</strong></td><td>11 September 2026</td><td>First publication</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="box warn">
+    <h4>Before this goes live</h4>
+    <p>The ICO registration reference is now in place. The items still marked in orange on this page must be filled before publication: the VAT position, the hosting, email and payment providers in the sub-processor list, and the Supabase project region.</p>
+    <p>These documents have been drafted to reflect standard market practice for a UK business-to-business software company and current UK law, but they have not been reviewed by a solicitor. They should be before you take a payment or sign a customer. The clauses that most need a professional eye are the liability cap and exclusions, the indemnities, and the data processing terms.</p>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <strong style="color:var(--steel);font-family:var(--disp);font-weight:500">CodeIQ Holdings Ltd</strong><br>
+  Registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Northampton NN4 6RX, United Kingdom.<br>
+  <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> &middot; codeiqholdings.co.uk &middot; codeiqholdings.com<br>
+  &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.2. &middot; <a href="#" data-cookie-settings>Cookie settings</a>
+</footer>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side a'));
+  var docs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if (!docs.length) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      links.forEach(function(l){ l.classList.remove('on'); });
+      var a = links.filter(function(l){ return l.getAttribute('href') === '#' + e.target.id; })[0];
+      if (a) {
+        a.classList.add('on');
+        var side = document.getElementById('side');
+        if (side && side.scrollHeight > side.clientHeight) {
+          var top = a.offsetTop - side.clientHeight / 2;
+          side.scrollTo({ top: top > 0 ? top : 0, behavior: 'smooth' });
+        }
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+  docs.forEach(function(d){ io.observe(d); });
+})();
+</script>
+<!-- ===================== COOKIE CONSENT ===================== -->
+<style>
+/* focus visibility — required for the banner to be keyboard-usable, applied site-wide */
+:focus-visible{outline:2px solid #F5A65B;outline-offset:3px;border-radius:4px}
+.cc *:focus-visible{outline:2px solid #F5A65B;outline-offset:2px}
+
+.cc{position:fixed;left:16px;bottom:16px;z-index:2000;width:min(430px,calc(100vw - 32px));
+  background:#111317;color:#F4F1EA;border:1px solid rgba(244,241,234,.16);border-radius:18px;
+  padding:22px 24px 20px;box-shadow:0 24px 70px -20px rgba(0,0,0,.8);
+  font-family:"Inter",ui-sans-serif,system-ui,sans-serif;font-weight:300;font-size:13.5px;line-height:1.65;
+  transform:translateY(18px);opacity:0;transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)}
+.cc.in{transform:none;opacity:1}
+.cc[hidden]{display:none !important}
+.cc h2{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:500;font-size:16px;
+  letter-spacing:-.015em;margin:0 0 9px;color:#F4F1EA;line-height:1.25}
+.cc p{margin:0 0 16px;color:#A0A7B2}
+.cc a{color:#E0642F}
+.cc-row{display:flex;gap:9px;flex-wrap:wrap}
+.cc-b{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:12.5px;font-weight:500;
+  padding:10px 17px;border-radius:99px;cursor:pointer;border:1px solid rgba(244,241,234,.26);
+  background:transparent;color:#F4F1EA;transition:all .3s;line-height:1.2}
+.cc-b:hover{border-color:#F4F1EA;background:rgba(244,241,234,.07)}
+.cc-b.pri{background:#E0642F;border-color:#E0642F;color:#150902}
+.cc-b.pri:hover{background:#F5A65B;border-color:#F5A65B}
+.cc-b.link{border:0;padding:10px 4px;color:#A0A7B2;text-decoration:underline;text-underline-offset:3px}
+.cc-b.link:hover{color:#F4F1EA;background:transparent}
+.cc-prefs{margin:4px 0 18px;border-top:1px solid rgba(244,241,234,.12)}
+.cc-prefs[hidden]{display:none !important}
+.cc-item{display:flex;gap:13px;align-items:flex-start;padding:15px 0;border-bottom:1px solid rgba(244,241,234,.12)}
+.cc-item:last-child{border-bottom:0}
+.cc-item .t{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:13.5px;font-weight:500;
+  color:#F4F1EA;margin-bottom:3px}
+.cc-item .d{font-size:12.5px;color:#A0A7B2;line-height:1.55}
+.cc-sw{flex:none;margin-top:2px}
+.cc-sw input{position:absolute;opacity:0;width:38px;height:22px;margin:0;cursor:pointer}
+.cc-sw label{display:block;width:38px;height:22px;border-radius:99px;background:rgba(244,241,234,.16);
+  position:relative;cursor:pointer;transition:background .3s}
+.cc-sw label::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
+  background:#F4F1EA;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.cc-sw input:checked + label{background:#E0642F}
+.cc-sw input:checked + label::after{transform:translateX(16px)}
+.cc-sw input:disabled + label{background:#E0642F;opacity:.5;cursor:not-allowed}
+.cc-sw input:focus-visible + label{outline:2px solid #F5A65B;outline-offset:3px}
+@media(max-width:520px){.cc{left:10px;right:10px;bottom:10px;width:auto;padding:20px 20px 18px}}
+@media (prefers-reduced-motion: reduce){.cc{transition:none;transform:none}}
+</style>
+
+<div class="cc" id="cc" role="dialog" aria-modal="false" aria-labelledby="cc-h" aria-describedby="cc-p" hidden>
+  <h2 id="cc-h">Cookies</h2>
+  <p id="cc-p">We use cookies that are strictly necessary to make this site work. We would also like to set optional ones to understand which pages are used. You can accept, reject, or choose. Full detail in our <a href="#cookies">Cookie Policy</a>.</p>
+
+  <div class="cc-prefs" id="cc-prefs" hidden>
+    <div class="cc-item">
+      <div class="cc-sw"><input type="checkbox" id="cc-nec" checked disabled><label for="cc-nec"><span class="sr">Strictly necessary — always on</span></label></div>
+      <div><div class="t">Strictly necessary</div><div class="d">Security, load balancing, and remembering this cookie choice. Cannot be switched off, and needs no consent in law.</div></div>
+    </div>
+    <div class="cc-item">
+      <div class="cc-sw"><input type="checkbox" id="cc-fun"><label for="cc-fun"><span class="sr">Functional</span></label></div>
+      <div><div class="t">Functional</div><div class="d">Remembering preferences such as a chosen view. Not currently in use on this site.</div></div>
+    </div>
+    <div class="cc-item">
+      <div class="cc-sw"><input type="checkbox" id="cc-ana"><label for="cc-ana"><span class="sr">Analytics</span></label></div>
+      <div><div class="t">Analytics</div><div class="d">Counting visits and understanding which pages are read. Nothing is set until you turn this on.</div></div>
+    </div>
+  </div>
+
+  <div class="cc-row">
+    <button class="cc-b pri" id="cc-accept" type="button">Accept all</button>
+    <button class="cc-b" id="cc-reject" type="button">Reject all</button>
+    <button class="cc-b link" id="cc-choose" type="button">Choose</button>
+    <button class="cc-b" id="cc-save" type="button" hidden>Save choices</button>
+  </div>
+</div>
+
+<script>
+/* CodeIQ cookie consent.
+   Nothing beyond strictly necessary storage is set until the visitor consents.
+   Read the result with window.codeiqConsent.get() -> {necessary, functional, analytics, ts, version}
+   and gate any script you add behind it. Listen for the 'codeiq:consent' event to react to changes. */
+(function(){
+  var KEY = 'codeiq_consent';
+  var VERSION = 1;          /* bump to re-ask everyone after a material change */
+  var MAX_AGE_DAYS = 180;   /* re-ask at least every six months */
+
+  function read(){
+    try {
+      var raw = localStorage.getItem(KEY);
+      if(!raw) return null;
+      var v = JSON.parse(raw);
+      if(!v || v.version !== VERSION) return null;
+      if(Date.now() - v.ts > MAX_AGE_DAYS*864e5) return null;
+      return v;
+    } catch(e){ return null; }
+  }
+  function write(state){
+    var v = { necessary:true, functional:!!state.functional, analytics:!!state.analytics,
+              ts:Date.now(), version:VERSION };
+    try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){}
+    try { document.dispatchEvent(new CustomEvent('codeiq:consent', {detail:v})); } catch(e){}
+    return v;
+  }
+
+  var el = document.getElementById('cc');
+  if(!el) return;
+  var prefs = document.getElementById('cc-prefs');
+  var fun = document.getElementById('cc-fun');
+  var ana = document.getElementById('cc-ana');
+  var saveBtn = document.getElementById('cc-save');
+  var chooseBtn = document.getElementById('cc-choose');
+  var lastFocus = null;
+
+  function show(openPrefs){
+    lastFocus = document.activeElement;
+    var v = read();
+    if(v){ fun.checked = v.functional; ana.checked = v.analytics; }
+    prefs.hidden = !openPrefs;
+    saveBtn.hidden = !openPrefs;
+    chooseBtn.hidden = !!openPrefs;
+    el.hidden = false;
+    requestAnimationFrame(function(){ el.classList.add('in'); });
+    setTimeout(function(){ (openPrefs ? fun : document.getElementById('cc-accept')).focus(); }, 60);
+  }
+  function hide(){
+    el.classList.remove('in');
+    setTimeout(function(){ el.hidden = true; if(lastFocus && lastFocus.focus) lastFocus.focus(); }, 260);
+  }
+  function decide(state){ write(state); hide(); }
+
+  document.getElementById('cc-accept').addEventListener('click', function(){
+    decide({functional:true, analytics:true});
+  });
+  document.getElementById('cc-reject').addEventListener('click', function(){
+    decide({functional:false, analytics:false});
+  });
+  chooseBtn.addEventListener('click', function(){
+    prefs.hidden = false; saveBtn.hidden = false; chooseBtn.hidden = true; fun.focus();
+  });
+  saveBtn.addEventListener('click', function(){
+    decide({functional:fun.checked, analytics:ana.checked});
+  });
+  el.addEventListener('keydown', function(e){ if(e.key === 'Escape') hide(); });
+
+  /* footer link, and any element with data-cookie-settings, reopens it */
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-cookie-settings]');
+    if(t){ e.preventDefault(); show(true); }
+  });
+
+  window.codeiqConsent = {
+    get: function(){ return read() || {necessary:true, functional:false, analytics:false, ts:0, version:VERSION}; },
+    open: function(){ show(true); },
+    reset: function(){ try{ localStorage.removeItem(KEY); }catch(e){} show(false); }
+  };
+
+  /* only ask if we have not got a valid, current answer */
+  if(!read()){ setTimeout(function(){ show(false); }, 900); }
+
+  /* ---- where analytics goes when you add it ----
+     document.addEventListener('codeiq:consent', function(e){
+       if(e.detail.analytics) loadAnalytics();
+     });
+     if(window.codeiqConsent.get().analytics) loadAnalytics();
+     Do not load the script anywhere else. Loading it and "waiting" for consent
+     still sets the cookie, which is the breach. ------------------------------ */
+})();
+</script>
+<!-- =================== END COOKIE CONSENT =================== -->
+
+</body>
+</html>

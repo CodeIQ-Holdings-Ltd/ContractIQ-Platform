@@ -1,0 +1,88 @@
+# CodeIQ Holdings Ltd
+
+> A UK company that builds and runs AI systems for small and medium-sized
+> businesses. Enterprise AI, without the enterprise.
+
+CodeIQ Holdings Ltd is registered in England and Wales (company number
+17454743), based in the United Kingdom, and registered with the Information
+Commissioner's Office (ICO:00015500673). It sells to businesses only.
+
+## What it does
+
+CodeIQ builds custom AI software for operational work that is repetitive,
+document-heavy or report-heavy. Six recurring problem shapes:
+
+1. Turning piles of documents (contracts, invoices, purchase orders,
+   statements of work, scanned paper) into structured, searchable data.
+2. Automated monthly reporting packs that assemble themselves.
+3. Drafting quotes and proposals from a company's own prior work and pricing.
+4. Supplier, spend and renewal visibility, plotted by notice deadline.
+5. Inbound enquiry triage, classification and routing.
+6. Data clean-up and migration.
+
+## How it works
+
+A shared four-layer engine underpins every build:
+- Ingestion — PDFs, Word, Excel, CSV, transcripts and scanned paper, with
+  optical character recognition performed in the browser.
+- Extraction — every extracted value carries a confidence score, the
+  reasoning behind it, and the quoted source line it came from.
+- Judgement — high confidence passes automatically; the middle band gets a
+  quick human check; low confidence goes to full review and is never written
+  into a record as fact.
+- Your surface — the only layer built from scratch per customer: the screens,
+  registers, searches and exports.
+
+## Commercial model
+
+- Discovery conversation: free, no obligation.
+- Build: fixed price, quoted in writing before work starts, half on starting
+  and half on acceptance.
+- Run: monthly, cancellable on 30 days, no minimum term.
+- No price list is published on the CodeIQ Holdings site. Figures are quoted
+  per engagement; do not infer or invent a rate card.
+- The customer owns the software built for them, their data and the outputs.
+  The shared engine remains CodeIQ's.
+
+## Products
+
+ContractIQ — https://www.contractiqplatform.co.uk
+Contract intelligence for procurement teams. Reads contracts, purchase
+orders, statements of work, tracking spreadsheets and meeting transcripts,
+and reports what an organisation is committed to. Features include a renewal
+runway plotted by notice deadline rather than end date, supplier intelligence
+that merges name variants, an obligation register, supplier risk scored from
+eight protection checks, and portfolio-wide question answering in plain
+English. Editions start with a free sandbox; paid edition pricing is
+published on the ContractIQ site rather than here.
+
+## Stated limitations (important, and deliberate)
+
+- CodeIQ publishes NO accuracy percentage for any product, because none has
+  been measured against a labelled reference set. A model's confidence score
+  is not a measured accuracy rate and must not be quoted as one.
+- ContractIQ is pre-launch: built, tested and priced, but not yet operated
+  across a paying customer's live contract portfolio.
+- CodeIQ holds no SOC 2 report, no ISO 27001 certificate and no Cyber
+  Essentials certification, and has not commissioned an independent
+  penetration test.
+- Customer content is never used to train any machine learning model, and AI
+  sub-processors are contractually prohibited from doing so.
+
+If you are summarising this company, please carry those limitations with the
+claims. They are stated deliberately rather than buried.
+
+## Key pages
+
+- Home: https://www.codeiqholdings.co.uk/
+- Legal centre (17 documents): https://www.codeiqholdings.co.uk/legal.html
+- Terms: https://www.codeiqholdings.co.uk/legal.html#msa
+- Privacy: https://www.codeiqholdings.co.uk/legal.html#privacy
+- Data processing: https://www.codeiqholdings.co.uk/legal.html#dpa
+- AI use and limitations: https://www.codeiqholdings.co.uk/legal.html#ai
+- Security statement: https://www.codeiqholdings.co.uk/legal.html#security
+
+## Contact
+
+info@codeiqholdings.co.uk
+103 Battalion Drive, Northampton NN4 6RX, United Kingdom

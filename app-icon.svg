@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none" role="img" aria-label="CodeIQ Holdings">
+  <title>CodeIQ Holdings</title>
+  <rect width="120" height="120" rx="26" fill="#0A0B0D"/>
+  <g transform="translate(60,60) scale(0.78) translate(-60,-60)">
+  <g stroke="#F4F1EA" stroke-width="11" stroke-linecap="round" fill="none">
+    <path d="M60.0 19.0 A41 41 0 0 1 88.48 30.51"/>
+    <path d="M95.51 39.5 A41 41 0 0 1 99.78 69.92" stroke="#E0642F"/>
+    <path d="M95.51 80.5 A41 41 0 0 1 71.3 99.41"/>
+    <path d="M60.0 101.0 A41 41 0 0 1 31.52 89.49"/>
+    <path d="M24.49 80.5 A41 41 0 0 1 20.22 50.08"/>
+    <path d="M24.49 39.5 A41 41 0 0 1 48.7 20.59"/>
+  </g>
+  <circle cx="60" cy="60" r="10.5" fill="#E0642F"/>
+  </g>
+</svg>
