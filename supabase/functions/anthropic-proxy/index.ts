@@ -1,45 +1,59 @@
-// ContractIQ · Supabase Edge Function · anthropic-proxy
+// ContractIQ Platform · Supabase Edge Function · anthropic-proxy
 // ---------------------------------------------------------------
 // The ONLY place the Anthropic API key exists. The browser never sees it.
 //
-// DEPLOY (free tier):
-//   supabase functions new anthropic-proxy      # paste this file in
-//   supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-//   supabase secrets set ALLOWED_ORIGIN=https://YOURNAME.github.io
-//   supabase functions deploy anthropic-proxy --no-verify-jwt
+// WHAT CHANGED IN THIS VERSION, AND WHY IT MATTERS
 //
-// The --no-verify-jwt flag is for TESTING ONLY. It lets the app call this
-// without a signed-in Supabase user, which is what you want while you are
-// evaluating the product yourself. "BEFORE REAL USERS" at the bottom
-// explains exactly what to turn on before anyone else touches it.
+//   Before: deployed with --no-verify-jwt, so anyone who found the URL —
+//   and it is visible in every user's browser network tab — could spend
+//   the Anthropic balance. The only guard was a counter held in this
+//   function's memory: shared across every customer, and reset to zero
+//   every time the function went cold.
+//
+//   Now: the caller must present a valid Supabase session. Their account
+//   is resolved from that session, credits are RESERVED before the model
+//   is called and settled only if it answers, and the hourly limit is per
+//   account and lives in the database.
+//
+// DEPLOY
+//   Supabase → Edge Functions → Deploy a new function → Via Editor
+//   Name it  anthropic-proxy  and paste this file in.
+//   Enforce JWT verification: ON.      ← this is the fix. Leave it on.
+//
+// SECRETS (Edge Functions → Secrets)
+//   ANTHROPIC_API_KEY = sk-ant-...
+//   ALLOWED_ORIGIN    = https://contractiqplatform.co.uk    (no path, no trailing slash)
+//   ANTHROPIC_MODEL   = claude-sonnet-5                     (optional)
+//
+// SUPABASE_URL, SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY are
+// injected automatically. You do not add those yourself.
+//
+// The /demo build never calls this function at all — it serves canned
+// responses — so turning JWT verification on does not break the demo.
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
 const ANTHROPIC_KEY  = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
-const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "";   // e.g. https://you.github.io
-// Sonnet 5 is the right default for contract analysis: it handles long
-// documents and structured JSON well, and it is the cheapest tier that
-// does so reliably. Override with the ANTHROPIC_MODEL secret if you want
-// to route a premium tier to Opus 5. See the setup guide for the numbers.
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "";
 const MODEL          = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-5";
+const SUPABASE_URL   = Deno.env.get("SUPABASE_URL") ?? "";
+const ANON_KEY       = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
-// Crude but effective spend guard while testing: caps how many calls this
-// function will make in a rolling hour, so a mistake (or someone finding
-// the URL) cannot quietly run up a bill.
-const MAX_CALLS_PER_HOUR = Number(Deno.env.get("MAX_CALLS_PER_HOUR") ?? "60");
-let windowStart = Date.now();
-let callsThisWindow = 0;
+// What each kind of call costs. These mirror pricing.html and the credit
+// table in the app. Re-running an analysis inside the revision window is
+// free, which the app signals by sending kind "revision" with cost 0.
+const COST: Record<string, number> = { analysis: 10, cedric: 2, revision: 0 };
 
 const corsHeaders = (origin: string) => ({
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN || origin || "*",
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  // Cache the preflight for 24 hours. Without this the browser asks
-  // permission before EVERY call — five times per analysis — and each
-  // OPTIONS is another chance to hit a worker that is still booting or
-  // shutting down after a long request, which returns 502 and makes the
-  // browser report "Failed to fetch" without ever sending the POST.
-  // One preflight per day instead of five per analysis.
+  // One preflight a day instead of five per analysis. Without this the
+  // browser asks permission before every call, and each OPTIONS is another
+  // chance to hit a worker that is booting — which returns 502 and shows
+  // up as "Failed to fetch" with the POST never sent.
   "Access-Control-Max-Age": "86400",
   "Vary": "Origin",
 });
@@ -47,53 +61,121 @@ const corsHeaders = (origin: string) => ({
 serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const cors = corsHeaders(origin);
+  const json = (status: number, body: unknown) =>
+    new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
-  // Answer the preflight FIRST and as cheaply as possible: 204, no body,
-  // before any key check, rate-limit check or JSON parsing. A preflight
-  // that fails blocks the real request entirely, so it must never depend
-  // on anything that could error.
+  // Answer the preflight first and as cheaply as possible, before any
+  // check that could throw. A failed preflight blocks the real request.
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }),
-      { status: 405, headers: { ...cors, "Content-Type": "application/json" } });
-  }
+  if (req.method !== "POST")    return json(405, { error: "Method not allowed" });
 
-  // Only serve the origin you deployed to. Without this, anyone who finds
-  // the URL can spend your Anthropic credit.
   if (ALLOWED_ORIGIN && origin && origin !== ALLOWED_ORIGIN) {
-    return new Response(JSON.stringify({ error: "Origin not allowed" }),
-      { status: 403, headers: { ...cors, "Content-Type": "application/json" } });
+    return json(403, { error: "Origin not allowed" });
   }
-
   if (!ANTHROPIC_KEY) {
-    return new Response(JSON.stringify({ error: "Server is missing ANTHROPIC_API_KEY" }),
-      { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
+    return json(500, { error: "Server is missing ANTHROPIC_API_KEY" });
   }
 
-  // ── Spend guard ──
-  if (Date.now() - windowStart > 3_600_000) { windowStart = Date.now(); callsThisWindow = 0; }
-  if (callsThisWindow >= MAX_CALLS_PER_HOUR) {
-    return new Response(JSON.stringify({
-      error: `Rate limit reached (${MAX_CALLS_PER_HOUR}/hour). This is a safety cap you set, not an Anthropic limit.`,
-    }), { status: 429, headers: { ...cors, "Content-Type": "application/json" } });
+  // ── 1 · Who is calling ────────────────────────────────────────
+  const authHeader = req.headers.get("Authorization") ?? "";
+  if (!authHeader.startsWith("Bearer ")) {
+    return json(401, { error: "Please sign in before running analysis." });
   }
-  callsThisWindow++;
 
+  const asUser = createClient(SUPABASE_URL, ANON_KEY, {
+    global: { headers: { Authorization: authHeader } },
+    auth: { persistSession: false },
+  });
+
+  const { data: userData, error: userErr } = await asUser.auth.getUser();
+  const user = userData?.user;
+  if (userErr || !user) {
+    return json(401, { error: "Your session has expired. Sign in again and retry." });
+  }
+
+  let body: Record<string, unknown>;
+  try { body = await req.json(); } catch { return json(400, { error: "Invalid request" }); }
+
+  const messages = Array.isArray(body.messages) ? body.messages : [];
+  if (!messages.length) return json(400, { error: "No messages supplied" });
+
+  const kind = ["analysis", "cedric", "revision"].includes(String(body.kind))
+    ? String(body.kind) : "cedric";
+  const cost = COST[kind] ?? 0;
+  const contractId = body.contract_id ? String(body.contract_id).slice(0, 120) : null;
+
+  // One analysis is five calls to the model, one per stage. They share a
+  // run_id, so the run is authorised and charged ONCE — not five times —
+  // and a run that dies at stage four costs the customer nothing.
+  const runId = body.run_id ? String(body.run_id).slice(0, 80) : null;
+  // The last stage settles the charge. Anything earlier leaves the hold
+  // open, so the credits are committed only when the whole run lands.
+  const isFinal = body.final === true || kind === "cedric";
+
+  // ── 2 · Which account, and may it spend? ──────────────────────
+  // The account comes from the caller's own membership row, read with
+  // THEIR token, so Row Level Security decides it — never from the
+  // request body, which a modified client controls.
+  const { data: membership } = await asUser
+    .from("account_members").select("account_id").limit(1).maybeSingle();
+
+  const accountId = membership?.account_id;
+  if (!accountId) {
+    return json(403, { error: "This sign-in is not attached to a workspace yet." });
+  }
+
+  const { data: auth, error: authErr } = await asUser.rpc("authorise_ai_call", {
+    p_account_id:  accountId,
+    p_kind:        kind,
+    p_cost:        cost,
+    p_contract_id: contractId,
+    p_run_id:      runId,
+  });
+
+  if (authErr) {
+    console.error("authorise_ai_call failed", authErr.message);
+    return json(500, { error: "Could not check your credit balance. Nothing has been charged." });
+  }
+
+  if (!auth?.ok) {
+    // 402 for "out of credits", 429 for "too fast" — the app shows a
+    // different, actionable panel for each.
+    const status = auth?.reason === "rate_limit" ? 429 : 402;
+    return json(status, {
+      error:     auth?.message ?? "This action is not available right now.",
+      reason:    auth?.reason,
+      needed:    auth?.needed,
+      available: auth?.available,
+      limit:     auth?.limit,
+    });
+  }
+
+  const holdId: string | null = auth.hold_id ?? null;
+
+  // Settling and releasing must happen whatever the caller's own RLS
+  // would allow, so they go through the service role. This client is
+  // created AFTER authorisation, and is never used to decide anything.
+  const asService = SERVICE_KEY
+    ? createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } })
+    : asUser;
+
+  const release = async () => {
+    if (holdId) await asService.rpc("release_credit_hold", { p_hold_id: holdId });
+  };
+  // Only the final stage of a run commits the charge. Earlier stages
+  // leave the hold open: the credits are already unspendable, so the
+  // balance is honest, but nothing is billed until the run finishes.
+  const settle = async () => {
+    if (holdId && isFinal) await asService.rpc("settle_credit_hold", { p_hold_id: holdId });
+  };
+
+  // ── 3 · Call the model ────────────────────────────────────────
   try {
-    const body = await req.json();
-
-    // Only forward the fields we expect. Never let the client choose the
-    // model or pass arbitrary parameters through to a paid API.
-    const messages = Array.isArray(body.messages) ? body.messages : [];
-    if (!messages.length) {
-      return new Response(JSON.stringify({ error: "No messages supplied" }),
-        { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
-    }
     const payload = {
       model: MODEL,
-      // Ceiling raised from 4,000. A full contract analysis routinely needs
-      // 5-7k output tokens; capping at 4,000 truncated the JSON mid-object
-      // after ~45 seconds of generation, which surfaced as an opaque failure.
+      // A full contract analysis routinely needs 5-7k output tokens.
+      // Capping at 4,000 truncated the JSON mid-object after roughly
+      // 45 seconds of generation, which surfaced as an opaque failure.
       max_tokens: Math.min(Number(body.max_tokens) || 2000, 16000),
       ...(body.system ? { system: String(body.system) } : {}),
       messages,
@@ -111,59 +193,60 @@ serve(async (req) => {
 
     const data = await upstream.json();
 
-    // Log usage so you can see what testing actually costs.
+    if (!upstream.ok) {
+      // Anthropic refused. The customer did not get an answer, so the
+      // customer does not pay for one.
+      await release();
+      console.error(`anthropic ${upstream.status}`, data?.error?.type ?? "");
+      return json(upstream.status, {
+        ...data,
+        _charged: false,
+        error: data?.error?.message ?? `Anthropic returned ${upstream.status}`,
+      });
+    }
+
+    // A truncated answer is a failed answer: the app cannot parse it.
+    // Say so plainly and charge nothing, rather than billing for a
+    // response that will throw when it is read.
+    if (data?.stop_reason === "max_tokens") {
+      await release();
+      return json(502, {
+        ...data,
+        _charged: false,
+        error: "The model ran out of room before finishing. Nothing has been charged. Try a shorter document or fewer pages.",
+      });
+    }
+
+    await settle();
+
     if (data?.usage) {
       const inTok = data.usage.input_tokens ?? 0;
       const outTok = data.usage.output_tokens ?? 0;
       const usd = (inTok * 3) / 1e6 + (outTok * 15) / 1e6;
-      console.log(`in:${inTok} out:${outTok} ~$${usd.toFixed(4)} (call ${callsThisWindow}/${MAX_CALLS_PER_HOUR} this hour)`);
+      console.log(`acct:${accountId} kind:${kind} run:${runId ?? "-"} in:${inTok} out:${outTok} ~$${usd.toFixed(4)} settled:${isFinal}`);
     }
 
-    return new Response(JSON.stringify(data), {
-      status: upstream.status,
-      headers: { ...cors, "Content-Type": "application/json" },
+    return json(200, {
+      ...data,
+      _charged: isFinal ? ((auth.from_plan ?? 0) + (auth.from_bolton ?? 0)) : 0,
+      _credits_left: auth.credits_left ?? null,
     });
   } catch (e) {
+    await release();
     console.error("proxy error", e);
-    return new Response(JSON.stringify({ error: "Proxy failure", detail: String(e) }),
-      { status: 502, headers: { ...cors, "Content-Type": "application/json" } });
+    return json(502, {
+      error: "The analysis service could not be reached. Nothing has been charged — please try again.",
+      _charged: false,
+      detail: String(e),
+    });
   }
 });
 
-/* ===============================================================
-   BEFORE REAL USERS - what this test build deliberately skips
-   ===============================================================
-   This version is safe enough to evaluate the product yourself. It is
-   NOT safe in front of paying customers, because it does not:
+/* ═══════════════════════════════════════════════════════════════
+   STILL NOT DONE HERE, deliberately
 
-   1. VERIFY WHO IS CALLING.
-      Deploy without --no-verify-jwt, then read the caller's Supabase Auth
-      JWT and build a Supabase client with it, so Row Level Security
-      filters every query to that user's own account:
-
-        const supabase = createClient(
-          Deno.env.get("SUPABASE_URL")!,
-          Deno.env.get("SUPABASE_ANON_KEY")!,
-          { global: { headers: { Authorization: req.headers.get("Authorization")! } } },
-        );
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return new Response("Unauthorized", { status: 401 });
-
-   2. ENFORCE CREDITS SERVER-SIDE.
-      The credit balance in the app is a display, not a control - a
-      modified client can spend without limit. Check before, record after:
-
-        const { data: left } = await supabase.rpc("credits_remaining", { acct: accountId });
-        if (left < 10) return new Response("Out of credits", { status: 402 });
-        // ... call Anthropic ...
-        await supabase.from("credit_ledger").insert({
-          account_id: accountId, kind: "analysis", credits: 10,
-        });
-
-   3. USE PROMPT CACHING.
-      Cedric re-sends the whole document context every question. Caching
-      cuts that to roughly a third of the cost.
-
-   credits_remaining() and credit_ledger already exist in
-   contractiq_supabase_schema.sql - they are just not wired up here.
-   =============================================================== */
+   PROMPT CACHING. Cedric re-sends the whole document context with
+   every question. Anthropic's prompt caching would cut that to roughly
+   a third of the cost. It is a pure saving with no behaviour change,
+   and it is the next thing worth doing to this file.
+   ═══════════════════════════════════════════════════════════════ */

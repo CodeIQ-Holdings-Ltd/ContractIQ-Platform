@@ -19,8 +19,6 @@ html{scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:90px}
 body{margin:0;background:var(--obsidian);color:var(--bone);font-family:var(--body);font-weight:300;
   line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15px}
 a{color:var(--copper)}
-.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-
 h1,h2,h3,h4{font-family:var(--disp);font-weight:500;letter-spacing:-.022em;line-height:1.12;margin:0}
 p{margin:0 0 14px}
 p:last-child{margin-bottom:0}
@@ -175,7 +173,7 @@ footer a:hover{color:var(--copper)}
     <div><div class="k">Registered office</div><div class="v">103 Battalion Drive<br>Northampton NN4 6RX<br>United Kingdom</div></div>
     <div><div class="k">Contact</div><div class="v">info@codeiqholdings.co.uk</div></div>
     <div><div class="k">Websites</div><div class="v">codeiqholdings.co.uk<br>codeiqholdings.com</div></div>
-    <div><div class="k">ICO registration</div><div class="v">ICO:00015500673</div></div>
+    <div><div class="k">ICO registration</div><div class="v">ICO00015500673</div></div>
     <div><div class="k">VAT number</div><div class="v"><span class="fill">If and when registered</span></div></div>
   </div>
   <p>CodeIQ Holdings Ltd is the contracting entity for all products described on this page. Where a product is operated by a subsidiary of CodeIQ Holdings Ltd, the relevant Product Schedule will name that entity and these terms apply to it as though it were named throughout.</p>
@@ -553,7 +551,7 @@ footer a:hover{color:var(--copper)}
   <p class="stamp">Controller: CodeIQ Holdings Ltd &middot; UK GDPR, Data Protection Act 2018 and the Data (Use and Access) Act 2025</p>
 
   <h3>1. Who we are</h3>
-  <p>CodeIQ Holdings Ltd, company number 17454743, registered office 103 Battalion Drive, Northampton NN4 6RX, is the controller of the personal data described in this policy. Our registration reference with the Information Commissioner's Office is <strong>ICO:00015500673</strong>. Contact us about anything in this policy at <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>.</p>
+  <p>CodeIQ Holdings Ltd, company number 17454743, registered office 103 Battalion Drive, Northampton NN4 6RX, is the controller of the personal data described in this policy. Our ICO registration reference is ICO00015500673. Contact us about anything in this policy at <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>.</p>
   <p>Where our customers upload documents containing personal data into our Services, we act as a <strong>processor</strong> on their behalf and not as a controller. The Data Processing Agreement below governs that relationship. This Privacy Policy concerns the personal data for which we are the controller: website visitors, enquirers, account holders and suppliers.</p>
 
   <h3>2. What we collect and why</h3>
@@ -684,9 +682,9 @@ footer a:hover{color:var(--copper)}
     <tbody>
       <tr><td><strong>Anthropic PBC</strong></td><td>Large language model inference &mdash; reading and interpreting documents, generating analysis and answers</td><td>United States</td><td>UK Addendum to the EU SCCs, with a transfer risk assessment. Engaged on terms prohibiting training on customer content</td></tr>
       <tr><td><strong>Supabase</strong></td><td>Database, authentication, file storage and background job processing</td><td><span class="fill">Confirm the project region</span></td><td>UK adequacy where the region is in the EEA; otherwise UK Addendum to the EU SCCs</td></tr>
-      <tr><td><strong><span class="fill">Website and application hosting provider</span></strong></td><td>Hosting the website and application front end, content delivery</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
+      <tr><td><strong>IONOS SE</strong> (domain and website hosting) and <strong>GitHub, Inc.</strong> (application front end, via GitHub Pages)</td><td>Hosting the website and application front end, content delivery</td><td>Germany (IONOS); United States (GitHub)</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for GitHub</td></tr>
       <tr><td><strong><span class="fill">Email provider</span></strong></td><td>Transactional and business email</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
-      <tr><td><strong><span class="fill">Payment provider</span></strong></td><td>Collecting subscription payments. We do not store payment card details</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
+      <tr><td><strong>Stripe Payments Europe, Ltd.</strong></td><td>Collecting subscription and credit payments. Card details are entered on Stripe&rsquo;s own hosted checkout page and are never seen or stored by us</td><td>Ireland, with processing in the United States</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for onward transfers</td></tr>
     </tbody>
   </table>
   </div>
@@ -697,65 +695,23 @@ footer a:hover{color:var(--copper)}
 <!-- ================================================================ -->
 <section class="doc" id="cookies">
   <div class="doc-head"><span class="doc-num">12</span><h2>Cookie Policy</h2></div>
-  <p class="stamp">Privacy and Electronic Communications Regulations 2003 &middot; UK GDPR &middot; Version 1.1</p>
-
-  <h3>1. What this site actually does today</h3>
-  <div class="box">
-    <h4>The honest position</h4>
-    <p>This website sets <strong>no cookies at all</strong> beyond one small entry in your browser's local storage that records your answer to the cookie banner. Nothing is loaded from an advertising network, there is no cross-site tracking, and no analytics provider is in use at the date of this version. If that changes, this page changes first and the banner asks you again.</p>
-  </div>
-
-  <h3>2. Categories, and what consent each needs</h3>
+  <p class="stamp">Privacy and Electronic Communications Regulations 2003, as amended</p>
+  <h3>1. What we use</h3>
   <div class="tblwrap">
   <table>
-    <thead><tr><th>Category</th><th>What it is for</th><th>Consent</th><th>In use today</th></tr></thead>
+    <thead><tr><th>Category</th><th>Purpose</th><th>Consent needed</th></tr></thead>
     <tbody>
-      <tr><td><strong>Strictly necessary</strong></td>
-        <td>Signing in and staying signed in, security, load balancing, and remembering your cookie choice</td>
-        <td>Not required &mdash; exempt under PECR regulation 6(4)</td><td>Yes &mdash; consent record only</td></tr>
-      <tr><td><strong>Functional</strong></td>
-        <td>Remembering a preference such as a chosen view or filter</td>
-        <td>Required before anything is set</td><td>No</td></tr>
-      <tr><td><strong>Analytics</strong></td>
-        <td>Counting visits and understanding which pages are read</td>
-        <td>Required before anything is set</td><td>No</td></tr>
-      <tr><td><strong>Advertising and cross-site tracking</strong></td>
-        <td>We do not do this and do not intend to</td>
-        <td>&mdash;</td><td>No, and not planned</td></tr>
+      <tr><td><strong>Strictly necessary</strong></td><td>Signing you in, keeping you signed in, security, load balancing, remembering your cookie choice</td><td>No &mdash; exempt</td></tr>
+      <tr><td><strong>Functional</strong></td><td>Remembering preferences such as a chosen view or filter</td><td>No, where used only to improve how the site works for you</td></tr>
+      <tr><td><strong>Analytics</strong></td><td>Counting visits and understanding which pages are used</td><td>Yes, unless used solely for statistical purposes to improve the service</td></tr>
+      <tr><td><strong>Advertising</strong></td><td>We do not use advertising or cross-site tracking cookies</td><td>Not applicable</td></tr>
     </tbody>
   </table>
   </div>
-
-  <h3>3. What we store</h3>
-  <div class="tblwrap">
-  <table>
-    <thead><tr><th>Name</th><th>Type</th><th>Purpose</th><th>Expires</th></tr></thead>
-    <tbody>
-      <tr><td><code>codeiq_consent</code></td><td>Local storage, not a cookie</td>
-        <td>Records whether you accepted, rejected or customised, and when. Without it we would have to ask on every page</td>
-        <td>6 months, after which you are asked again</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p>That entry contains only your choices and a timestamp. It contains no identifier, is never sent to us or to anyone else, and stays in your browser.</p>
-
-  <h3>4. Your choices</h3>
-  <ul class="pl">
-    <li>The banner appears before anything optional is set, and <strong>Accept all</strong> and <strong>Reject all</strong> are given equal prominence. Rejecting is exactly as easy as accepting, which is what the law requires and what most sites still get wrong.</li>
-    <li>Choosing nothing and closing the banner sets nothing optional. Silence is not consent.</li>
-    <li>You can change your mind at any time using the <strong>Cookie settings</strong> link in the footer of every page.</li>
-    <li>You will be asked again after six months, and immediately if we add a category or a provider.</li>
-    <li>You can also block or delete cookies and site data in your browser. Strictly necessary items cannot be blocked without parts of the service ceasing to work.</li>
-  </ul>
-
-  <h3>5. If we add analytics</h3>
-  <p>When we add an analytics provider we will: name it in this table with its cookie names and durations; give at least the notice this Legal Centre requires; and load nothing until the analytics toggle is switched on. A script that loads and then waits for consent has already set its cookie, and that is the breach &mdash; so ours does not load at all.</p>
-
-  <h3>6. Third parties</h3>
-  <p>Our sign-in provider sets cookies necessary to keep an authenticated user signed in to the products; these are strictly necessary and exempt. Our public website loads a stylesheet from Google Fonts, which means your browser makes a request to Google's servers; that request carries your IP address but sets no cookie on this site. We permit no third party to set advertising or cross-site tracking cookies on any CodeIQ property.</p>
-
-  <h3>7. Questions</h3>
-  <p>Email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>. Complaints about cookies or tracking can also go to the Information Commissioner's Office at ico.org.uk.</p>
+  <h3>2. Your choices</h3>
+  <p>Where consent is required we ask for it through a banner before the cookie is set, and you can change your choice at any time through the cookie settings link in the website footer. You can also block or delete cookies in your browser, though strictly necessary cookies cannot be blocked without the Services ceasing to work.</p>
+  <h3>3. Third-party cookies</h3>
+  <p>Our authentication provider sets cookies necessary to keep you signed in. We do not permit third parties to set advertising or cross-site tracking cookies through our sites. We do not currently use any analytics, advertising or tracking cookies. If that changes, this section will name the provider, its cookies and their durations before the cookies are set.</p>
 </section>
 
 <!-- ================================================================ -->
@@ -857,15 +813,13 @@ footer a:hover{color:var(--copper)}
   <table>
     <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
     <tbody>
-      <tr><td><strong>1.2</strong></td><td>12 September 2026</td><td>ICO registration reference inserted</td></tr>
-      <tr><td><strong>1.1</strong></td><td>11 September 2026</td><td>Cookie Policy rewritten to match the consent banner now implemented; consent banner added to all pages</td></tr>
       <tr><td><strong>1.0</strong></td><td>11 September 2026</td><td>First publication</td></tr>
     </tbody>
   </table>
   </div>
   <div class="box warn">
     <h4>Before this goes live</h4>
-    <p>The ICO registration reference is now in place. The items still marked in orange on this page must be filled before publication: the VAT position, the hosting, email and payment providers in the sub-processor list, and the Supabase project region.</p>
+    <p>Every item marked in orange on this page is a gap that must be filled before publication: the ICO registration reference, VAT position, the hosting, email and payment providers in the sub-processor list, the Supabase project region, and the analytics position in the Cookie Policy.</p>
     <p>These documents have been drafted to reflect standard market practice for a UK business-to-business software company and current UK law, but they have not been reviewed by a solicitor. They should be before you take a payment or sign a customer. The clauses that most need a professional eye are the liability cap and exclusions, the indemnities, and the data processing terms.</p>
   </div>
 </section>
@@ -877,7 +831,7 @@ footer a:hover{color:var(--copper)}
   <strong style="color:var(--steel);font-family:var(--disp);font-weight:500">CodeIQ Holdings Ltd</strong><br>
   Registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Northampton NN4 6RX, United Kingdom.<br>
   <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> &middot; codeiqholdings.co.uk &middot; codeiqholdings.com<br>
-  &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.2. &middot; <a href="#" data-cookie-settings>Cookie settings</a>
+  &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.0.
 </footer>
 
 <script>
@@ -903,173 +857,5 @@ footer a:hover{color:var(--copper)}
   docs.forEach(function(d){ io.observe(d); });
 })();
 </script>
-<!-- ===================== COOKIE CONSENT ===================== -->
-<style>
-/* focus visibility — required for the banner to be keyboard-usable, applied site-wide */
-:focus-visible{outline:2px solid #F5A65B;outline-offset:3px;border-radius:4px}
-.cc *:focus-visible{outline:2px solid #F5A65B;outline-offset:2px}
-
-.cc{position:fixed;left:16px;bottom:16px;z-index:2000;width:min(430px,calc(100vw - 32px));
-  background:#111317;color:#F4F1EA;border:1px solid rgba(244,241,234,.16);border-radius:18px;
-  padding:22px 24px 20px;box-shadow:0 24px 70px -20px rgba(0,0,0,.8);
-  font-family:"Inter",ui-sans-serif,system-ui,sans-serif;font-weight:300;font-size:13.5px;line-height:1.65;
-  transform:translateY(18px);opacity:0;transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)}
-.cc.in{transform:none;opacity:1}
-.cc[hidden]{display:none !important}
-.cc h2{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:500;font-size:16px;
-  letter-spacing:-.015em;margin:0 0 9px;color:#F4F1EA;line-height:1.25}
-.cc p{margin:0 0 16px;color:#A0A7B2}
-.cc a{color:#E0642F}
-.cc-row{display:flex;gap:9px;flex-wrap:wrap}
-.cc-b{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:12.5px;font-weight:500;
-  padding:10px 17px;border-radius:99px;cursor:pointer;border:1px solid rgba(244,241,234,.26);
-  background:transparent;color:#F4F1EA;transition:all .3s;line-height:1.2}
-.cc-b:hover{border-color:#F4F1EA;background:rgba(244,241,234,.07)}
-.cc-b.pri{background:#E0642F;border-color:#E0642F;color:#150902}
-.cc-b.pri:hover{background:#F5A65B;border-color:#F5A65B}
-.cc-b.link{border:0;padding:10px 4px;color:#A0A7B2;text-decoration:underline;text-underline-offset:3px}
-.cc-b.link:hover{color:#F4F1EA;background:transparent}
-.cc-prefs{margin:4px 0 18px;border-top:1px solid rgba(244,241,234,.12)}
-.cc-prefs[hidden]{display:none !important}
-.cc-item{display:flex;gap:13px;align-items:flex-start;padding:15px 0;border-bottom:1px solid rgba(244,241,234,.12)}
-.cc-item:last-child{border-bottom:0}
-.cc-item .t{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-size:13.5px;font-weight:500;
-  color:#F4F1EA;margin-bottom:3px}
-.cc-item .d{font-size:12.5px;color:#A0A7B2;line-height:1.55}
-.cc-sw{flex:none;margin-top:2px}
-.cc-sw input{position:absolute;opacity:0;width:38px;height:22px;margin:0;cursor:pointer}
-.cc-sw label{display:block;width:38px;height:22px;border-radius:99px;background:rgba(244,241,234,.16);
-  position:relative;cursor:pointer;transition:background .3s}
-.cc-sw label::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
-  background:#F4F1EA;transition:transform .3s cubic-bezier(.22,1,.36,1)}
-.cc-sw input:checked + label{background:#E0642F}
-.cc-sw input:checked + label::after{transform:translateX(16px)}
-.cc-sw input:disabled + label{background:#E0642F;opacity:.5;cursor:not-allowed}
-.cc-sw input:focus-visible + label{outline:2px solid #F5A65B;outline-offset:3px}
-@media(max-width:520px){.cc{left:10px;right:10px;bottom:10px;width:auto;padding:20px 20px 18px}}
-@media (prefers-reduced-motion: reduce){.cc{transition:none;transform:none}}
-</style>
-
-<div class="cc" id="cc" role="dialog" aria-modal="false" aria-labelledby="cc-h" aria-describedby="cc-p" hidden>
-  <h2 id="cc-h">Cookies</h2>
-  <p id="cc-p">We use cookies that are strictly necessary to make this site work. We would also like to set optional ones to understand which pages are used. You can accept, reject, or choose. Full detail in our <a href="#cookies">Cookie Policy</a>.</p>
-
-  <div class="cc-prefs" id="cc-prefs" hidden>
-    <div class="cc-item">
-      <div class="cc-sw"><input type="checkbox" id="cc-nec" checked disabled><label for="cc-nec"><span class="sr">Strictly necessary — always on</span></label></div>
-      <div><div class="t">Strictly necessary</div><div class="d">Security, load balancing, and remembering this cookie choice. Cannot be switched off, and needs no consent in law.</div></div>
-    </div>
-    <div class="cc-item">
-      <div class="cc-sw"><input type="checkbox" id="cc-fun"><label for="cc-fun"><span class="sr">Functional</span></label></div>
-      <div><div class="t">Functional</div><div class="d">Remembering preferences such as a chosen view. Not currently in use on this site.</div></div>
-    </div>
-    <div class="cc-item">
-      <div class="cc-sw"><input type="checkbox" id="cc-ana"><label for="cc-ana"><span class="sr">Analytics</span></label></div>
-      <div><div class="t">Analytics</div><div class="d">Counting visits and understanding which pages are read. Nothing is set until you turn this on.</div></div>
-    </div>
-  </div>
-
-  <div class="cc-row">
-    <button class="cc-b pri" id="cc-accept" type="button">Accept all</button>
-    <button class="cc-b" id="cc-reject" type="button">Reject all</button>
-    <button class="cc-b link" id="cc-choose" type="button">Choose</button>
-    <button class="cc-b" id="cc-save" type="button" hidden>Save choices</button>
-  </div>
-</div>
-
-<script>
-/* CodeIQ cookie consent.
-   Nothing beyond strictly necessary storage is set until the visitor consents.
-   Read the result with window.codeiqConsent.get() -> {necessary, functional, analytics, ts, version}
-   and gate any script you add behind it. Listen for the 'codeiq:consent' event to react to changes. */
-(function(){
-  var KEY = 'codeiq_consent';
-  var VERSION = 1;          /* bump to re-ask everyone after a material change */
-  var MAX_AGE_DAYS = 180;   /* re-ask at least every six months */
-
-  function read(){
-    try {
-      var raw = localStorage.getItem(KEY);
-      if(!raw) return null;
-      var v = JSON.parse(raw);
-      if(!v || v.version !== VERSION) return null;
-      if(Date.now() - v.ts > MAX_AGE_DAYS*864e5) return null;
-      return v;
-    } catch(e){ return null; }
-  }
-  function write(state){
-    var v = { necessary:true, functional:!!state.functional, analytics:!!state.analytics,
-              ts:Date.now(), version:VERSION };
-    try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){}
-    try { document.dispatchEvent(new CustomEvent('codeiq:consent', {detail:v})); } catch(e){}
-    return v;
-  }
-
-  var el = document.getElementById('cc');
-  if(!el) return;
-  var prefs = document.getElementById('cc-prefs');
-  var fun = document.getElementById('cc-fun');
-  var ana = document.getElementById('cc-ana');
-  var saveBtn = document.getElementById('cc-save');
-  var chooseBtn = document.getElementById('cc-choose');
-  var lastFocus = null;
-
-  function show(openPrefs){
-    lastFocus = document.activeElement;
-    var v = read();
-    if(v){ fun.checked = v.functional; ana.checked = v.analytics; }
-    prefs.hidden = !openPrefs;
-    saveBtn.hidden = !openPrefs;
-    chooseBtn.hidden = !!openPrefs;
-    el.hidden = false;
-    requestAnimationFrame(function(){ el.classList.add('in'); });
-    setTimeout(function(){ (openPrefs ? fun : document.getElementById('cc-accept')).focus(); }, 60);
-  }
-  function hide(){
-    el.classList.remove('in');
-    setTimeout(function(){ el.hidden = true; if(lastFocus && lastFocus.focus) lastFocus.focus(); }, 260);
-  }
-  function decide(state){ write(state); hide(); }
-
-  document.getElementById('cc-accept').addEventListener('click', function(){
-    decide({functional:true, analytics:true});
-  });
-  document.getElementById('cc-reject').addEventListener('click', function(){
-    decide({functional:false, analytics:false});
-  });
-  chooseBtn.addEventListener('click', function(){
-    prefs.hidden = false; saveBtn.hidden = false; chooseBtn.hidden = true; fun.focus();
-  });
-  saveBtn.addEventListener('click', function(){
-    decide({functional:fun.checked, analytics:ana.checked});
-  });
-  el.addEventListener('keydown', function(e){ if(e.key === 'Escape') hide(); });
-
-  /* footer link, and any element with data-cookie-settings, reopens it */
-  document.addEventListener('click', function(e){
-    var t = e.target.closest('[data-cookie-settings]');
-    if(t){ e.preventDefault(); show(true); }
-  });
-
-  window.codeiqConsent = {
-    get: function(){ return read() || {necessary:true, functional:false, analytics:false, ts:0, version:VERSION}; },
-    open: function(){ show(true); },
-    reset: function(){ try{ localStorage.removeItem(KEY); }catch(e){} show(false); }
-  };
-
-  /* only ask if we have not got a valid, current answer */
-  if(!read()){ setTimeout(function(){ show(false); }, 900); }
-
-  /* ---- where analytics goes when you add it ----
-     document.addEventListener('codeiq:consent', function(e){
-       if(e.detail.analytics) loadAnalytics();
-     });
-     if(window.codeiqConsent.get().analytics) loadAnalytics();
-     Do not load the script anywhere else. Loading it and "waiting" for consent
-     still sets the cookie, which is the breach. ------------------------------ */
-})();
-</script>
-<!-- =================== END COOKIE CONSENT =================== -->
-
 </body>
 </html>

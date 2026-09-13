@@ -1,3 +1,7 @@
+> **Setup has moved to `supabase/README.md` (13 Sept 2026)** — four Edge Functions,
+> the three SQL scripts in order, and the Stripe webhook. Follow that; this file
+> is kept for background.
+
 # ContractIQ
 
 The marketing site and the full application, ready to deploy to GitHub Pages.
@@ -68,9 +72,8 @@ supabase link --project-ref YOUR_PROJECT_REF
 
 supabase secrets set ANTHROPIC_API_KEY=sk-ant-your-key
 supabase secrets set ALLOWED_ORIGIN=https://YOURNAME.github.io
-supabase secrets set MAX_CALLS_PER_HOUR=60
 
-supabase functions deploy anthropic-proxy --no-verify-jwt
+supabase functions deploy anthropic-proxy       # JWT verification ON — do not pass --no-verify-jwt
 ```
 
 6. Open `/app/`, sign in, **Settings** → paste the Supabase URL and anon

@@ -1,3 +1,9 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.contractiq.example/sitemap.xml
+
+# The application itself is not public content and should not be indexed.
+Disallow: /app/
+Disallow: /checkout.html
+Disallow: /success.html
+
+Sitemap: https://contractiqplatform.co.uk/sitemap.xml

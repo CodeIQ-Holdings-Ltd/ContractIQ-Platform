@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ContractIQ Platform — what to test before going live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --navy:#0B1D33; --navy2:#13294A; --line:#25415F;
+    --paper:#F7FAFD; --card:#FFFFFF; --border:#DCE7F3;
+    --tx:#16283E; --tx2:#4A6280; --tx3:#7E96B2;
+    --teal:#2FA89E; --teal-d:#1E7A72;
+    --blue:#2F7BD9; --amber:#C7881B; --red:#C0453A;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--tx);
+       font-family:'Quicksand',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+       font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+
+  header{background:var(--navy);color:#EAF2FB;padding:44px 0 38px;margin-bottom:34px}
+  header .wrap{display:block}
+  .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--teal);margin-bottom:12px}
+  h1{font-size:clamp(25px,4.4vw,36px);font-weight:700;margin:0 0 12px;letter-spacing:-.02em;line-height:1.15}
+  header p{margin:0;color:#A9C3DE;font-size:15.5px;max-width:62ch}
+  .meta{margin-top:18px;font-family:var(--mono);font-size:12px;color:#7FA0C4}
+
+  h2{font-size:20px;font-weight:700;margin:38px 0 4px;letter-spacing:-.01em;
+     padding-top:22px;border-top:1px solid var(--border)}
+  h2 .num{font-family:var(--mono);font-size:13px;color:var(--teal-d);margin-right:9px}
+  h2 + .lede{color:var(--tx2);font-size:14.5px;margin:0 0 18px;max-width:66ch}
+
+  ul.checks{list-style:none;margin:0 0 8px;padding:0}
+  ul.checks li{position:relative;padding:11px 14px 11px 42px;background:var(--card);
+      border:1px solid var(--border);border-radius:9px;margin-bottom:7px;font-size:14.5px;line-height:1.6}
+  ul.checks li::before{content:"";position:absolute;left:14px;top:14px;width:15px;height:15px;
+      border:2px solid #B9CCE0;border-radius:4px}
+  ul.checks li b{color:var(--tx)}
+  ul.checks li .why{display:block;color:var(--tx2);font-size:13px;margin-top:3px}
+  li.critical{border-left:4px solid var(--red)}
+  li.money{border-left:4px solid var(--amber)}
+
+  code{font-family:var(--mono);font-size:.86em;background:#EDF3FA;padding:.13em .4em;
+       border-radius:4px;color:#1B365D}
+  pre{background:var(--navy2);color:#DCE9F7;border-radius:9px;padding:14px 16px;
+      overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.6;margin:10px 0}
+  pre code{background:none;padding:0;color:inherit;font-size:inherit}
+
+  .note{border-left:3px solid var(--blue);background:#F0F6FD;border-radius:0 8px 8px 0;
+        padding:13px 16px;margin:14px 0;font-size:14px;color:var(--tx2)}
+  .note b{color:var(--tx)}
+  .warn{border-left-color:var(--amber);background:#FDF7EA}
+  .stop{border-left-color:var(--red);background:#FDF0EE}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.8px;
+        background:var(--card);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+  th{text-align:left;padding:10px 13px;background:#EFF5FC;font-weight:700;font-size:12px;
+     text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);border-bottom:1px solid var(--border)}
+  td{padding:10px 13px;border-bottom:1px solid #EDF2F8;vertical-align:top;color:var(--tx2)}
+  td:first-child{color:var(--tx);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  .tw{overflow-x:auto}
+
+  .done{background:#EDF8F4;border:1px solid #BFE3D8;border-radius:10px;padding:16px 18px;margin:16px 0}
+  .done h3{margin:0 0 8px;font-size:15px;color:var(--teal-d)}
+  .done ul{margin:0;padding-left:20px;font-size:14px;color:var(--tx2);line-height:1.7}
+
+  footer{margin:46px 0 60px;padding-top:22px;border-top:1px solid var(--border);
+         font-size:12.6px;color:var(--tx3);line-height:1.7}
+  @media print{body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}
+    header p,.meta{color:#333}ul.checks li{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">ContractIQ Platform · pre-launch</div>
+    <h1>What to test before you go live</h1>
+    <p>In the order a customer meets it, not the order it was built. Work top to bottom —
+       later sections assume the earlier ones passed. Anything with a red edge will cost you
+       money or credibility if it is wrong; anything with an amber edge involves someone's card.</p>
+    <div class="meta">CodeIQ Holdings Ltd · company 17454743 · 13 September 2026</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="done">
+  <h3>Built since the questionnaire — these are what you are testing</h3>
+  <ul>
+    <li><b>The Stripe webhook now exists.</b> Your note said a test payment would succeed in Stripe and
+        change nothing in the database. That is no longer true: <code>stripe-webhook</code> sets the plan
+        and the credit allowance, and its signature is verified on every request.</li>
+    <li><b>The September prices are live everywhere:</b> Growth £79, Scale £270, Enterprise £700 flat —
+        on the pricing page, in checkout, in the app's plan table and in <code>plan_catalogue</code>.</li>
+    <li><b>Credits are reserved before work starts and charged only when it finishes.</b>
+        Plan credits are spent before bought ones.</li>
+    <li><b>The AI proxy verifies who is calling</b> and enforces a per-workspace limit of 20 analyses
+        an hour, held in the database rather than in a function's memory.</li>
+    <li><b>The plan is read from the database at sign-in,</b> so a founding member gets Growth
+        rather than the Enterprise feature set.</li>
+    <li><b>One Legal Centre</b> replaces terms, privacy and DPA, naming CodeIQ Holdings Ltd.</li>
+    <li><b>The success page no longer claims your workspace is ready and an email is on its way.</b></li>
+  </ul>
+</div>
+
+<h2><span class="num">01</span>Before you touch anything</h2>
+<p class="lede">Five minutes that make the rest of this recoverable.</p>
+<ul class="checks">
+  <li><b>Take a Supabase backup.</b><span class="why">Database → Backups. Pro takes daily ones, but take a manual one now so there is a point to return to that you chose.</span></li>
+  <li><b>Confirm the project is Pro and not paused.</b><span class="why">Free projects pause after 7 days idle. Ten founding members finding a dead link is the worst possible first impression.</span></li>
+  <li><b>Keep the Stripe sandbox in test mode throughout.</b><span class="why">Every step below uses <code>sk_test_…</code>. <code>STRIPE_ALLOW_LIVE</code> stays unset until the very end — with a live key and that flag unset, the function refuses to take money rather than taking it by accident.</span></li>
+  <li><b>Have the Supabase logs open in a second tab.</b><span class="why">Edge Functions → the function → Logs. Nearly every failure below explains itself there.</span></li>
+</ul>
+
+<h2><span class="num">02</span>The database</h2>
+<p class="lede">Follow <code>supabase/README.md</code> for the detail. These are the checks.</p>
+<ul class="checks">
+  <li><b>All three SQL scripts run without error,</b> in order: <code>SETUP.sql</code>, then <code>MIGRATION_003_founding.sql</code>, then <code>MIGRATION_004_credits_and_billing.sql</code>.<span class="why">The SQL editor runs each file as one transaction, so a failure leaves nothing behind. Fix and re-run the whole file.</span></li>
+  <li><b>The verification query returns 4, 1, 3, 1.</b>
+<pre><code>select (select count(*) from plan_catalogue) as plans,
+       (select count(*) from credit_packs)   as packs,
+       (select count(*) from ai_limits)      as limits,
+       (select count(*) from information_schema.tables
+         where table_schema='public' and table_name='credit_holds') as holds;</code></pre></li>
+  <li><b>Run migration 004 a second time and confirm it still succeeds.</b><span class="why">It is written to be re-runnable. If it fails on a second run you have a different copy from the one shipped.</span></li>
+  <li class="money"><b>Check the prices in the database match the prices on the site.</b>
+<pre><code>select plan, price_pence, credits_included from plan_catalogue order by sort_order;</code></pre>
+    <span class="why">Since the September repricing these should read Growth 7900, Scale 27000, Enterprise 70000 pence — and <code>pricing.html</code>, <code>checkout.html</code> and the app's plan table now say £79, £270 and £700 to match. If you change a price again, change the database row and the page together, then redo section 06.</span></li>
+  <li class="money"><b>If you had already run migration 004 before this version, confirm Scale really moved to £270.</b>
+<pre><code>select plan, price_pence from plan_catalogue where plan in ('scale','enterprise');</code></pre>
+    <span class="why">The catalogue insert will not overwrite a row that already exists, so the script now carries an explicit correction that only fires where the old value is still there. Expect 27000 and 70000.</span></li>
+</ul>
+
+<h2><span class="num">03</span>Edge Functions and secrets</h2>
+<ul class="checks">
+  <li class="critical"><b>All four functions are deployed, named exactly right.</b><span class="why"><code>anthropic-proxy</code>, <code>job-worker</code>, <code>create-checkout-session</code>, <code>stripe-webhook</code>. The app builds its URLs from these names; a typo is a 404 that looks like a broken product.</span></li>
+  <li class="critical"><b>JWT verification: ON for <code>anthropic-proxy</code> and <code>job-worker</code>, OFF for the two Stripe functions.</b><span class="why">This is the single most important setting on the list. With it off on the proxy, anyone who reads your network tab can spend your Anthropic balance.</span></li>
+  <li><b><code>ALLOWED_ORIGIN</code> has no trailing slash and no folder path.</b><span class="why">Just <code>https://contractiqplatform.co.uk</code>. A trailing slash produces a 403 that presents as the app being broken.</span></li>
+  <li><b>Every secret is set:</b> <code>ANTHROPIC_API_KEY</code>, <code>ALLOWED_ORIGIN</code>, <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>.</li>
+  <li><b>No key appears anywhere except Supabase Secrets.</b><span class="why">Not in the repo, not in the app, not in a screenshot. Search the repo for <code>sk_</code> and <code>sk-ant-</code> before you push.</span></li>
+</ul>
+
+<h2><span class="num">04</span>The public site</h2>
+<ul class="checks">
+  <li><b>Every page loads and every internal link resolves.</b><span class="why">Automated here: 12 pages, 12 distinct link targets, no 404s.</span></li>
+  <li><b><code>/terms.html</code>, <code>/privacy.html</code> and <code>/dpa.html</code> land on the Legal Centre.</b><span class="why">They are now redirects, so old links and anything already shared keep working.</span></li>
+  <li class="critical"><b>Search the whole site for "Rita Baxi" and "10885786" and find nothing.</b><span class="why">This was the second launch blocker: the live legals named your wife's company. Verify it yourself rather than taking my word for it.</span></li>
+  <li><b>Every footer names CodeIQ Holdings Ltd, company 17454743, the registered office and the ICO reference.</b><span class="why">Companies Act 2006 s.82 requires it on the website, not only in the terms.</span></li>
+  <li><b>Nothing scrolls sideways on a phone.</b><span class="why">Checked at 390px across all 12 pages plus the app.</span></li>
+  <li><b>Open the Legal Centre and read the six remaining placeholders.</b><span class="why">Supabase region, email provider, VAT number, and three "to confirm" cells in the sub-processor table. They are visibly marked. Fill them before a customer reads them.</span></li>
+</ul>
+
+<h2><span class="num">05</span>Sign-up, and the email that has to arrive</h2>
+<ul class="checks">
+  <li class="critical"><b>Connect your own SMTP before testing this.</b><span class="why">Supabase's built-in mail is rate-limited on Pro as well as Free. Ten founding members in one evening is precisely the pattern that trips it. Resend is the recommendation — free to 3,000 a month, about ten minutes, and you will need to add its SPF and DKIM records at IONOS or the mail lands in spam.</span></li>
+  <li><b>Sign up with a real address and confirm the six-digit code arrives within a minute.</b></li>
+  <li><b>Sign up with a corporate address on a different domain.</b><span class="why">Corporate filters are where verification mail actually dies. A personal Gmail proves very little.</span></li>
+  <li><b>Check Authentication → URL Configuration includes your folder path.</b><span class="why">If it does not, verification links silently do nothing — no error, just a dead click.</span></li>
+  <li><b>Type a password by hand rather than pasting it.</b><span class="why">A remount bug once made the field accept one character at a time, and pasting would never have caught it.</span></li>
+  <li><b>After sign-up, open Settings and confirm the plan and credit balance are shown.</b><span class="why">A new account with no payment should read Evaluation Sandbox, 150 credits. If it says Enterprise, the app is not reading the database.</span></li>
+</ul>
+
+<h2><span class="num">06</span>Taking a payment</h2>
+<p class="lede">Your steps, with the webhook added — that is the part that was missing.</p>
+
+<ul class="checks">
+  <li><b>1 · Deploy <code>create-checkout-session</code>.</b><span class="why">Supabase → Edge Functions → Deploy a new function → Via Editor. Name it <code>create-checkout-session</code> and paste the file in. Turn off "Enforce JWT verification", because buyers are not signed in yet.</span></li>
+  <li><b>2 · Add the secrets.</b><span class="why">Edge Functions → Secrets: <code>STRIPE_SECRET_KEY</code> = your <code>sk_test_…</code> key from the Stripe sandbox (Developers → API keys). <code>ALLOWED_ORIGIN</code> is already set and gets reused.</span></li>
+  <li class="critical"><b>3 · Deploy <code>stripe-webhook</code> and register it in Stripe.</b><span class="why">JWT verification OFF. Then Stripe → Developers → Webhooks → Add endpoint, URL <code>https://&lt;project-ref&gt;.supabase.co/functions/v1/stripe-webhook</code>, events <code>checkout.session.completed</code>, <code>invoice.payment_succeeded</code>, <code>invoice.payment_failed</code>, <code>customer.subscription.deleted</code>, <code>customer.subscription.updated</code>. Copy the signing secret into <code>STRIPE_WEBHOOK_SECRET</code>. <b>Without this, the payment succeeds and nothing in your product changes.</b></span></li>
+  <li><b>4 · Send a test webhook from Stripe and get a 200.</b>
+<pre><code>select id, type, received_at from stripe_events order by received_at desc limit 5;</code></pre>
+    <span class="why">A 400 saying "Signature verification failed" means the signing secret is wrong — it is easy to copy the API key by mistake.</span></li>
+  <li><b>5 · Run the site locally and open the pricing page.</b>
+<pre><code>cd "$HOME/Desktop/2026 - Months/September/ContractIQ_GitHub_FullApp_v9" && python3 -m http.server 8000</code></pre>
+    <span class="why">Then <code>http://localhost:8000/pricing.html</code>. Localhost is allowed automatically while the Stripe key is a test key, so you do not need to touch <code>ALLOWED_ORIGIN</code>.</span></li>
+  <li class="money"><b>6 · Choose Growth or Scale and pay with <code>4242 4242 4242 4242</code>,</b> any future expiry, any CVC.<span class="why">The payment appears under Payments in your Stripe sandbox.</span></li>
+  <li><b>7 · Confirm checkout will not proceed without all three confirmations.</b><span class="why">Terms, "buying for a business with authority", and the AI limitations notice. Self-serve has no signed Order Form, so these are where those confirmations now live — and without the business confirmation, consumer cancellation rights apply by default.</span></li>
+  <li class="critical"><b>8 · Confirm the payment reached the database.</b>
+<pre><code>select email, plan, claimed_at from pending_subscriptions order by created_at desc limit 5;</code></pre>
+    <span class="why">A row with <code>claimed_at</code> null is correct: the buyer has no login yet, so the payment is parked against their email.</span></li>
+  <li class="critical"><b>9 · Now sign up with the same email address and confirm the plan applies itself.</b>
+<pre><code>select plan, credits_included, stripe_customer_id, billing_status from accounts
+ order by created_at desc limit 3;</code></pre>
+    <span class="why">This is the whole customer journey and the step most likely to be skipped. Growth should read 500 credits.</span></li>
+  <li><b>10 · Sign up with a <em>different</em> email and watch it not apply.</b><span class="why">Expected behaviour, and worth seeing once so you recognise the support ticket. The fix is one UPDATE, in the README.</span></li>
+  <li><b>11 · Optional: use your own Stripe products.</b><span class="why">If you have created ContractIQ products and prices in Stripe, put their ids into <code>plan_catalogue.stripe_price_id</code> and <code>credit_packs.stripe_price_id</code> and those are used instead of prices created on the fly.</span></li>
+  <li><b>12 · Cancel the subscription in Stripe and confirm the account drops to sandbox.</b></li>
+  <li><b>13 · Trigger a failed payment in Stripe and confirm the account is marked <code>past_due</code> but keeps working.</b><span class="why">Stripe retries for days. Cutting someone off over an expired card is how you lose a customer you had already won.</span></li>
+</ul>
+
+<h2><span class="num">07</span>Credits — the part that decides whether this is a business</h2>
+<ul class="checks">
+  <li class="money"><b>Run one analysis and confirm exactly 10 credits are deducted, not 50.</b><span class="why">An analysis is five calls to the model. They share a run id so the run is charged once. Verified automatically, but check it against a real analysis too.</span></li>
+  <li><b>Confirm the balance drops while the analysis is running, and the ledger row appears only when it finishes.</b>
+<pre><code>select * from credits_breakdown('&lt;your-account-id&gt;');
+select created_at, kind, source, credits from my_credit_history limit 10;</code></pre></li>
+  <li class="critical"><b>Make an analysis fail and confirm nothing is charged.</b><span class="why">Easiest way: temporarily set <code>ANTHROPIC_API_KEY</code> to rubbish. The reserved credits must come back.</span></li>
+  <li><b>Ask Cedric a question and confirm 2 credits are deducted.</b><span class="why">Cedric was entirely unmetered until now.</span></li>
+  <li class="money"><b>Run an account down to zero and confirm the block is a panel, not a toast,</b> naming the cost, the balance and offering to buy credits.</li>
+  <li class="money"><b>Buy the 100-credit pack for £25 with the test card,</b> and confirm the balance rises within a few seconds of returning.</li>
+  <li class="critical"><b>Confirm bought credits survive a plan reset, and plan credits are spent first.</b>
+<pre><code>select plan_left, bolton_left, total_left from credits_breakdown('&lt;account-id&gt;');</code></pre>
+    <span class="why">Verified automatically — a 10-credit spend with 5 plan credits left took 5 from the plan and 5 from the bought balance. Worth seeing once in the product.</span></li>
+  <li><b>Run 21 analyses in an hour and confirm the 21st is refused.</b><span class="why">The limit is per workspace, held in <code>ai_limits</code>, and survives a function cold start. Change the number there, not in code.</span></li>
+</ul>
+
+<h2><span class="num">08</span>Trying to break it on purpose</h2>
+<p class="lede">Each of these was possible before this round of work.</p>
+<ul class="checks">
+  <li class="critical"><b>Call the proxy with no session and confirm a 401.</b>
+<pre><code>curl -i -X POST https://&lt;project-ref&gt;.supabase.co/functions/v1/anthropic-proxy \
+  -H "content-type: application/json" \
+  -d '{"messages":[{"role":"user","content":"hello"}]}'</code></pre>
+    <span class="why">If this returns an answer from Claude, JWT verification is off and your balance is public.</span></li>
+  <li><b>Call it from a different origin and confirm a 403.</b></li>
+  <li><b>Open two browser tabs on a workspace with 10 credits and start an analysis in both.</b><span class="why">One must succeed and one must be refused. Both succeeding means the reservation lock is not working.</span></li>
+  <li><b>Sign in as a second user in another workspace and confirm you cannot see the first one's contracts.</b></li>
+  <li><b>POST a fake event to the webhook URL and confirm a 400.</b><span class="why">Without signature verification, anyone could grant themselves an Enterprise plan.</span></li>
+</ul>
+
+<h2><span class="num">09</span>The founding ten</h2>
+<ul class="checks">
+  <li><b>The counter on the homepage reads from the database.</b>
+<pre><code>select * from founding_offer;
+select seat_no, claimed_at, free_until, status from founding_members order by seat_no;</code></pre></li>
+  <li class="critical"><b>A founding member gets Growth, not Enterprise.</b><span class="why">This is the fix from question 16. Sign one up and check Settings says Growth / Professional with 500 credits — the old build gave everyone the full Enterprise feature set regardless of the database.</span></li>
+  <li><b>Claim all ten seats and confirm the eleventh sees "the ten founding places have gone".</b></li>
+  <li><b>Disconnect the database and confirm the page claims no number at all.</b><span class="why">It should fall back to a neutral "See plans" rather than inventing a figure in either direction.</span></li>
+  <li><b>Have the Beta &amp; Early Access Agreement countersigned before each founding member gets access.</b><span class="why">Your answer to question 20: ten emails, and it puts the confidentiality obligation properly on record.</span></li>
+</ul>
+
+<h2><span class="num">10</span>Before you take real money</h2>
+<ul class="checks">
+  <li class="critical"><b>Sign the IP Assignment Deed, with a witness.</b><span class="why">Until it is signed, CodeIQ Holdings Ltd does not own the product it is selling. Section 4 of your own action plan asks you to check your BT employment contract first (CDPA 1988 s.11(2)) — clause 4(c) warrants no overlap.</span></li>
+  <li><b>Have a solicitor read the Legal Centre for reasonableness and consumer-law exposure.</b></li>
+  <li><b>Confirm professional indemnity insurance is in force.</b></li>
+  <li><b>Run the free UKIPO search on CODEIQ and CONTRACTIQ.</b><span class="why">It costs nothing and should come before you spend on anything else.</span></li>
+  <li><b>Send a test email to the address the site publishes and confirm it arrives.</b><span class="why">The site currently shows <code>info@contractiqplatform.com</code> while the live domain is <code>.co.uk</code>. Make sure whichever address is shown is one you actually read.</span></li>
+  <li class="money"><b>Only now: switch the Stripe key to live and set <code>STRIPE_ALLOW_LIVE=true</code>.</b><span class="why">Then repeat section 06 with a real card and refund yourself. A test-mode pass does not prove the live path.</span></li>
+</ul>
+
+<h2><span class="num">11</span>What is still not done</h2>
+<div class="note stop">
+  <b>Nothing persists yet.</b> This is the one remaining launch blocker and the reason the
+  audit scored 4/10. Contract records, documents and analyses still live in browser memory
+  and are lost on refresh — after you have paid Anthropic for the analysis. The credits are
+  now real, the plan is real and the payment is real; the work product is not saved. That is
+  the next piece of work, and it is the long one.
+</div>
+<div class="note warn">
+  <b>Also outstanding.</b> No self-service billing portal — cancellations come to you by email,
+  and <code>success.html</code> now says so rather than pretending otherwise. No SMTP connected yet.
+  Six placeholders remain in the Legal Centre. The sign-up screen inside the app still uses the
+  old single "accept the terms" checkbox; the three confirmations were added at checkout, and
+  sign-up should match it.
+</div>
+<div class="note">
+  <b>A smaller one worth knowing.</b> Where a user belongs to more than one workspace, the app
+  picks the first it finds. There is no workspace switcher, so today that is invisible — but it
+  will need solving before anyone is a member of two.
+</div>
+
+<footer>
+  ContractIQ Platform · a product of CodeIQ Holdings Ltd · company 17454743 ·
+  103 Battalion Drive, Wootton, Northampton NN4 6RX · ICO00015500673<br>
+  Checkboxes on this page are for printing or ticking in the browser; they are not saved anywhere.
+</footer>
+
+</div>
+</body>
+</html>

@@ -90,13 +90,13 @@
 <header class="hero">
   <div class="eyebrow">Create your workspace</div>
   <h1>Two minutes to set up.<br />Cancel any time.</h1>
-  <p>Your workspace is created as soon as payment completes. Sign-in details are emailed straight away.</p>
+  <p>Pay first, then create your sign-in with the same email address &mdash; your plan is waiting against it. Cancel any time.</p>
 </header>
 
 <div class="wrap">
   <div class="panel">
     <h2>Choose your edition</h2>
-    <div class="sub">All prices exclude VAT, which is added at checkout where applicable.</div>
+    <div class="sub">Prices are in pounds sterling, billed monthly. Any tax due is shown on Stripe&rsquo;s payment page before you confirm.</div>
 
     <div class="plans" id="plans">
       <div class="plan" data-plan="sandbox">
@@ -112,17 +112,17 @@
       <div class="plan" data-plan="scale">
         <div class="dot"></div>
         <div><b>Scale</b><small>1,800 credits a month · priority queue · everything in Growth</small></div>
-        <div class="price">£199<span style="font-size:12px;font-weight:600;color:var(--grey)">/mo</span></div>
+        <div class="price">£270<span style="font-size:12px;font-weight:600;color:var(--grey)">/mo</span></div>
       </div>
       <div class="plan" data-plan="enterprise">
         <div class="dot"></div>
-        <div><b>Enterprise Suite</b><small>5,000+ credits · SSO · Zero-Retention · API access</small></div>
-        <div class="price">Custom</div>
+        <div><b>Enterprise Suite</b><small>5,000 credits · SSO · Zero-Retention · API access</small></div>
+        <div class="price">£700<span style="font-size:12px;font-weight:600;color:var(--grey)">/mo</span></div>
       </div>
     </div>
 
     <h2 style="margin-bottom:4px">Your details</h2>
-    <div class="sub">This creates the workspace and the first administrator account.</div>
+    <div class="sub">These details go on your subscription and your receipt. You create the sign-in itself straight after payment.</div>
 
     <div class="row">
       <div class="fld"><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required /></div>
@@ -131,7 +131,7 @@
     <div class="fld">
       <label for="email">Work email</label>
       <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@company.com" />
-      <div class="hint">Your sign-in details and receipts are sent here.</div>
+      <div class="hint">Use the address you will sign in with &mdash; your plan is matched to it. Stripe emails your receipt here too.</div>
     </div>
     <div class="fld">
       <label for="company">Company / organisation</label>
@@ -166,9 +166,23 @@
     <div class="check">
       <input type="checkbox" id="terms" />
       <label for="terms" style="font-weight:500;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--grey)">
-        I accept the <a href="terms.html" target="_blank">Terms of Service</a> and
-        <a href="privacy.html" target="_blank">Privacy Policy</a>, and I understand that ContractIQ is an automated
-        screening aid and not legal advice.
+        I accept the <a href="legal.html#msa" target="_blank">Master Subscription Agreement</a>,
+        the <a href="legal.html#schedule-contractiq" target="_blank">ContractIQ Product Schedule</a> and the
+        <a href="legal.html#privacy" target="_blank">Privacy Policy</a>.
+      </label>
+    </div>
+    <div class="check">
+      <input type="checkbox" id="business" />
+      <label for="business" style="font-weight:500;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--grey)">
+        I am buying for a business, not as a consumer, and I have authority to enter this agreement on its behalf.
+      </label>
+    </div>
+    <div class="check">
+      <input type="checkbox" id="aiack" />
+      <label for="aiack" style="font-weight:500;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--grey)">
+        I have read the <a href="legal.html#ai" target="_blank">AI Use &amp; Limitations Notice</a> and the liability and
+        warranty terms, and I understand ContractIQ is an automated screening aid, not legal advice, with no published
+        accuracy figure &mdash; its output is reviewed by a person before it is relied on.
       </label>
     </div>
     <div class="check">
@@ -178,10 +192,10 @@
       </label>
     </div>
 
-    <button class="btn" id="submitBtn">Continue to set up Direct Debit</button>
+    <button class="btn" id="submitBtn">Continue to secure payment</button>
     <div class="err" id="err"></div>
-    <p style="font-size:11.5px;color:var(--grey);text-align:center;margin-top:14px;line-height:1.6">
-      You will be redirected to GoCardless to set up a Direct Debit mandate. ContractIQ never sees or stores your bank details, and every payment is covered by the Direct Debit Guarantee.
+    <p id="payNote" style="font-size:11.5px;color:var(--grey);text-align:center;margin-top:14px;line-height:1.6">
+      You will be redirected to Stripe's secure checkout page to pay by card. ContractIQ never sees or stores your card details.
     </p>
   </div>
 
@@ -196,19 +210,23 @@
     </ul>
     <div class="secure">
       <b>Secure by design</b>
-      Payments are collected by GoCardless Ltd via Direct Debit. Your bank details are entered on GoCardless's own secure page and never touch our servers.
+      Payments are processed by Stripe. Your card details are entered on Stripe's own secure page and never touch our servers.
       Cancel any time from your billing portal — access continues to the end of the paid period.
     </div>
   </aside>
 </div>
 
 <footer>
-  ContractIQ Platform · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="contact.html">Contact</a>
+  ContractIQ Platform · <a href="legal.html#msa">Terms</a> · <a href="legal.html#privacy">Privacy</a> · <a href="contact.html">Contact</a>
   <br /><span style="font-weight:500;color:#6E8CB4">Automated screening aid — not legal advice.</span>
 </footer>
 
 <script>
 (function () {
+  // Stripe Checkout runs in a Supabase Edge Function. See
+  // supabase/functions/create-checkout-session/index.ts to deploy it.
+  var CHECKOUT_ENDPOINT = "https://aremuhzsgmqginhmpfno.supabase.co/functions/v1/create-checkout-session";
+
   var PLAN_COPY = {
     sandbox: { title: "Evaluation Sandbox", items: [
       "150 credits every 90 days — about 2 analyses plus 65 questions",
@@ -229,7 +247,7 @@
       "Meeting transcript ingestion and knowledge capture",
       "Renewal alerts, Cedric, and Word/PDF/slide exports"] },
     enterprise: { title: "Enterprise Suite", items: [
-      "5,000+ credits a month, scaled to your estate",
+      "5,000 credits a month, with more available on request",
       "Zero-Retention processing",
       "Dedicated API access keys",
       "Corporate SSO and isolated environments",
@@ -253,7 +271,8 @@
     document.getElementById("vatWrap").style.display = plan === "sandbox" ? "none" : "";
     btn.textContent = plan === "sandbox" ? "Create free workspace"
                     : plan === "enterprise" ? "Request Enterprise pricing"
-                    : "Continue to set up Direct Debit";
+                    : "Continue to secure payment";
+    document.getElementById("payNote").style.display = (plan === "growth" || plan === "scale") ? "" : "none";
   }
   plansEl.addEventListener("click", function (e) {
     var el = e.target.closest(".plan"); if (!el) return;
@@ -262,6 +281,11 @@
   paint();
 
   function fail(msg) { err.textContent = msg; err.style.display = "block"; btn.disabled = false; btn.textContent = "Try again"; }
+
+  if (new URLSearchParams(location.search).get("cancelled")) {
+    err.textContent = "Payment was cancelled and you have not been charged. You can try again whenever you are ready.";
+    err.style.display = "block";
+  }
 
   btn.addEventListener("click", function () {
     err.style.display = "none";
@@ -277,7 +301,9 @@
     };
     if (!payload.firstName || !payload.lastName || !payload.company) return fail("Please complete your name and company.");
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(payload.email)) return fail("Please enter a valid work email address.");
-    if (!document.getElementById("terms").checked) return fail("Please accept the Terms and Privacy Policy to continue.");
+    if (!document.getElementById("terms").checked) return fail("Please accept the Master Subscription Agreement and Privacy Policy to continue.");
+    if (!document.getElementById("business").checked) return fail("Please confirm you are buying for a business and have authority to do so.");
+    if (!document.getElementById("aiack").checked) return fail("Please confirm you have read the AI Use & Limitations Notice.");
 
     if (plan === "enterprise") {
       location.href = "mailto:info@contractiqplatform.com?subject=" + encodeURIComponent("ContractIQ Enterprise enquiry — " + payload.company) +
@@ -286,8 +312,19 @@
       return;
     }
 
-    btn.disabled = true; btn.textContent = "Setting up…";
-    fetch("api/create-checkout-session.php", {
+    // The free tier needs no payment: account creation happens in the app.
+    if (plan === "sandbox") { location.href = "app/"; return; }
+
+    payload.returnBase = new URL(".", location.href).href;   // success/cancel pages live beside this one
+    // Carried through to Stripe and stored with the subscription, so what
+    // the customer confirmed is on the record and not just in this page.
+    payload.acceptedTerms   = true;
+    payload.acceptedBusiness = true;
+    payload.acceptedAiNotice = true;
+    payload.acceptedAt      = new Date().toISOString();
+    payload.termsVersion    = "2026.1";
+    btn.disabled = true; btn.textContent = "Opening secure checkout…";
+    fetch(CHECKOUT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -295,7 +332,7 @@
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (!res.ok || !res.j.url) return fail(res.j.error || "We could not start checkout. Please try again or contact support.");
-        location.href = res.j.url;                 // GoCardless mandate flow (or success page for the free tier)
+        location.href = res.j.url;                 // Stripe's hosted checkout page
       })
       .catch(function () { fail("Network problem — please check your connection and try again."); });
   });

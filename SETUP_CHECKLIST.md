@@ -1,4 +1,8 @@
-# ContractIQ — going live
+> **Superseded in places by `supabase/README.md` (13 Sept 2026).**
+> Where the two disagree, the Supabase README is right: it covers the new
+> Stripe functions and the credit system, and it is the one that was tested.
+
+# ContractIQ Platform — going live
 
 Roughly 30 minutes. Tick these off in order; nothing later depends on
 you having done the earlier ones in one sitting.
@@ -36,7 +40,8 @@ you having done the earlier ones in one sitting.
 |---|---|
 | `ANTHROPIC_API_KEY` | your `sk-ant-…` key |
 | `ALLOWED_ORIGIN` | `https://YOURNAME.github.io` |
-| `MAX_CALLS_PER_HOUR` | `60` |
+| `STRIPE_SECRET_KEY` | `sk_test_…` |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_…` |
 
 > `ALLOWED_ORIGIN` is the origin the **app** is served from — `https://`
 > only, **no folder path, no trailing slash**. Wrong value = every
@@ -48,7 +53,8 @@ Edge Functions → **Deploy a new function → Via Editor**. No terminal needed.
 
 - [ ] Name it exactly `anthropic-proxy`, paste
       `supabase/functions/anthropic-proxy/index.ts`, Deploy.
-      Then open it and turn **Verify JWT OFF** — the browser calls this one.
+      Leave **Verify JWT ON**. The proxy identifies the caller and checks their
+      credits; with it off, anyone who finds the URL can spend your Anthropic balance.
 - [ ] Name it exactly `job-worker`, paste
       `supabase/functions/job-worker/index.ts`, Deploy.
       Leave **Verify JWT ON** — the database calls this one.
@@ -128,8 +134,9 @@ question that matters: does it read *your* contracts well?
 | What the app says | Fix |
 |---|---|
 | No AI endpoint configured | Step 5 — check the URL starts `https://` and ends `.supabase.co` |
-| AI endpoint rejected the request | `ALLOWED_ORIGIN` mismatch (step 3) or Verify JWT still on (step 4) |
-| Rate limit reached | Your own `MAX_CALLS_PER_HOUR` — raise it in Secrets |
+| AI endpoint rejected the request, 403 | `ALLOWED_ORIGIN` mismatch — no trailing slash, no folder path |
+| AI endpoint rejected the request, 401 | The signed-in session expired. Sign out and back in. Do **not** turn Verify JWT off |
+| Rate limit reached | The per-workspace hourly limit. Change it in the `ai_limits` table, not in Secrets |
 | Analysis failed — 500 | The function can't find the key. Check the spelling in Secrets |
 | Analysis failed — 529 | Anthropic is busy. Wait and retry |
 | Jobs stay "Queued" forever | Cron not running, or Vault secrets missing |

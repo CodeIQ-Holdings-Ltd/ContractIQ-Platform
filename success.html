@@ -53,33 +53,34 @@
 <body>
 <header class="hero">
   <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></div>
-  <h1 id="headline">Your workspace is ready.</h1>
-  <p id="sub">Check your inbox — sign-in details are on their way.</p>
+  <h1 id="headline">Payment received.</h1>
+  <p id="sub">One short step left: create your sign-in.</p>
 </header>
 
 <div class="wrap">
   <div class="panel">
     <h2>What happens next</h2>
     <ol>
-      <li><b>Check your email</b><span>Your sign-in link and receipt have been sent. If nothing arrives within a few minutes, look in spam, then contact support and we will sort it.</span></li>
+      <li id="stepOne"><b>Create your sign-in</b><span>Use <b id="paidEmail">the same email address you just paid with</b>. Your plan is already waiting against that address and is applied the moment you sign up — there is no code to enter. Stripe has emailed your receipt separately.</span></li>
       <li><b>Pick the contract that worries you most</b><span>Usually the largest, or the one renewing soonest. Enter its reference and supplier — that is the whole form.</span></li>
       <li><b>Drop in everything you have</b><span>The agreement, purchase orders, statements of work, tracking spreadsheets, and any Teams or Zoom transcripts of meetings about it.</span></li>
       <li><b>Run the analysis and diarise the deadline</b><span>Read the insights, add the renewal notice date to your calendar, and export the report for whoever needs to see it.</span></li>
     </ol>
     <div class="cta">
-      <a class="btn" href="app/">Open ContractIQ</a>
+      <a class="btn" href="app/">Create your sign-in</a>
       <a class="btn ghost" href="index.html">Back to the site</a>
     </div>
     <div class="note" id="billingNote">
       <b>Your billing</b><br />
-      Manage or cancel your subscription at any time from the billing portal inside the app — access continues to the end of the paid period.
-      Receipts and VAT invoices are issued automatically by our payment provider. ContractIQ never sees or stores your card details.
+      Your subscription is managed by Stripe, who issue your receipt automatically. ContractIQ never sees or stores your card details.
+      To change or cancel your plan, email <a href="mailto:info@contractiqplatform.com">info@contractiqplatform.com</a> and we will action it the same working day —
+      access continues to the end of the period you have paid for. A self-service billing portal is coming; until it is here, a person handles it.
     </div>
   </div>
 </div>
 
 <footer>
-  ContractIQ Platform · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="contact.html">Contact</a>
+  ContractIQ Platform · <a href="legal.html#msa">Terms</a> · <a href="legal.html#privacy">Privacy</a> · <a href="contact.html">Contact</a>
   <br /><span style="font-weight:500;color:#6E8CB4">Automated screening aid — not legal advice.</span>
 </footer>
 
@@ -88,9 +89,30 @@
   var plan = new URLSearchParams(location.search).get("plan") || "growth";
   var COPY = {
     sandbox: { h: "Your free workspace is ready.", s: "150 credits every 90 days — no card, no expiry date, no catch." },
-    growth:  { h: "You're on Growth. Welcome aboard.", s: "500 credits a month, playbook rules and cross-document analysis are live." },
-    scale:   { h: "You're on Scale. Welcome aboard.", s: "1,800 credits a month and priority analysis are live on your workspace." }
+    growth:  { h: "You're on Growth. Welcome aboard.", s: "500 credits a month, playbook rules and cross-document analysis — as soon as you create your sign-in." },
+    scale:   { h: "You're on Scale. Welcome aboard.", s: "1,800 credits a month and priority analysis — as soon as you create your sign-in." }
   };
+  var q = new URLSearchParams(location.search);
+  var bought = q.get("bought");
+
+  if (bought === "credits") {
+    // A top-up bought from inside the app. They already have a sign-in, so
+    // the whole "create your account" flow is wrong for them.
+    var n = parseInt(q.get("credits") || "0", 10);
+    document.getElementById("headline").textContent = "Payment received.";
+    document.getElementById("sub").textContent =
+      (n ? n.toLocaleString() + " credits are being added to your workspace." : "Your credits are being added to your workspace.");
+    document.getElementById("stepOne").innerHTML =
+      "<b>Go back to ContractIQ</b><span>Your credits usually land within a few seconds. If the balance still looks the same, " +
+      "use <b>Refresh balance</b> in Settings. Bought credits do not expire when your month rolls over, and your plan allowance " +
+      "is always spent first.</span>";
+    var btn = document.querySelector(".cta .btn");
+    if (btn) { btn.textContent = "Back to ContractIQ"; btn.setAttribute("href", "app/"); }
+    document.getElementById("billingNote").innerHTML =
+      "<b>Your receipt</b><br />Stripe has emailed it to you. ContractIQ never sees or stores your card details.";
+    return;
+  }
+
   var c = COPY[plan] || COPY.growth;
   document.getElementById("headline").textContent = c.h;
   document.getElementById("sub").textContent = c.s;

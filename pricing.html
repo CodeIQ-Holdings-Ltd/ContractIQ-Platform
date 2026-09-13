@@ -295,22 +295,22 @@
         <div class="badge-pop">Most popular</div>
         <div class="tier">Growth / Professional</div>
         <div class="amt">£79<small>/month</small></div>
-        <div class="per">Cancel any time · VAT added at checkout</div>
+        <div class="per">Cancel any time · any tax due is shown before you confirm</div>
         <ul><li><b>500 credits</b> a month</li><li>About 12 analyses plus 190 questions</li><li>Unused credits roll over, up to 500</li><li>Custom playbook configuration</li><li>Cross-document analysis and transcripts</li><li>30-day revision windows</li></ul>
         <a class="btn pri" href="checkout.html?plan=growth" style="text-align:center">Choose Growth</a>
       </div>
       <div class="plan">
         <div class="tier">Scale</div>
-        <div class="amt">£199<small>/month</small></div>
+        <div class="amt">£270<small>/month</small></div>
         <div class="per">For heavier contract estates</div>
         <ul><li><b>1,800 credits</b> a month</li><li>About 45 analyses plus 675 questions</li><li>Unused credits roll over, up to 1,800</li><li>Everything in Growth</li><li>Priority analysis queue</li><li>Quarterly portfolio review export</li></ul>
         <a class="btn ghost" href="checkout.html?plan=scale" style="text-align:center">Choose Scale</a>
       </div>
       <div class="plan">
         <div class="tier">Enterprise Suite</div>
-        <div class="amt">From £499<small>/month</small></div>
-        <div class="per">Tailored corporate pricing · invoiced annually</div>
-        <ul><li><b>5,000+ credits</b> a month</li><li>Volume scaled to your estate</li><li>Zero-Retention processing</li><li>Dedicated API access keys</li><li>Corporate SSO and isolated environments</li></ul>
+        <div class="amt">£700<small>/month</small></div>
+        <div class="per">Flat monthly price · annual invoicing available</div>
+        <ul><li><b>5,000 credits</b> a month</li><li>Volume scaled to your estate</li><li>Zero-Retention processing</li><li>Dedicated API access keys</li><li>Corporate SSO and isolated environments</li></ul>
         <a class="btn ghost" href="checkout.html?plan=enterprise" style="text-align:center">Talk to sales</a>
       </div>
     </div>
@@ -351,7 +351,9 @@
     </div>
   </div>
 </section>
-<script>/* Point the data-buy anchors at your GoCardless payment links when billing goes live. */</script>
+<script>/* Plan purchases go through checkout.html, which starts a Stripe Checkout session
+   via the create-checkout-session Edge Function. Prices come from plan_catalogue
+   in the database, so changing one there changes it everywhere. */</script>
 <footer class="footer">
   <div class="foot-grid">
     <div>
@@ -364,12 +366,12 @@
     </div>
     <div>
       <h4>Company</h4>
-      <a href="contact.html">Contact</a><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a><a href="dpa.html">Data Processing (DPA)</a>
+      <a href="contact.html">Contact</a><a href="legal.html">Legal Centre</a><a href="legal.html#msa">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#dpa">Data Processing (DPA)</a>
     </div>
   </div>
   <div class="foot-base">
-    <div>© 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.</div>
-    <div><a href="privacy.html">Privacy</a> &nbsp;|&nbsp; <a href="terms.html">Terms</a></div>
+    <div>&copy; 2026 ContractIQ Platform. All rights reserved. Automated screening aid &mdash; not legal advice.<br><span style="opacity:.75">ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX. ICO registration ICO00015500673.</span></div>
+    <div><a href="legal.html#privacy">Privacy</a> &nbsp;|&nbsp; <a href="legal.html#msa">Terms</a></div>
   </div>
 </footer>
 <script>
