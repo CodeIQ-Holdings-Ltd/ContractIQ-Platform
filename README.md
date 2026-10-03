@@ -1,3 +1,7 @@
+> **v13 (19 Sept 2026): follow `ContractIQ_Go_Live_Guide.docx` to go live.**
+> `supabase/README.md` is the technical reference; `SETUP_CHECKLIST.md` is the one-page tick list.
+> Everything below is kept for background and may be out of date.
+
 > **Setup has moved to `supabase/README.md` (13 Sept 2026)** — four Edge Functions,
 > the three SQL scripts in order, and the Stripe webhook. Follow that; this file
 > is kept for background.

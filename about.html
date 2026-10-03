@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<script>document.documentElement.className+=' js';</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>About ContractIQ Platform — Why We Built It</title>
@@ -261,23 +262,58 @@
     .plans { grid-template-columns: 1fr; }
   }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />  <link rel="stylesheet" href="assets/motion.css" />
-  <script src="assets/motion.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/ciq-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 </head>
 <body>
-<nav class="nav">
-  <a href="index.html" class="brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</a>
-  <div class="nav-links">
-    <a href="index.html" class="hide-m">Home</a><a href="features.html" class="hide-m">Features</a><a href="pricing.html" class="hide-m">Pricing</a><a href="security.html" class="hide-m">Security</a><a href="about.html" style="color:#fff" class="hide-m">About</a><a href="contact.html" class="hide-m">Contact</a>
-    <a class="btn sm" href="app/">Start free</a>
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Platform <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="features.html"><b>Features</b><span>Every capability, and how each one shows its working</span></a>
+          <a href="security.html"><b>Security</b><span>How your documents are handled, stored and erased</span></a>
+          <a href="index.html#process"><b>How it works</b><span>Two fields, then the AI does the reading</span></a>
+          <a href="demo/"><b>Live demo</b><span>The real interface on sample data — no sign-up</span></a>
+          <a class="full" href="app/"><b>Open the application →</b><span>Sign in, or create a free Evaluation Sandbox workspace</span></a>
+        </div>
+      </li>
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Plans <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="pricing.html"><b>Pricing</b><span>Sandbox, Growth, Scale and Enterprise, and what a credit buys</span></a>
+          <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
+          <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
+          <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
+          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
+        </div>
+      </li>
+      <li><a href="about.html" aria-current="page">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="legal.html">Legal</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn ghost" href="demo/">Live demo</a>
+      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
   </div>
 </nav>
 
 <header class="page-hero">
+  <div class="ciq-bg"><img src="assets/hero-mountains.jpg" alt="" /></div><div class="ciq-orb a"></div><div class="ciq-orb b"></div>
   <div class="kick">Our Story</div>
   <h1>Built by someone who lives this problem.</h1>
   <p>ContractIQ exists because contract value quietly leaks — through missed notice windows, unread clauses and licences nobody uses.</p>
 </header>
+<svg class="ridge" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,74 C180,32 330,106 520,80 C700,56 840,114 1010,86 C1180,58 1320,102 1440,68 L1440,150 L0,150 Z" fill="#16253D"/>
+  <path d="M0,104 C200,70 360,128 560,106 C760,84 900,134 1080,110 C1240,88 1350,122 1440,102 L1440,150 L0,150 Z" fill="#6E86A6"/>
+  <path d="M0,124 C220,100 380,142 600,124 C820,106 960,146 1140,128 C1290,113 1370,132 1440,124 L1440,150 L0,150 Z" fill="#F4F8FC"/>
+</svg>
 <section>
   <div class="prose">
     <h2>Why ContractIQ exists</h2>
@@ -286,40 +322,46 @@
     <h2>The principles it's built on</h2>
     <ul>
       <li><b>Honesty about what it is.</b> ContractIQ is a screening aid, not legal advice — and it says so everywhere it matters, including on every export.</li>
-      <li><b>Your data is yours.</b> Workspaces run on your own database, accounts are isolated at the database-engine level, and nothing is ever used to train AI models.</li>
+      <li><b>Your data is yours.</b> Workspaces are separated by row-level security enforced in a single UK-hosted Supabase project operated by CodeIQ Holdings Ltd, so one customer's data cannot be reached from another's session; US hosting is available by arrangement on Enterprise. The AI runs on Amazon Bedrock in AWS data centres in the UK, the EEA and Switzerland; Amazon does not keep what is sent to it or pass it to the model's developer, and nothing is ever used to train AI models — the <a href="legal.html#subprocessors">sub-processor list</a> names everyone who handles it.</li>
       <li><b>Evidence over adjectives.</b> Every analysis shows its reasoning — the clause, the risk, the number — so stakeholders can verify rather than trust blindly.</li>
     </ul>
     <h2>Where it's going</h2>
     <p>The roadmap is shaped directly by founding customers: deeper playbook comparison, portfolio benchmarking, and native integrations are next. If you want a say in that, <a href="pricing.html">a founding place</a> comes with a direct line to the founder.</p>
-    <p class="meta">Company details, registration number and address will be published here on incorporation.</p>
   </div>
 </section>
 <footer class="footer">
   <div class="foot-grid">
     <div>
-      <div class="foot-brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</div>
-      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk, opportunity and legal compliance — before the renewal clock runs out.</p>
+      <a class="foot-brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk,
+         opportunity and legal compliance — before the renewal clock runs out.</p>
     </div>
     <div>
       <h4>Product</h4>
-      <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="security.html">Security</a><a href="about.html">About</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="demo/">Live demo</a>
+      <a href="app/">Open the app</a>
     </div>
     <div>
       <h4>Company</h4>
-      <a href="contact.html">Contact</a><a href="legal.html">Legal Centre</a><a href="legal.html#msa">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#dpa">Data Processing (DPA)</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="legal.html">Legal Centre</a>
+      <a href="legal.html#msa">Terms of Service</a>
+      <a href="legal.html#privacy">Privacy Policy</a>
+      <a href="legal.html#dpa">Data Processing (DPA)</a>
     </div>
   </div>
   <div class="foot-base">
-    <div>&copy; 2026 ContractIQ Platform. All rights reserved. Automated screening aid &mdash; not legal advice.<br><span style="opacity:.75">ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX. ICO registration ICO00015500673.</span></div>
-    <div><a href="legal.html#privacy">Privacy</a> &nbsp;|&nbsp; <a href="legal.html#msa">Terms</a></div>
+    © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
+    ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
+    Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
+    ICO registration ICO00015500673.
   </div>
 </footer>
-<script>
-/* Failsafe: never let a motion bug leave content hidden. */
-setTimeout(function(){
-  var h=document.querySelectorAll('.reveal:not(.is-in)');
-  for(var i=0;i<h.length;i++) h[i].classList.add('is-in');
-}, 2600);
-</script>
+
+<script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

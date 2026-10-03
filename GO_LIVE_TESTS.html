@@ -177,7 +177,7 @@
 <pre><code>select id, type, received_at from stripe_events order by received_at desc limit 5;</code></pre>
     <span class="why">A 400 saying "Signature verification failed" means the signing secret is wrong — it is easy to copy the API key by mistake.</span></li>
   <li><b>5 · Run the site locally and open the pricing page.</b>
-<pre><code>cd "$HOME/Desktop/2026 - Months/September/ContractIQ_GitHub_FullApp_v9" && python3 -m http.server 8000</code></pre>
+<pre><code>cd "$HOME/Desktop/2026 - Months/September/ContractIQ_GitHub_FullApp_v10" && python3 -m http.server 8000</code></pre>
     <span class="why">Then <code>http://localhost:8000/pricing.html</code>. Localhost is allowed automatically while the Stripe key is a test key, so you do not need to touch <code>ALLOWED_ORIGIN</code>.</span></li>
   <li class="money"><b>6 · Choose Growth or Scale and pay with <code>4242 4242 4242 4242</code>,</b> any future expiry, any CVC.<span class="why">The payment appears under Payments in your Stripe sandbox.</span></li>
   <li><b>7 · Confirm checkout will not proceed without all three confirmations.</b><span class="why">Terms, "buying for a business with authority", and the AI limitations notice. Self-serve has no signed Order Form, so these are where those confirmations now live — and without the business confirmation, consumer cancellation rights apply by default.</span></li>

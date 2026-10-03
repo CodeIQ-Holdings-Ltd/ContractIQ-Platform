@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<script>document.documentElement.className+=' js';</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Editions & Pricing — ContractIQ Platform</title>
-<meta name="description" content="Free Evaluation Sandbox, Growth at £79/month with audit roll-over, and custom Enterprise plans." />
+<meta name="description" content="Four editions: a free Evaluation Sandbox, Growth at £79 a month, Scale at £270 and Enterprise at £700 a month, with unused credits rolling over on paid plans." />
 <link rel="canonical" href="https://www.contractiq.example/pricing.html" />
 <meta name="theme-color" content="#152238" />
 <meta property="og:type" content="website" /><meta property="og:site_name" content="ContractIQ Platform" />
-<meta property="og:title" content="Editions & Pricing — ContractIQ Platform" /><meta property="og:description" content="Free Evaluation Sandbox, Growth at £79/month with audit roll-over, and custom Enterprise plans." />
+<meta property="og:title" content="Editions & Pricing — ContractIQ Platform" /><meta property="og:description" content="Four editions: a free Evaluation Sandbox, Growth at £79 a month, Scale at £270 and Enterprise at £700 a month, with unused credits rolling over on paid plans." />
 <meta property="og:url" content="https://www.contractiq.example/pricing.html" /><meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -261,23 +262,58 @@
     .plans { grid-template-columns: 1fr; }
   }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />  <link rel="stylesheet" href="assets/motion.css" />
-  <script src="assets/motion.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/ciq-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 </head>
 <body>
-<nav class="nav">
-  <a href="index.html" class="brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</a>
-  <div class="nav-links">
-    <a href="index.html" class="hide-m">Home</a><a href="features.html" class="hide-m">Features</a><a href="pricing.html" style="color:#fff" class="hide-m">Pricing</a><a href="security.html" class="hide-m">Security</a><a href="about.html" class="hide-m">About</a><a href="contact.html" class="hide-m">Contact</a>
-    <a class="btn sm" href="app/">Start free</a>
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Platform <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="features.html"><b>Features</b><span>Every capability, and how each one shows its working</span></a>
+          <a href="security.html"><b>Security</b><span>How your documents are handled, stored and erased</span></a>
+          <a href="index.html#process"><b>How it works</b><span>Two fields, then the AI does the reading</span></a>
+          <a href="demo/"><b>Live demo</b><span>The real interface on sample data — no sign-up</span></a>
+          <a class="full" href="app/"><b>Open the application →</b><span>Sign in, or create a free Evaluation Sandbox workspace</span></a>
+        </div>
+      </li>
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Plans <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="pricing.html"><b>Pricing</b><span>Sandbox, Growth, Scale and Enterprise, and what a credit buys</span></a>
+          <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
+          <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
+          <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
+          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
+        </div>
+      </li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="legal.html">Legal</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn ghost" href="demo/">Live demo</a>
+      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
   </div>
 </nav>
 
 <header class="page-hero">
+  <div class="ciq-bg"><img src="assets/hero-mountains.jpg" alt="" /></div><div class="ciq-orb a"></div><div class="ciq-orb b"></div>
   <div class="kick">Pricing</div>
   <h1>Simple tiers. Serious analysis.</h1>
-  <p>Three editions of the ContractIQ Platform. Start free, scale as your contract estate grows — unused audits roll over on paid plans.</p>
+  <p>Four editions of the ContractIQ Platform. Start free, scale as your contract estate grows — unused audits roll over on paid plans.</p>
 </header>
+<svg class="ridge" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,74 C180,32 330,106 520,80 C700,56 840,114 1010,86 C1180,58 1320,102 1440,68 L1440,150 L0,150 Z" fill="#16253D"/>
+  <path d="M0,104 C200,70 360,128 560,106 C760,84 900,134 1080,110 C1240,88 1350,122 1440,102 L1440,150 L0,150 Z" fill="#6E86A6"/>
+  <path d="M0,124 C220,100 380,142 600,124 C820,106 960,146 1140,128 C1290,113 1370,132 1440,124 L1440,150 L0,150 Z" fill="#F4F8FC"/>
+</svg>
 <section>
   <div class="wrap">
     <div id="founding-banner" style="background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;padding:20px 26px;text-align:center;font-weight:600;font-size:15px;margin-bottom:34px;border-radius:10px;">
@@ -288,7 +324,7 @@
         <div class="tier">Evaluation Sandbox</div>
         <div class="amt">£0</div>
         <div class="per">Permanently free · no card required</div>
-        <ul><li><b>150 credits</b> every 90 days</li><li>About 2 analyses plus 65 questions</li><li>Standard risk triage dashboard</li><li>Core clause checking routines</li><li>Renewal alerts and exports included</li></ul>
+        <ul><li><b>100 credits</b> every 90 days</li><li>For example 5 analyses plus 25 questions</li><li>Standard risk triage dashboard</li><li>Core clause checking routines</li><li>Renewal alerts and exports included</li><li>AI runs in the UK and EU; the AI provider keeps nothing</li></ul>
         <a class="btn ghost" href="checkout.html?plan=sandbox" style="text-align:center">Start free</a>
       </div>
       <div class="plan pop">
@@ -296,42 +332,50 @@
         <div class="tier">Growth / Professional</div>
         <div class="amt">£79<small>/month</small></div>
         <div class="per">Cancel any time · any tax due is shown before you confirm</div>
-        <ul><li><b>500 credits</b> a month</li><li>About 12 analyses plus 190 questions</li><li>Unused credits roll over, up to 500</li><li>Custom playbook configuration</li><li>Cross-document analysis and transcripts</li><li>30-day revision windows</li></ul>
+        <ul><li><b>500 credits</b> a month</li><li>About 12 analyses plus 190 questions</li><li>Unused credits roll over, up to 500</li><li>Custom playbook configuration</li><li>Cross-document analysis; transcript ingestion on every plan</li><li>30-day revision windows</li><li>AI runs in the UK and EU; the AI provider keeps nothing</li></ul>
         <a class="btn pri" href="checkout.html?plan=growth" style="text-align:center">Choose Growth</a>
       </div>
       <div class="plan">
         <div class="tier">Scale</div>
         <div class="amt">£270<small>/month</small></div>
         <div class="per">For heavier contract estates</div>
-        <ul><li><b>1,800 credits</b> a month</li><li>About 45 analyses plus 675 questions</li><li>Unused credits roll over, up to 1,800</li><li>Everything in Growth</li><li>Priority analysis queue</li><li>Quarterly portfolio review export</li></ul>
+        <ul><li><b>1,800 credits</b> a month</li><li>About 45 analyses plus 675 questions</li><li>Unused credits roll over, up to 1,800</li><li>Everything in Growth</li><li>Priority analysis queue</li><li>On-demand executive portfolio digest, on every plan</li><li>AI runs in the UK and EU; the AI provider keeps nothing</li></ul>
         <a class="btn ghost" href="checkout.html?plan=scale" style="text-align:center">Choose Scale</a>
       </div>
       <div class="plan">
         <div class="tier">Enterprise Suite</div>
         <div class="amt">£700<small>/month</small></div>
         <div class="per">Flat monthly price · annual invoicing available</div>
-        <ul><li><b>5,000 credits</b> a month</li><li>Volume scaled to your estate</li><li>Zero-Retention processing</li><li>Dedicated API access keys</li><li>Corporate SSO and isolated environments</li></ul>
+        <ul><li><b>5,000 credits</b> a month</li><li>Volume scaled to your estate</li><li>Zero-Retention mode: document text is never saved</li><li>API access is on the roadmap, arranged during onboarding</li><li>SSO and a dedicated deployment set up with you during onboarding</li><li>AI runs in the UK and EU; the AI provider keeps nothing</li><li>US data hosting available by arrangement</li></ul>
         <a class="btn ghost" href="checkout.html?plan=enterprise" style="text-align:center">Talk to sales</a>
       </div>
     </div>
 
     <div style="max-width:900px;margin:40px auto 0">
-      <h3 style="font-size:20px;font-weight:700;color:var(--navy-900);text-align:center;margin-bottom:6px">What is a credit?</h3>
+      <h3 style="font-size:20px;font-weight:700;color:var(--navy-900);text-align:center;margin-bottom:6px">How credits work</h3>
       <p style="text-align:center;color:var(--grey);font-size:15px;margin-bottom:22px">
-        One unit for every AI action, so you always know what you are spending — and never get a surprise bill.
+        A credit is a fixed unit, not a variable one. The same operation costs the same whatever the document.
       </p>
-      <div class="hexgrid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+      <p style="text-align:center;color:var(--ink);font-size:14.5px;margin-bottom:22px">
+        <strong>Unused credits roll over, up to one period's worth.</strong> Whatever you have not spent when the period
+        ends is banked and added to the next one, capped at a single period's allowance — 500 on Growth, 1,800 on Scale,
+        5,000 on Enterprise Suite. The cap is there so a workspace cannot bank six months and then put an entire estate
+        through in one weekend. Banked credits end with the subscription; credits you have bought outright are drawn on
+        only once the period allowance is gone, are never capped, and never expire.
+      </p>
+      <div class="hexgrid">
         <div class="hcard"><h3>10 credits</h3><p>A full contract analysis — extraction, scoring, compliance review, knowledge capture and insights.</p></div>
         <div class="hcard"><h3>2 credits</h3><p>One question to Cedric, answered from your own documents and analysis.</p></div>
-        <div class="hcard"><h3>0 credits</h3><p>Re-running an analysis on the same record inside your revision window. Refining is free.</p></div>
+        <div class="hcard"><h3>0 credits</h3><p>Re-running an analysis on the same record inside your revision window, on paid plans. Refining is free.</p></div>
       </div>
       <p style="text-align:center;color:var(--grey);font-size:14px;margin-top:22px">
-        Run out mid-month? Top-up packs are <b>500 credits for £39</b> or <b>2,000 credits for £119</b> — no subscription change needed.
-        Ingesting documents, renewal alerts, calendar exports and reports never cost credits.
+        Run out mid-month? A top-up pack of <b>100 credits is £25</b>, bought from inside the app — no change to your subscription.
+        Ingesting documents, renewal alerts, calendar exports and reports never cost credits. The account runs up to 20 analyses
+        and 120 questions an hour; anything beyond that queues for the next hour.
       </p>
     </div>
     </div>
-    <p class="legal-note">All prices exclude VAT. Credits meter AI usage only. Storing contracts, ingesting documents, renewal alerts and exports are unlimited on every edition. <a href="contact.html">Questions?</a></p>
+    <p class="legal-note">Prices are in pounds sterling; any tax due is shown on Stripe's payment page before you confirm. Credits meter AI usage only. Storing contracts, ingesting documents, renewal alerts and exports are unlimited on every edition, and your work is saved automatically as you go. Of what you upload, the extracted text and the analysis are stored; the original file stays in your browser. On every plan the AI runs on Amazon Bedrock in AWS regions in the UK, EEA and Switzerland, and neither Amazon nor the model developer keeps what is sent. Renewal alerts are calendar reminders you export as an .ics file; they fire from your own calendar, not from us, and there is no email or push alerting. <a href="contact.html">Questions?</a></p>
   </div>
 </section>
 <section class="soft-band">
@@ -342,12 +386,13 @@
 <path d="M32 38 h36 M32 50 h36 M32 62 h22" stroke="url(#hxg)" stroke-width="6" stroke-linecap="round"/></svg><div class="k">Questions</div><h2>Frequently asked</h2><p class="s">ContractIQ in plain English — what it is, what it costs, where your data lives.</p></div>
     <div class="faq">
       <details><summary><span class="num">01</span>Is ContractIQ legal advice?</summary><p class="fp">No. ContractIQ is an automated analytical screening aid. Its risk indicators, clause flags and drafting observations are for preliminary triage only, do not constitute legal advice, and create no solicitor–client relationship. Qualified counsel should verify all positions before signature — users retain full responsibility for validating outputs against the original text.</p></details>
-      <details><summary><span class="num">02</span>How do credits work?</summary><p class="fp">Every AI action costs credits: 10 for a full contract analysis, 2 for a question to Cedric, and nothing to re-run an analysis inside your revision window. Everything else — storing contracts, ingesting documents, renewal alerts, calendar deadlines and report exports — is unlimited. Unused credits roll over up to the cap on your plan, and top-up packs are available if you run short.</p></details>
+      <details><summary><span class="num">02</span>How do credits work?</summary><p class="fp">Every AI action costs credits: 10 for a full contract analysis, 2 for a question to Cedric, and nothing to re-run an analysis inside your revision window on paid plans. Everything else — storing contracts, ingesting documents, renewal alerts, calendar deadlines and report exports — is unlimited. Unused credits roll over up to the cap on your plan, and top-up packs are available if you run short.</p></details>
       <details><summary><span class="num">03</span>What documents can I ingest?</summary><p class="fp">Contracts, purchase orders, statements of work, tracking spreadsheets and user detail files. Analysis extracts the contract's title, value, term, notice period, user counts and clause positions automatically.</p></details>
-      <details><summary><span class="num">04</span>Where is my data stored?</summary><p class="fp">In your own Supabase-backed workspace. With Zero-Retention mode enabled, source document text is purged the moment analysis completes.</p></details>
-      <details><summary><span class="num">05</span>Can multiple people use one account?</summary><p class="fp">Yes — ContractIQ runs on a business account with individual usernames, roles and an admin-managed team list.</p></details>
-      <details><summary><span class="num">06</span>What platforms does it run on?</summary><p class="fp">ContractIQ runs worldwide — as a web-based app in any modern browser, or as a standalone desktop download for Windows and macOS. Both connect to your own workspace.</p></details>
-      <details><summary><span class="num">07</span>Can I cancel at any time?</summary><p class="fp">Yes. Growth is a monthly subscription with no minimum term — cancel and you keep access until the end of the paid period. Banked roll-over audits expire when the subscription ends.</p></details>
+      <details><summary><span class="num">04</span>Where is my data stored?</summary><p class="fp">Your workspace lives in a Supabase database in London, operated for CodeIQ Holdings Ltd. Workspaces are separated by row-level security enforced in the database itself, so one customer's records cannot be reached from another's session. The original files you upload never leave your browser; the text read from them and the analysis are stored so you can search and re-analyse. On Enterprise, Zero-Retention mode means document text is never saved at all — only the extracted details and the analysis. US hosting can be arranged for Enterprise customers who need it.</p></details>
+      <details><summary><span class="num">05</span>Which AI do you use, and does it keep my documents?</summary><p class="fp">Anthropic's Claude model, run for us by Amazon Web Services through Amazon Bedrock, in AWS data centres in the UK, the EEA and Switzerland. Amazon Bedrock does not store what is sent to the model or what it answers, and does not pass it to Anthropic. Nothing you upload is used to train any AI model. Names, email addresses and phone numbers in meeting transcripts are replaced with labels in your browser before anything is sent.</p></details>
+      <details><summary><span class="num">06</span>Can multiple people use one account?</summary><p class="fp">Yes — ContractIQ runs on a business account with individual usernames, roles and an admin-managed team list.</p></details>
+      <details><summary><span class="num">07</span>What platforms does it run on?</summary><p class="fp">ContractIQ runs worldwide, in any modern browser on Windows, macOS and Linux. There is nothing to install and nothing to keep updated — sign in and your workspace is there.</p></details>
+      <details><summary><span class="num">08</span>Can I cancel at any time?</summary><p class="fp">Yes. Growth bought directly is a monthly subscription with no minimum term — cancel and you keep access until the end of the paid period. A founding place is the one exception: it carries a six-month minimum term, and cancels from the six-month anniversary onwards. Banked roll-over audits expire when the subscription ends.</p></details>
     </div>
   </div>
 </section>
@@ -357,30 +402,36 @@
 <footer class="footer">
   <div class="foot-grid">
     <div>
-      <div class="foot-brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</div>
-      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk, opportunity and legal compliance — before the renewal clock runs out.</p>
+      <a class="foot-brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk,
+         opportunity and legal compliance — before the renewal clock runs out.</p>
     </div>
     <div>
       <h4>Product</h4>
-      <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="security.html">Security</a><a href="about.html">About</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="demo/">Live demo</a>
+      <a href="app/">Open the app</a>
     </div>
     <div>
       <h4>Company</h4>
-      <a href="contact.html">Contact</a><a href="legal.html">Legal Centre</a><a href="legal.html#msa">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#dpa">Data Processing (DPA)</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="legal.html">Legal Centre</a>
+      <a href="legal.html#msa">Terms of Service</a>
+      <a href="legal.html#privacy">Privacy Policy</a>
+      <a href="legal.html#dpa">Data Processing (DPA)</a>
     </div>
   </div>
   <div class="foot-base">
-    <div>&copy; 2026 ContractIQ Platform. All rights reserved. Automated screening aid &mdash; not legal advice.<br><span style="opacity:.75">ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX. ICO registration ICO00015500673.</span></div>
-    <div><a href="legal.html#privacy">Privacy</a> &nbsp;|&nbsp; <a href="legal.html#msa">Terms</a></div>
+    © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
+    ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
+    Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
+    ICO registration ICO00015500673.
   </div>
 </footer>
-<script>
-/* Failsafe: never let a motion bug leave content hidden. */
-setTimeout(function(){
-  var h=document.querySelectorAll('.reveal:not(.is-in)');
-  for(var i=0;i<h.length;i++) h[i].classList.add('is-in');
-}, 2600);
-</script>
+
 
 <script>
 /* Founding banner — same live count as the homepage. Hidden entirely
@@ -388,8 +439,8 @@ setTimeout(function(){
    offer that no longer exists. Hidden too if the count cannot be read,
    because a wrong claim here is worse than no claim. */
 (function () {
-  var SUPABASE_URL = '';                  // https://xxxx.supabase.co
-  var SUPABASE_PUBLISHABLE_KEY = '';      // sb_publishable_…
+  var SUPABASE_URL = 'https://aremuhzsgmqginhmpfno.supabase.co';                  // https://xxxx.supabase.co
+  var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5XMn3xiA5ueSGDfjvOxgew_0Cp0TWwr';      // sb_publishable_…
 
   var banner = document.getElementById('founding-banner');
   var text   = document.getElementById('fo-text');
@@ -422,5 +473,6 @@ setTimeout(function(){
     .catch(function () { /* stays hidden */ });
 })();
 </script>
+<script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

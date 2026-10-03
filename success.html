@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<script>document.documentElement.className+=' js';</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Welcome to ContractIQ</title>
@@ -47,11 +48,46 @@
   footer { background:var(--navy-950); color:#7E9CC4; text-align:center; padding:26px 5vw; font-size:12.5px; font-weight:600; }
   footer a { color:#A9C4E6; text-decoration:none; }
 </style>
-  <link rel="stylesheet" href="assets/motion.css" />
-  <script src="assets/motion.js" defer></script>
+<link rel="stylesheet" href="assets/ciq-theme.css">
 </head>
 <body>
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Platform <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="features.html"><b>Features</b><span>Every capability, and how each one shows its working</span></a>
+          <a href="security.html"><b>Security</b><span>How your documents are handled, stored and erased</span></a>
+          <a href="index.html#process"><b>How it works</b><span>Two fields, then the AI does the reading</span></a>
+          <a href="demo/"><b>Live demo</b><span>The real interface on sample data — no sign-up</span></a>
+          <a class="full" href="app/"><b>Open the application →</b><span>Sign in, or create a free Evaluation Sandbox workspace</span></a>
+        </div>
+      </li>
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Plans <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="pricing.html"><b>Pricing</b><span>Sandbox, Growth, Scale and Enterprise, and what a credit buys</span></a>
+          <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
+          <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
+          <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
+          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
+        </div>
+      </li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="legal.html">Legal</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn ghost" href="demo/">Live demo</a>
+      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</nav>
 <header class="hero">
+  <div class="ciq-bg"><img src="assets/hero-mountains.jpg" alt="" /></div><div class="ciq-orb a"></div><div class="ciq-orb b"></div>
   <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg></div>
   <h1 id="headline">Payment received.</h1>
   <p id="sub">One short step left: create your sign-in.</p>
@@ -79,16 +115,44 @@
   </div>
 </div>
 
-<footer>
-  ContractIQ Platform · <a href="legal.html#msa">Terms</a> · <a href="legal.html#privacy">Privacy</a> · <a href="contact.html">Contact</a>
-  <br /><span style="font-weight:500;color:#6E8CB4">Automated screening aid — not legal advice.</span>
+<footer class="footer">
+  <div class="foot-grid">
+    <div>
+      <a class="foot-brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk,
+         opportunity and legal compliance — before the renewal clock runs out.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="demo/">Live demo</a>
+      <a href="app/">Open the app</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="legal.html">Legal Centre</a>
+      <a href="legal.html#msa">Terms of Service</a>
+      <a href="legal.html#privacy">Privacy Policy</a>
+      <a href="legal.html#dpa">Data Processing (DPA)</a>
+    </div>
+  </div>
+  <div class="foot-base">
+    © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
+    ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
+    Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
+    ICO registration ICO00015500673.
+  </div>
 </footer>
 
 <script>
 (function () {
   var plan = new URLSearchParams(location.search).get("plan") || "growth";
   var COPY = {
-    sandbox: { h: "Your free workspace is ready.", s: "150 credits every 90 days — no card, no expiry date, no catch." },
+    sandbox: { h: "Your free workspace is ready.", s: "100 credits every 90 days — no card, no expiry date, no catch." },
     growth:  { h: "You're on Growth. Welcome aboard.", s: "500 credits a month, playbook rules and cross-document analysis — as soon as you create your sign-in." },
     scale:   { h: "You're on Scale. Welcome aboard.", s: "1,800 credits a month and priority analysis — as soon as you create your sign-in." }
   };
@@ -123,12 +187,7 @@
   }
 })();
 </script>
-<script>
-/* Failsafe: never let a motion bug leave content hidden. */
-setTimeout(function(){
-  var h=document.querySelectorAll('.reveal:not(.is-in)');
-  for(var i=0;i<h.length;i++) h[i].classList.add('is-in');
-}, 2600);
-</script>
+
+<script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

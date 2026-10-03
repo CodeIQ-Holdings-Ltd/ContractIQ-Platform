@@ -1,0 +1,27 @@
+{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Sid": "UsProfileOnly",
+   "Effect": "Allow",
+   "Action": "bedrock:InvokeModel",
+   "Resource":
+    "arn:aws:bedrock:us-east-1:YOUR_ACCOUNT_ID:inference-profile/us.anthropic.claude-sonnet-5"
+  },
+  {
+   "Sid": "ModelOnlyThroughUsProfile",
+   "Effect": "Allow",
+   "Action": "bedrock:InvokeModel",
+   "Resource": [
+    "arn:aws:bedrock:us-*::foundation-model/anthropic.claude-sonnet-5*",
+    "arn:aws:bedrock:ca-*::foundation-model/anthropic.claude-sonnet-5*"
+   ],
+   "Condition": {
+    "StringLike": {
+     "bedrock:InferenceProfileArn":
+      "arn:aws:bedrock:us-east-1:YOUR_ACCOUNT_ID:inference-profile/us.anthropic.claude-sonnet-5"
+    }
+   }
+  }
+ ]
+}

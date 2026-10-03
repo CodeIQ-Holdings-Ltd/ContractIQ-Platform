@@ -34,10 +34,21 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
+// Projects created in 2026 use sb_publishable_/sb_secret_ keys, injected as
+// JSON dictionaries. Prefer those; fall back to the legacy single keys.
+function firstKey(jsonDict: string | undefined): string {
+  if (!jsonDict) return "";
+  try {
+    const d = JSON.parse(jsonDict);
+    if (typeof d === "string") return d;
+    return String(d.default ?? Object.values(d)[0] ?? "");
+  } catch { return ""; }
+}
+
 const STRIPE_KEY     = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
 const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 const SUPABASE_URL   = Deno.env.get("SUPABASE_URL") ?? "";
-const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SERVICE_KEY    = firstKey(Deno.env.get("SUPABASE_SECRET_KEYS")) || (Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
 
 const db = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
 

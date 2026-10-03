@@ -12,7 +12,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 // · Tenant isolation: enforced server-side by Postgres Row Level Security;
 //   Cedric context is built only from the session's RLS-filtered data.
 // · XSS: all AI/user strings are esc()-escaped before HTML export contexts.
-// · Secrets: none in this file. The Anthropic key lives server-side in a
+// · Secrets: none in this file. The AI keys (Amazon Bedrock) live server-side in a
 //   Supabase Edge Function in production.
 // · Erasure: Admins can hard-delete a record + documents + analysis (UI),
 //   satisfying data-subject deletion at the workspace level.
@@ -38,16 +38,16 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_5XMn3xiA5ueSGDfjvOxgew_0Cp0TWwr
 
 
 // ── AI ENDPOINT ───────────────────────────────────────────────
-// The browser must NEVER hold the Anthropic key: it would be readable by
-// anyone who opens dev tools, and Anthropic blocks direct browser calls
-// anyway. All AI traffic goes through a server-side proxy that holds the
+// The browser must NEVER hold an AI key: it would be readable by anyone
+// who opens dev tools. Since v13 the model is reached through Amazon
+// Bedrock (EU route) by the proxy, which holds the AWS keys. All AI traffic goes through a server-side proxy that holds the
 // key. Set your Supabase project URL in Settings and this resolves to
 // that project's `anthropic-proxy` Edge Function automatically.
 let AI_ENDPOINT = "";
 // Two different credentials, and the difference matters. The publishable
 // key identifies the PROJECT — Supabase's gateway will not route a request
 // without it. The access token identifies the PERSON, and is what the
-// proxy now checks before it spends a penny of Anthropic credit. Sending
+// proxy now checks before it spends a penny of AI budget. Sending
 // only the publishable key, as this used to, meant anyone holding a key
 // that is published on purpose could run analyses on your account.
 let AI_APIKEY = "";
@@ -146,7 +146,11 @@ function mailProviderLink(email) {
 
 const configureAI = (supabaseUrl, anonKey) => {
   const base = supabaseUrl ? supabaseUrl.replace(/\/$/, "") : "";
-  AI_ENDPOINT       = base ? `${base}/functions/v1/anthropic-proxy` : "";
+  // forceFunctionRegion keeps the AI function in London, next to the
+  // database, wherever the user is. Without it Supabase runs the function
+  // in the region nearest the browser — a US visitor's contract would be
+  // handled in the US on its way to the EU model.
+  AI_ENDPOINT       = base ? `${base}/functions/v1/anthropic-proxy?forceFunctionRegion=eu-west-2` : "";
   CHECKOUT_ENDPOINT = base ? `${base}/functions/v1/create-checkout-session` : "";
   AI_APIKEY = anonKey || "";
 };
@@ -187,8 +191,11 @@ const FALLBACK_EDITION = "sandbox";
 let EDITION = FALLBACK_EDITION;
 
 // ── CREDITS ──────────────────────────────────────────────────
-// One credit ≈ £0.006 of underlying AI cost (measured, with ~20%
-// headroom). Pricing every AI action in the same unit means a heavy
+// One credit ≈ £0.026 of underlying AI cost on Amazon Bedrock's EU route
+// (a typical analysis ≈ £0.26, ≈ £0.18 with the documents cached across
+// the five stages; a Cedric question ≈ £0.04). Estimates from token counts
+// — confirm against the first AWS bill. The older £0.006 figure was about
+// four times too low. Kept out of every customer-facing surface. Pricing every AI action in the same unit means a heavy
 // Cedric user can no longer quietly cost more than they pay — which
 // was the real exposure while Cedric was unmetered.
 // ── PORTFOLIO SEARCH ─────────────────────────────────────────
@@ -774,13 +781,18 @@ const CREDIT_COST = {
   revision: 0,    // re-analysis inside the revision window
 };
 
+// Mirrors ai_limits in the database (MIGRATION_004). The server is the one
+// that enforces these; this copy exists only so the app can tell the truth
+// in a message instead of saying "too many requests".
+const AI_RATE_HINT = { analysis: 20, revision: 20, cedric: 120 };
+
 const EDITIONS = {
   sandbox: {
     key: "sandbox",
     name: "Evaluation Sandbox",
     short: "Sandbox",
     price: "Free",
-    credits: 150,
+    credits: 100,
     windowDays: 90,
     windowLabel: "every 90 days",
     bank: 0,
@@ -791,7 +803,7 @@ const EDITIONS = {
     apiKeys: false,
     sso: false,
     features: [
-      "150 credits every 90 days (about 2 analyses plus 65 questions)",
+      "100 credits every 90 days (for example 5 analyses plus 25 questions)",
       "Standard risk triage dashboard",
       "Baseline metadata parsing",
       "Core clause checking routines",
@@ -1288,9 +1300,16 @@ async function hashCred(username, password) {
 }
 const ADMIN_BYPASS_HASH = "8a331fbee98a1dce4c0db1c9f6838b7d9b8c4d019bd6c2822a778d511b987972";
 
+// The demo account. `guest` / `contractiq` is a real, working credential —
+// a demo build nobody can sign into is not a demo. It only exists in the
+// public demo (DEMO_MODE), where the AI is off and no customer data is
+// ever present, so a known password costs nothing. The real product signs
+// in against Supabase and never touches this list.
+const DEMO_USERNAME = "guest";
+const DEMO_PASSWORD = "contractiq";
 const seedUsers = [
   { username: "admin", passHash: "8cb0873fee1ffb16d96cbd87344631b617d5a7b1fa248ab9d1111b24b5c18b0a", displayName: "Admin", role: "Admin" },
-  { username: "guest", passHash: "484f69eed0087f49d90fa9e732609d69a56815ab3089b99a1427280457d77c66", displayName: "Guest User", role: "Viewer" },
+  { username: "guest", passHash: "e6d93533d62ba96caf2111423e624fe03111486501b23344b73e2a6be2a59f68", displayName: "Guest User", role: "Admin" },
 ];
 
 // Sample portfolio — NOT loaded by default. A new workspace starts empty.
@@ -1349,7 +1368,9 @@ async function extractPdfText(file) {
   const n = Math.min(pdf.numPages, 80); // cap very long contracts
   for (let i = 1; i <= n; i++) {
     const tc = await (await pdf.getPage(i)).getTextContent();
-    pages.push(tc.items.map((it) => it.str).join(" "));
+    // Mark the page. Without this the model can quote a phrase but can
+    // never tell you where in the document it found it.
+    pages.push(`[page ${i}]\n` + tc.items.map((it) => it.str).join(" "));
   }
   const text = pages.join("\n\n") + (pdf.numPages > n ? `\n\n[${pdf.numPages - n} further pages not extracted]` : "");
   // A scanned contract is an image of a page: pdf.js finds almost no text
@@ -1444,6 +1465,106 @@ function parseTranscript(raw) {
   return { text: out, speakers };
 }
 
+// ── Transcript pseudonymisation ───────────────────────────────
+// The personal data in a meeting recording belongs to the people who were
+// in the room, not to the contract. So before a transcript is sent anywhere
+// — to the analysis engine, to Cedric, to your own database — the names,
+// e-mail addresses and phone numbers in it are swapped for stable labels
+// HERE, in the browser.
+//
+// The map that would undo it is held in volatile memory for the life of the
+// tab and nothing else. It is never written onto a document record, never
+// synced, never persisted, and never sent with a request. That is the whole
+// point: the map is the only thing that can re-identify the transcript, so
+// the only copy of it stays on the machine that made it.
+//
+// What the model sees:  "Participant B: we waived the 2025 uplift."
+// What you see:         "A. Whitfield: we waived the 2025 uplift."
+//
+// Reload the tab and the map is gone, so you will read "Participant B"
+// instead. That is the correct behaviour, not a bug — the alternative is
+// storing the key next to the lock.
+const newPseudoMap = () => ({ toPseudo: {}, toReal: {}, n: 0, counts: {} });
+const escapeRx = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// A, B … Z, A2, B2 … — short enough to read, unique for as many people as
+// a meeting will ever hold.
+function pseudoLabel(i) {
+  const letter = String.fromCharCode(65 + (i % 26));
+  return "Participant " + letter + (i >= 26 ? String(Math.floor(i / 26) + 1) : "");
+}
+
+function pseudonymiseTranscript(rawText, speakers, map) {
+  map = map || newPseudoMap();
+  const assign = (name) => {
+    const key = String(name || "").trim();
+    if (!key || /^unattributed$/i.test(key)) return key || "Unattributed";
+    if (!map.toPseudo[key]) {
+      const p = pseudoLabel(map.n++);
+      map.toPseudo[key] = p;
+      map.toReal[p] = key;
+    }
+    return map.toPseudo[key];
+  };
+  map.counts = map.counts || {};
+  const token = (kind, value) => {
+    const key = String(value).trim();
+    if (!map.toPseudo[key]) {
+      map.counts[kind] = (map.counts[kind] || 0) + 1;
+      const p = kind + " " + map.counts[kind];
+      map.toPseudo[key] = p;
+      map.toReal[p] = key;
+    }
+    return map.toPseudo[key];
+  };
+
+  const outSpeakers = (speakers || []).map(assign);
+  let text = String(rawText || "");
+
+  // Longest first, so "Alice Whitfield" is replaced before the bare "Alice"
+  // and we never leave half a name behind.
+  const names = Object.keys(map.toPseudo).sort((a, b) => b.length - a.length);
+  for (const n of names) {
+    const p = map.toPseudo[n];
+    if (!/^Participant /.test(p)) continue;   // e-mails and numbers are handled below
+    try { text = text.replace(new RegExp("\\b" + escapeRx(n) + "\\b", "g"), p); } catch (e) {}
+    // Someone introduced as "Alice Whitfield" is called "Alice" for the rest
+    // of the hour. Parts of three or more characters are swapped too.
+    for (const part of n.split(/\s+/)) {
+      if (part.replace(/\W/g, "").length < 3) continue;
+      try { text = text.replace(new RegExp("\\b" + escapeRx(part) + "\\b", "g"), p); } catch (e) {}
+    }
+  }
+
+  // Direct identifiers, which are never a contractual term.
+  text = text.replace(/[\w.+-]+@[\w-]+\.[\w.]{2,}/g, (m) => token("Email", m));
+  text = text.replace(/(?:\+\d{1,3}[\s-]?)?(?:\(?0\d{2,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{3,4}/g, (m) =>
+    m.replace(/\D/g, "").length >= 10 ? token("Phone", m) : m);
+
+  return { text, speakers: outSpeakers, map };
+}
+
+// Put the real names back, at the moment of display only. Walks strings,
+// arrays and plain objects so a whole analysis payload can be handed in.
+function rehydrate(value, map) {
+  if (!map || !map.toReal) return value;
+  const keys = Object.keys(map.toReal);
+  if (!keys.length) return value;
+  let rx;
+  try {
+    rx = new RegExp(keys.sort((a, b) => b.length - a.length).map(escapeRx).join("|"), "g");
+  } catch (e) { return value; }
+  const walk = (v) => {
+    if (typeof v === "string") return v.replace(rx, (m) => map.toReal[m] || m);
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === "object" && v.constructor === Object) {
+      const o = {}; for (const k in v) o[k] = walk(v[k]); return o;
+    }
+    return v;
+  };
+  return walk(value);
+}
+
 async function extractDocxText(file) {
   if (!window.mammoth) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js");
   const res = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
@@ -1486,16 +1607,23 @@ function matchContract(question, contracts) {
 // parses on its own. If stage three fails you keep stages one and two
 // rather than losing the lot.
 function analysisContextFor(contract, customPlaybook, policyPacks) {
+  // Sandbox buys a single-document read. Cross-document conflict analysis
+  // is what Growth adds, and the gate has to live on the path that actually
+  // runs in production — not only in the demo branch.
+  const scopeBlock = ED.crossClause
+    ? "\n\nCROSS-DOCUMENT ANALYSIS IS IN SCOPE: compare terms ACROSS the ingested documents and report every conflict between them — a purchase order that contradicts the master agreement, a rate card that does not match the schedule, an SOW that varies the liability position."
+    : "\n\nSCOPE LIMIT — this edition covers single-document review only. Assess each document on its own terms. Do NOT report conflicts BETWEEN documents, and do not reason across a purchase order, rate card or SOW to reach a finding; if the document set appears to conflict, say only that a cross-document review is needed.";
   const playbookBlock = (ED.playbook && customPlaybook?.trim())
     ? `\n\nCUSTOM PLAYBOOK — this organisation's own vetting rules. Grade the contract against THESE positions; every deviation is a finding:\n${customPlaybook.trim()}`
     : "";
-  const packs = (policyPacks || []).filter((p) => p.on);
-  const policyBlock = packs.length
-    ? `\n\nREGULATORY POLICY PACKS IN FORCE:\n${packs.map((p) => `${p.name} (v${p.version}):\n${p.rules.map((r) => "  - " + r).join("\n")}`).join("\n\n")}`
-    : "";
+  // Packs carry `active`, not `on`. Filtering on `on` matched nothing, so
+  // every pack a customer switched on was silently dropped before the
+  // prompt was built. `activePolicyBlock` is the correct builder.
+  const policyBlock = activePolicyBlock(policyPacks);
 
   return `CONTRACT RECORD:
 ${JSON.stringify({ ...contract, documents: undefined, analysis: undefined }, null, 2)}
+${scopeBlock}
 
 INGESTED DOCUMENTS:
 ${clipContext(docContext(contract)) || "(none ingested yet — analyse from record details alone and flag what documents would improve the analysis)"}${playbookBlock}${policyBlock}
@@ -1525,11 +1653,8 @@ LENGTH DISCIPLINE — this is a hard requirement, not a style note:
  - No preamble, no closing remarks, no markdown, no code fences. JSON only.`;
 
 // Stage 1 · what the contract actually says. Proven at ~3-4k tokens.
-function stage1Prompt(contract, customPlaybook, policyPacks) {
-  return `You are ContractIQ, an expert contract and commercial analyst. Extract the facts of this contract.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+function stage1Task() {
+  return `YOUR TASK FOR THIS STEP: Extract the facts of this contract.
 
 Return exactly this shape:
 {
@@ -1553,11 +1678,8 @@ Use null where the documents do not say. Never take contract values or dates fro
 }
 
 // Stage 2 · the money.
-function stage2Prompt(contract, customPlaybook, policyPacks) {
-  return `You are ContractIQ, an expert contract and commercial analyst. Assess the commercial position only.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+function stage2Task() {
+  return `YOUR TASK FOR THIS STEP: Assess the commercial position only.
 
 Return exactly this shape:
 {
@@ -1575,11 +1697,8 @@ If usage or licence data is present, compare entitlement against actual use and 
 }
 
 // Stage 3 · exposure and upside.
-function stage3Prompt(contract, customPlaybook, policyPacks) {
-  return `You are ContractIQ, an expert contract and commercial analyst. Identify risks and savings only.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+function stage3Task() {
+  return `YOUR TASK FOR THIS STEP: Identify risks and savings only.
 
 Return exactly this shape:
 {
@@ -1597,11 +1716,8 @@ If documents contradict each other on a figure or a date, raise that as a risk r
 }
 
 // Stage 4 · what must be done, and what is missing.
-function stage4Prompt(contract, customPlaybook, policyPacks) {
-  return `You are ContractIQ, an expert contract and commercial analyst. Cover compliance and obligations only.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+function stage4Task() {
+  return `YOUR TASK FOR THIS STEP: Cover compliance and obligations only.
 
 Return exactly this shape:
 {
@@ -1623,11 +1739,8 @@ Assess against standard UK enterprise practice (UK GDPR / Data Protection Act 20
 }
 
 // Stage 5 · the things that live in people's heads.
-function stage5Prompt(contract, customPlaybook, policyPacks) {
-  return `You are ContractIQ, an expert contract and commercial analyst. Cover institutional knowledge and the actions arising.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+function stage5Task() {
+  return `YOUR TASK FOR THIS STEP: Cover institutional knowledge and the actions arising.
 
 Return exactly this shape:
 {
@@ -1653,9 +1766,39 @@ Return exactly this shape:
 If no transcripts are present, still return "knowledge" with empty arrays and a summary saying so. reviewStartDate must leave realistic time to benchmark, gather stakeholders and negotiate before the notice deadline falls.`;
 }
 
-// Kept for the queued path, which sends one prompt to the worker.
+// ── Shared documents, one short task per stage ──────────────
+// The documents, the record and the rules are identical for all five
+// stages, so they travel as ONE block, first, marked cacheable; each stage
+// adds only its own short task after it. Stages two to five then read the
+// documents from the model's short-lived cache at a tenth of the price.
+// (Long material first and the question last is also the order that reads
+// long documents best.)
+function analysisShared(contract, customPlaybook, policyPacks) {
+  return `You are ContractIQ, an expert contract and commercial analyst.
+
+${analysisContextFor(contract, customPlaybook, policyPacks)}
+${LENGTH_RULES}`;
+}
+const STAGE_PLAN = [
+  { n: 1, label: "Reading the contract and extracting terms",   task: stage1Task, tokens: 8000 },
+  { n: 2, label: "Assessing cost and usage",                    task: stage2Task, tokens: 8000 },
+  { n: 3, label: "Identifying risks and savings",               task: stage3Task, tokens: 8000 },
+  { n: 4, label: "Checking compliance and obligations",         task: stage4Task, tokens: 8000 },
+  { n: 5, label: "Capturing knowledge and next steps",          task: stage5Task, tokens: 8000 },
+];
+const stageContent = (shared, task) => [
+  { type: "text", text: shared, cache_control: { type: "ephemeral" } },
+  { type: "text", text: task },
+];
+
+// The background queue now runs all five stages, exactly as the browser
+// does. (It used to send stage one alone and charge for the whole thing.)
 function analysisPromptFor(contract, customPlaybook, policyPacks) {
-  return stage1Prompt(contract, customPlaybook, policyPacks);
+  return {
+    v: 2,
+    context: analysisShared(contract, customPlaybook, policyPacks),
+    stages: STAGE_PLAN.map((st) => ({ n: st.n, label: st.label, task: st.task(), max_tokens: st.tokens })),
+  };
 }
 
 // Short, stable fingerprint used as an idempotency key. Two identical
@@ -1675,9 +1818,10 @@ function explainAiFailure(status, detail) {
   const d = (detail || "").toLowerCase();
   if (status === 401) {
     // Verify JWT is now ON, deliberately — that is what stops a stranger
-    // spending your Anthropic balance. A 401 means the session, not the setting.
+    // spending your AI budget. A 401 means the session, not the setting.
     return detail || "Your session has expired. Sign in again and retry — nothing has been charged.";
   }
+  if (status === 403 && (d.includes("bedrock") || d.includes("iam"))) return detail;
   if (status === 403) {
     if (d.includes("origin")) return "Your AI function rejected this site. The ALLOWED_ORIGIN secret in Supabase must exactly match this app's address — https:// and the domain only, no folder and no trailing slash.";
     return detail || "This sign-in is not attached to a workspace yet.";
@@ -1694,15 +1838,15 @@ function explainAiFailure(status, detail) {
       + " The limit is per workspace and per hour; change it in the ai_limits table.";
   }
   if (status === 500) {
-    if (d.includes("missing") || d.includes("api_key") || d.includes("anthropic_api_key"))
-      return "Your API key is not reaching the function. In Supabase → Edge Functions → Secrets, check ANTHROPIC_API_KEY is spelled exactly that way and holds the full sk-ant-… key.";
-    if (d.includes("credit") || d.includes("balance"))
-      return "Your Anthropic account is out of credit. Top up at console.anthropic.com.";
+    if (d.includes("aws_access_key_id") || d.includes("aws_secret"))
+      return "The Amazon keys are not reaching the AI function. In Supabase → Edge Functions → Secrets, check AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are both there and spelled exactly that way.";
+    if (d.includes("refusing model"))
+      return "The AI function is set to a model route that could send data outside the UK/EU. Remove the BEDROCK_MODEL_EU secret (the safe default is used) or set it to eu.anthropic.claude-sonnet-5.";
     return "The AI function failed. Check Supabase → Edge Functions → anthropic-proxy → Logs for the reason." + (detail ? ` (${detail})` : "");
   }
-  if (status === 502) return "The AI function could not reach Anthropic. Usually temporary — try again in a moment.";
-  if (status === 529 || d.includes("overloaded")) return "Anthropic is busy right now. Wait a minute and try again — nothing is wrong with your setup.";
-  if (status === 400 && d.includes("credit")) return "Your Anthropic account is out of credit. Top up at console.anthropic.com.";
+  if (status === 404 && d.includes("does not recognise the model")) return detail;
+  if (status === 502 || status === 504) return (detail && !/^HTTP/.test(detail)) ? detail : "The AI function could not reach Amazon Bedrock in time. Usually temporary — try again in a moment. Nothing has been charged.";
+  if (status === 503 || status === 529 || d.includes("overloaded") || d.includes("throttl")) return "The AI service is busy right now. Wait a minute and try again — nothing is wrong with your setup, and nothing has been charged.";
   return `The AI request failed (HTTP ${status})${detail ? ` — ${detail}` : ""}.`;
 }
 
@@ -1917,7 +2061,7 @@ function parseAnalysisJson(raw) {
     + "This is usually a one-off — running it again normally works.");
 }
 
-async function runAnalysis(contract, customPlaybook, policyPacks, onStage) {
+async function runAnalysis(contract, customPlaybook, policyPacks, onStage, revision = false) {
   if (DEMO_MODE) {
     await new Promise((r) => setTimeout(r, 1600));
     const sample = normaliseAnalysis(JSON.parse(JSON.stringify(SAMPLE_ANALYSIS)));
@@ -1949,13 +2093,8 @@ async function runAnalysis(contract, customPlaybook, policyPacks, onStage) {
   // The caps are what make this robust: they bound the output regardless
   // of how large or complex the contract is. The ceiling is only a
   // backstop for when a model ignores them.
-  const stages = [
-    { n: 1, label: "Reading the contract and extracting terms",   build: stage1Prompt, tokens: 8000 },
-    { n: 2, label: "Assessing cost and usage",                    build: stage2Prompt, tokens: 8000 },
-    { n: 3, label: "Identifying risks and savings",               build: stage3Prompt, tokens: 8000 },
-    { n: 4, label: "Checking compliance and obligations",         build: stage4Prompt, tokens: 8000 },
-    { n: 5, label: "Capturing knowledge and next steps",          build: stage5Prompt, tokens: 8000 },
-  ];
+  const stages = STAGE_PLAN;
+  const shared = analysisShared(contract, customPlaybook, policyPacks);
 
   const merged = {};
   const failed = [];
@@ -1974,12 +2113,12 @@ async function runAnalysis(contract, customPlaybook, policyPacks, onStage) {
         method: "POST",
         headers: aiHeaders(),
         body: JSON.stringify({
-          kind: "analysis",
+          kind: revision ? "revision" : "analysis",
           contract_id: contract?.id,
           run_id: runId,
           final: lastStage,
           max_tokens: st.tokens,
-          messages: [{ role: "user", content: st.build(contract, customPlaybook, policyPacks) }],
+          messages: [{ role: "user", content: stageContent(shared, st.task()) }],
         }),
       });
 
@@ -1997,13 +2136,13 @@ async function runAnalysis(contract, customPlaybook, policyPacks, onStage) {
         // One retry, explicitly asking for half as much. A contract dense
         // enough to overflow an 8,000-token stage will still yield its
         // most material findings when told to be brief.
-        const brief = st.build(contract, customPlaybook, policyPacks)
+        const brief = st.task()
           + "\n\nIMPORTANT: your previous attempt was too long and was discarded. Return AT MOST HALF the number of items in every array, and keep every string to one short sentence.";
         const retry = await fetchWithRetry(AI_ENDPOINT, {
           method: "POST", headers: aiHeaders(),
           body: JSON.stringify({
-            kind: "analysis", contract_id: contract?.id, run_id: runId, final: lastStage,
-            max_tokens: st.tokens, messages: [{ role: "user", content: brief }],
+            kind: revision ? "revision" : "analysis", contract_id: contract?.id, run_id: runId, final: lastStage,
+            max_tokens: st.tokens, messages: [{ role: "user", content: stageContent(shared, brief) }],
           }),
         });
         if (!retry.ok) throw new Error(explainAiFailure(retry.status, ""));
@@ -2111,7 +2250,7 @@ async function askCedric(question, history, contract) {
 }
 
 // ── Exports (unchanged Word/PDF/PPT outline) ──────────────────
-function buildReportHTML(ct) {
+function buildReportHTML(ct, trail) {
   const a = ct.analysis;
   const li = (arr, f) => (arr || []).map(f).join("");
   return `
@@ -2149,19 +2288,22 @@ function buildReportHTML(ct) {
   <p><b>Negotiation levers</b></p><ul>${li(a.insights.negotiationLevers, (x) => `<li>${esc(x)}</li>`)}</ul>
   <p><b>Recommendations</b></p><ul>${li(a.insights.recommendations, (x) => `<li>${esc(x)}</li>`)}</ul>
   <p><b>Dates to watch</b></p><ul>${li(a.insights.watchDates, (x) => `<li>${esc(x)}</li>`)}</ul>
+  ${(trail || []).length ? `<h2>Verification audit trail</h2>
+  <p class="sub">Every value a person checked or changed on this record, with what it was before and what it became.</p>
+  <table><tr><th>When</th><th>Who</th><th>Field</th><th>Action</th><th>From</th><th>To</th></tr>${li(trail, (t) => `<tr><td>${new Date(t.ts).toLocaleString("en-GB")}</td><td>${esc(t.user || "—")}</td><td>${esc(t.field)}</td><td>${esc(t.action)}</td><td>${esc(t.from === null || t.from === undefined || t.from === "" ? "—" : String(t.from))}</td><td>${esc(t.to === null || t.to === undefined || t.to === "" ? "—" : String(t.to))}</td></tr>`)}</table>` : ""}
   </body></html>`;
 }
 
-function exportWord(ct) {
-  const blob = new Blob(["﻿" + buildReportHTML(ct)], { type: "application/msword" });
+function exportWord(ct, trail) {
+  const blob = new Blob(["﻿" + buildReportHTML(ct, trail)], { type: "application/msword" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = `ContractIQ_${ct.ref}_${ct.supplier}.doc`.replace(/\s+/g, "_");
   a.click();
 }
-function exportPDF(ct) {
+function exportPDF(ct, trail) {
   const w = window.open("", "_blank");
-  w.document.write(buildReportHTML(ct));
+  w.document.write(buildReportHTML(ct, trail));
   w.document.close();
   setTimeout(() => w.print(), 400);
 }
@@ -2320,35 +2462,136 @@ function exportDigest(contracts) {
   a.click();
 }
 
-// ── Supabase (REST) ───────────────────────────────────────────
-async function supabasePush(cfg, contracts) {
-  const rows = contracts.map((c) => ({
-    id: c.id, ref: c.ref, name: c.name, supplier: c.supplier, category: c.category,
-    annual_value: c.annualValue, currency: c.currency, start_date: c.startDate || null,
-    end_date: c.endDate || null, notice_period_days: c.noticePeriodDays, auto_renew: c.autoRenew,
-    owner: c.owner, users_count: c.users, notes: c.notes,
-    analysis: c.analysis, documents_meta: c.documents.map(({ text, ...m }) => m),
-  }));
-  const res = await fetch(`${cfg.url}/rest/v1/contracts`, {
-    method: "POST",
-    headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates" },
-    body: JSON.stringify(rows),
-  });
-  if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+// ── Supabase (through the client, so RLS sees the signed-in user) ──
+//
+// These two used to talk to /rest/v1 directly with the anon key, and the
+// pushed rows carried no account_id. Both faults were fatal and silent:
+//
+//   · With the anon key in the Authorization header, auth.uid() is null,
+//     my_account_ids() returns nothing, and the "write contracts if
+//     editor" policy refuses every row.
+//   · contracts.account_id is NOT NULL, so even with a session the insert
+//     could not have succeeded.
+//
+// Every write failed behind a "sync failed" toast. That is the whole
+// reason nothing has ever persisted. Going through the supabase-js client
+// attaches the user's own access token, and account_id is now explicit.
+
+function contractToRow(c, accountId) {
+  return {
+    id: c.id,
+    account_id: accountId,
+    ref: c.ref || null,
+    name: c.name || null,
+    // supplier is NOT NULL in the schema; an un-named record must still save.
+    supplier: c.supplier || "—",
+    category: c.category || null,
+    annual_value: c.annualValue ?? 0,
+    currency: c.currency || "GBP",
+    start_date: c.startDate || null,
+    end_date: c.endDate || null,
+    notice_period_days: c.noticePeriodDays ?? null,
+    auto_renew: !!c.autoRenew,
+    owner: c.owner || null,
+    users_count: c.users ?? 0,
+    notes: c.notes || null,
+    analysis: c.analysis ?? null,
+    // Metadata only — the file itself never leaves the browser.
+    documents_meta: (c.documents || []).map(({ text, ...m }) => m),
+    updated_at: new Date().toISOString(),
+  };
 }
-async function supabasePull(cfg) {
-  const res = await fetch(`${cfg.url}/rest/v1/contracts?select=*`, {
-    headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}` },
-  });
-  if (!res.ok) throw new Error(`Supabase ${res.status}`);
-  const rows = await res.json();
-  return rows.map((r) => ({
+
+function rowToContract(r, docsByContract) {
+  const meta = r.documents_meta || [];
+  const stored = docsByContract?.[r.id] || {};
+  return {
     id: r.id, ref: r.ref, name: r.name, supplier: r.supplier, category: r.category,
     annualValue: r.annual_value, currency: r.currency, startDate: r.start_date,
     endDate: r.end_date, noticePeriodDays: r.notice_period_days, autoRenew: r.auto_renew,
     owner: r.owner, users: r.users_count, notes: r.notes,
-    analysis: r.analysis, documents: r.documents_meta || [],
-  }));
+    analysis: r.analysis ? normaliseAnalysis(r.analysis) : null,
+    // Re-attach the extracted text to its metadata so a reloaded contract
+    // can be re-analysed without asking for the file again.
+    documents: meta.map((m) => (stored[m.id] != null ? { ...m, text: stored[m.id] } : m)),
+  };
+}
+
+// What a finished analysis changes on the record. Shared by the browser
+// path and the background queue so the two cannot drift apart again.
+// H-I-L GATE: an extracted value is written onto the record only when its
+// data point cleared the high-confidence threshold; anything lower waits in
+// the Verify queue for a person. With Zero-Retention on, the document text
+// is dropped from the record at the same moment.
+function analysisPatchFor(contract, a, zeroRetention) {
+  const ex = a.extracted || {};
+  const patch = { analysis: a };
+  const dpFor = (k) => (a.dataPoints || []).find((d) => d.field === k && d.kind === "extraction");
+  ["name", "category", "annualValue", "currency", "startDate", "endDate", "noticePeriodDays", "autoRenew", "owner", "users"]
+    .forEach((k) => {
+      if (ex[k] === null || ex[k] === undefined) return;
+      const dp = dpFor(k);
+      if (!dp || hilTier(dp.confidence).key === "auto") patch[k] = ex[k];
+    });
+  if (zeroRetention) patch.documents = (contract?.documents || []).map(({ text, ...m }) => ({ ...m, purged: true }));
+  return patch;
+}
+
+async function supabasePush(client, accountId, contracts, opts = {}) {
+  if (!client || !accountId || !contracts?.length) return 0;
+
+  const { error } = await client
+    .from("contracts")
+    .upsert(contracts.map((c) => contractToRow(c, accountId)), { onConflict: "id" });
+  if (error) throw new Error(error.message);
+
+  // Extracted text is stored; the original file is not. That split is what
+  // the pricing page and the DPA both describe, so it is enforced here
+  // rather than left to whoever calls this next.
+  const docs = [];
+  for (const c of contracts) {
+    for (const d of c.documents || []) {
+      if (!d.id) continue;
+      docs.push({
+        id: d.id,
+        account_id: accountId,
+        contract_id: c.id,
+        name: d.name || "document",
+        doc_type: d.type || null,
+        size_bytes: d.size ?? null,
+        // Zero-Retention: the text is never written. (The database also
+        // refuses it — see MIGRATION_007 — so this is belt and braces.)
+        extracted_text: !opts.zeroRetention && typeof d.text === "string" ? d.text : null,
+      });
+    }
+  }
+  if (docs.length) {
+    const { error: dErr } = await client.from("documents").upsert(docs, { onConflict: "id" });
+    if (dErr) throw new Error(dErr.message);
+  }
+  return contracts.length;
+}
+
+async function supabasePull(client) {
+  if (!client) return [];
+  // RLS scopes both of these to the caller's own accounts, so no filter
+  // is needed here and none can be bypassed from the browser.
+  const { data: rows, error } = await client.from("contracts").select("*");
+  if (error) throw new Error(error.message);
+
+  const { data: docRows } = await client
+    .from("documents").select("id, contract_id, extracted_text");
+  const docsByContract = {};
+  for (const d of docRows || []) {
+    (docsByContract[d.contract_id] ||= {})[d.id] = d.extracted_text;
+  }
+  return (rows || []).map((r) => rowToContract(r, docsByContract));
+}
+
+async function supabaseDelete(client, id) {
+  if (!client || !id) return;
+  const { error } = await client.from("contracts").delete().eq("id", id);
+  if (error) throw new Error(error.message);
 }
 
 const TABS = ["Overview", "Verify", "Cost", "Users", "Risk", "Opportunities", "Compliance", "Knowledge", "Insights", "Documents"];
@@ -2359,40 +2602,35 @@ const TABS = ["Overview", "Verify", "Cost", "Users", "Risk", "Opportunities", "C
 // read the essentials before accepting. The acceptance checkbox at sign-in
 // is affirmative consent to all three.
 const LEGAL = {
-  terms: {
-    title: "Terms of Use",
-    updated: "Version 3.0 · 25 July 2026",
+  terms: {    title: "Terms of Use",
+    updated: "Summary of the Master Subscription Agreement · Version 1.1 · 19 September 2026",
     body: [
       ["Not legal advice", "ContractIQ is a software tool that produces automated analysis for information and triage only. It is not a law firm and does not provide legal, financial or professional advice. Output is generated by AI, is probabilistic, can be wrong or incomplete, and must be independently verified by you — and, where significant, by a qualified lawyer — before you rely on it. No lawyer–client relationship is created."],
       ["Output is information only", "Output may contain errors, omissions or hallucinations and may vary between runs. You must not rely on it as the sole basis for any decision. Any reliance is at your own risk."],
       ["Your verification responsibility", "You are solely responsible for checking all Output against the original documents and for obtaining professional advice on anything significant. \"The tool said so\" is not a defence."],
-      ["Meeting recordings & transcripts", "You must not upload a transcript unless your organisation had a lawful basis to record it and informed all participants in advance (as with Microsoft Teams). By uploading, you warrant you were entitled to, and you indemnify us against claims arising from content you were not entitled to upload."],
-      ["Your content", "You keep ownership of everything you upload. We process it only to provide the Services, and we never use it to train AI models."],
-      ["Liability", "We do not exclude liability for death or personal injury from negligence, or for fraud. Otherwise, and to the maximum extent lawful, we are not liable for reliance on Output or for indirect or consequential loss, and our total liability is capped at the greater of the fees you paid in the last 12 months or £100."],
-      ["Governing law", "England and Wales for business users; consumers keep the mandatory protections of their home country."],
+      ["Meeting recordings & transcripts", "You must not upload a transcript unless your organisation had a lawful basis to record it and informed all participants in advance (as with Microsoft Teams). By uploading, you warrant you were entitled to, and you indemnify us against claims arising from content you were not entitled to upload."],      ["Your content", "You keep ownership of everything you upload. We process it only to provide the Services, and we never use it to train AI models."],
+      ["The AI we use", "Analysis and Cedric run on Anthropic's Claude model through Amazon Bedrock, in AWS data centres in the UK, EEA and Switzerland. Amazon does not keep what is sent or answered, does not train on it, and does not pass it to Anthropic. You must follow the use rules our AI provider requires (Acceptable Use Policy, clause 2)."],      ["Liability", "We do not exclude liability for death or personal injury from negligence, or for fraud. Otherwise, and to the maximum extent lawful, we are not liable for indirect or consequential loss or for decisions taken in reliance on Output, and each party's total liability in any 12 months is capped at the greater of the fees paid in the previous 12 months or £5,000 (£100 for free, sandbox and beta use)."],
+      ["Business customers only", "ContractIQ is offered to businesses, not consumers. The Master Subscription Agreement is governed by the law of England and Wales."],
     ],
   },
-  privacy: {
-    title: "Privacy Policy",
-    updated: "Version 2.0 · 25 July 2026",
+  privacy: {    title: "Privacy Policy",
+    updated: "Summary · Version 1.1 · 19 September 2026",
     body: [
       ["Who controls your data", "For your account data, we are the controller. For the personal data inside documents and transcripts you upload, you are the controller and we are your processor under the DPA."],
       ["What we collect", "Account and billing details, the Customer Content you upload, usage and device data, and support communications."],
-      ["How we use it", "To provide, secure, meter and improve the Services. We do not use Customer Content to train AI models, and we do not sell your personal data."],
-      ["Storage & protection", "Encryption in transit, database-enforced separation between accounts, and an optional Zero-Retention mode that expunges document and transcript text right after analysis."],
-      ["International transfers", "Where data leaves the UK/EEA we use approved safeguards (UK IDTA/Addendum, EU Standard Contractual Clauses, and DPF-certified US providers where applicable)."],
-      ["Your rights", "Access, correction, deletion, restriction, objection, portability and consent withdrawal — with regional supplements for the UK, EU, US states, Canada, India and South Africa."],
-      ["Contact", "privacy@yourdomain.com"],
+      ["How we use it", "To provide, secure, meter and improve the Services. We do not use Customer Content to train AI models, and we do not sell your personal data."],      ["Storage & protection", "Workspaces are held in London, encrypted, with separation between accounts enforced by the database. Original files never leave your browser; the text read from them is stored unless Zero-Retention mode (Enterprise) is on. Names in meeting transcripts are replaced with labels in your browser first."],
+      ["AI processing", "Through Amazon Bedrock in AWS data centres in the UK, EEA and Switzerland. The AI provider keeps nothing once it has answered and never trains on your content."],
+      ["International transfers", "Where data leaves the UK we rely on UK adequacy regulations, or on the International Data Transfer Agreement or UK Addendum to the EU Standard Contractual Clauses."],
+      ["Your rights", "Access, correction, erasure, restriction, objection, portability and withdrawal of consent, under UK data protection law."],
+      ["Contact", "info@codeiqholdings.co.uk · CodeIQ Holdings Ltd · ICO registration ICO00015500673"],
     ],
   },
   dpa: {
-    title: "Data Processing Agreement",
-    updated: "For Business customers · Version 1.0 · 25 July 2026",
+    title: "Data Processing Agreement",    updated: "Summary · For business customers · Version 1.1 · 19 September 2026",
     body: [
       ["Roles", "You are the controller and ContractIQ is the processor for the personal data in your uploaded content. We process it only on your documented instructions."],
-      ["Meeting transcripts", "You warrant that, for every recording uploaded, you had a lawful basis and gave participants the recording notice required by law (equivalent to the Microsoft Teams notice). We are not responsible for your compliance with those obligations."],
-      ["Security & subprocessors", "Appropriate technical and organisational measures; subprocessors (hosting, AI model provider, payments, email) are bound by equivalent obligations and we remain liable for them."],
-      ["Breach notification", "We notify you without undue delay and within 72 hours of becoming aware of a personal-data breach affecting your data."],
+      ["Meeting transcripts", "You warrant that, for every recording uploaded, you had a lawful basis and gave participants the recording notice required by law (equivalent to the Microsoft Teams notice). We are not responsible for your compliance with those obligations."],      ["Security & sub-processors", "The measures in Annex B, including London hosting, AI processing in the UK/EEA/Switzerland by a provider that keeps nothing, and deletion of queued document text after analysis. Sub-processors (Supabase, Amazon Web Services, hosting, payments, email) are bound by equivalent obligations, we remain liable for them, and we give 30 days' notice of any change."],
+      ["Breach notification", "We notify you without undue delay and within 48 hours of becoming aware of a personal-data breach affecting your data."],
       ["Return & deletion", "On termination we delete or return your data; you have 30 days to export first."],
     ],
   },
@@ -2480,6 +2718,11 @@ export default function ContractIQ() {
   const [transcriptConsent, setTranscriptConsent] = useState(null);  // { acceptedBy, acceptedAt, version }
   const [consentPrompt, setConsentPrompt] = useState(null);          // { files, transcriptNames }
   const [consentTicked, setConsentTicked] = useState(false);
+  // Pseudonymisation, on by default. The switch decides what is written into
+  // the transcript record; the map that reverses it lives here in a ref and
+  // nowhere else — not in state that syncs, not in storage, not in a request.
+  const [pseudonymise, setPseudonymise] = useState(true);
+  const pseudoMaps = useRef({});                  // contractId -> map, memory only
   // Raw files held in memory for the session so a scanned document can be
   // OCR'd on demand without asking the user to upload it again.
   const fileCache = useRef(new Map());
@@ -2609,6 +2852,55 @@ export default function ContractIQ() {
   const selected = contracts.find((c) => c.id === selectedId);
   const update = (id, patch) => setContracts((cs) => cs.map((c) => (c.id === id ? { ...c, ...patch } : c)));
 
+  // ── Loading and saving ────────────────────────────────────────
+  // Autosave is debounced rather than a Save button: nobody loses work to
+  // a forgotten click, and the database is not written on every keystroke.
+  //
+  // `hydrated` is the safety catch. Until the first pull has completed,
+  // `contracts` is the empty starting state, and saving that would be
+  // indistinguishable from "the user deleted everything". So nothing is
+  // written until we have actually seen what is already there.
+  const [hydrated, setHydrated] = useState(false);
+  const [saveState, setSaveState] = useState("idle"); // idle | saving | saved | error
+  const saveTimer = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (DEMO_MODE || !session || !accountId) { setHydrated(false); return; }
+    (async () => {
+      try {
+        const client = await getSb(sb.url, sb.key);
+        const rows = await supabasePull(client);
+        if (cancelled) return;
+        if (rows.length) setContracts(rows);
+        setHydrated(true);
+      } catch (e) {
+        // Do not set hydrated. A failed read must never license a write
+        // that could overwrite rows we were simply unable to see.
+        if (!cancelled) notify("Could not load your saved contracts — working offline until the next attempt.");
+        console.error("Initial load failed:", e);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [session, accountId, sb.url, sb.key]);
+
+  useEffect(() => {
+    if (DEMO_MODE || !session || !accountId || !hydrated) return;
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      try {
+        setSaveState("saving");
+        const client = await getSb(sb.url, sb.key);
+        await supabasePush(client, accountId, contracts, { zeroRetention: ED.zeroRetention && zeroRetention });
+        setSaveState("saved");
+      } catch (e) {
+        setSaveState("error");
+        console.error("Autosave failed:", e);
+      }
+    }, 1500);
+    return () => clearTimeout(saveTimer.current);
+  }, [contracts, session, accountId, hydrated, sb.url, sb.key]);
+
   const totals = {
     value: contracts.reduce((s, c) => s + (c.annualValue || 0), 0),
     renewing: contracts.filter((c) => daysTo(c.endDate) != null && daysTo(c.endDate) >= 0 && daysTo(c.endDate) <= 180).length,
@@ -2665,8 +2957,7 @@ export default function ContractIQ() {
       return setAuthMsg({ kind: "err", text: friendlyAuthError(error.message) });
     }
     if (data?.session) {
-      applySession(data.session);
-      client.rpc("record_terms_acceptance", { version: "2026.1" }).then(null, () => {});
+      applySession(data.session);      client.rpc("record_terms_acceptance", { version: "2026.2" }).then(null, () => {});
     }
   };
 
@@ -2714,8 +3005,7 @@ export default function ContractIQ() {
         : "That code was not right. Check the email and try again." });
     }
     if (data?.session) {
-      applySession(data.session);
-      client.rpc("record_terms_acceptance", { version: "2026.1" }).then(null, () => {});
+      applySession(data.session);      client.rpc("record_terms_acceptance", { version: "2026.2" }).then(null, () => {});
     }
   };
 
@@ -2778,7 +3068,10 @@ export default function ContractIQ() {
   };
 
   // ── Queue an analysis instead of blocking the browser ──
-  const canQueue = () => asyncMode && !!session && !!accountId && !!sb.url && !DEMO_MODE;
+  // Zero-Retention runs in this tab: nothing is queued, so no copy of the
+  // text is ever written to the server, even briefly.
+  const canQueue = () => asyncMode && !!session && !!accountId && !!sb.url && !DEMO_MODE
+    && !(ED.zeroRetention && zeroRetention);
 
   const enqueueAnalysis = async (contract, kind) => {
     const client = await getSb(sb.url, sb.key);
@@ -2791,7 +3084,7 @@ export default function ContractIQ() {
       p_account_id: accountId,
       p_contract_id: contract.id,
       p_kind: kind || "analysis",
-      p_payload: { prompt: buildAnalysisPrompt(contract, playbook, policyPacks), max_tokens: 8000 },
+      p_payload: buildAnalysisPrompt(contract, playbook, policyPacks),
       p_idempotency: idem,
     });
     if (error) throw new Error(error.message);
@@ -2938,6 +3231,37 @@ export default function ContractIQ() {
 
   useEffect(() => { refreshEntitlement(); }, [refreshEntitlement, accountId]);
 
+  // Zero-Retention is a workspace setting held in the database (it used
+  // to be a switch that forgot itself on refresh).
+  const zeroRetentionRef = useRef(false);
+  useEffect(() => { zeroRetentionRef.current = ED.zeroRetention && zeroRetention; }, [zeroRetention, entitlement]);
+  useEffect(() => {
+    if (!session || !sb.url || DEMO_MODE) return;
+    (async () => {
+      try {
+        const client = await getSb(sb.url, sb.key);
+        const { data } = await client.rpc("my_workspace_settings");
+        if (data?.ok) setZeroRetention(!!data.zero_retention);
+      } catch (e) { /* MIGRATION_007 not run yet — stays off */ }
+    })();
+  }, [session, sb.url, sb.key, accountId]);
+
+  const toggleZeroRetention = async () => {
+    const next = !zeroRetention;
+    if (DEMO_MODE || !session || !accountId) { setZeroRetention(next); return notify(next ? "Zero-Retention enabled" : "Zero-Retention disabled"); }
+    try {
+      const client = await getSb(sb.url, sb.key);
+      const { error } = await client.rpc("set_zero_retention", { p_account_id: accountId, p_on: next });
+      if (error) throw error;
+      setZeroRetention(next);
+      notify(next
+        ? "Zero-Retention on for this workspace — document text will not be saved, and analysis runs in this tab"
+        : "Zero-Retention off — document text will be saved so contracts can be re-analysed later");
+    } catch (e) {
+      notify(`Could not change Zero-Retention — ${String(e?.message || e).slice(0, 90)}`);
+    }
+  };
+
   // ── Buying more credits ──
   // Sends the buyer to Stripe. The account is taken from their session by
   // the Edge Function, never from anything this page could be persuaded
@@ -3031,15 +3355,27 @@ export default function ContractIQ() {
           .order("enqueued_at", { ascending: false });
         if (stop) return;
         const rows = data || [];
-        // Anything that was running and has now gone has finished —
-        // pull the contract back down so the tabs fill in by themselves.
-        const done = prev.filter((j) => j.status === "running" && !rows.find((r) => r.id === j.id));
+        // Anything that was queued or running and has now gone has
+        // finished. (Watching only 'running' missed a fast job that went
+        // straight from queued to done between two polls.) Pull the result
+        // down and apply it exactly as the in-browser path does.
+        const done = prev.filter((j) => j.status !== "dead" && !rows.find((r) => r.id === j.id));
         for (const j of done) {
           const { data: c } = await client.from("contracts")
             .select("id, analysis").eq("id", j.contract_id).maybeSingle();
-          if (c?.analysis) {
-            update(j.contract_id, { analysis: c.analysis });
-            notify(`Analysis complete — ${j.ref || j.contract_id}`);
+          let raw = c?.analysis;
+          if (!raw) {
+            const { data: jr } = await client.from("my_jobs").select("status, result").eq("id", j.id).maybeSingle();
+            if (jr?.status === "succeeded") raw = jr.result;
+          }
+          if (raw) {
+            const a = normaliseAnalysis(raw);
+            setContracts((cs) => cs.map((ct) => (ct.id === j.contract_id
+              ? { ...ct, ...analysisPatchFor(ct, a, zeroRetentionRef.current) } : ct)));
+            notify(a.partial?.length
+              ? `Analysis complete — ${j.ref || j.contract_id} (${a.partial.length} section${a.partial.length === 1 ? "" : "s"} could not finish; see the Overview tab)`
+              : `Analysis complete — ${j.ref || j.contract_id}`);
+            refreshEntitlement();
           }
         }
         prev = rows;
@@ -3379,6 +3715,13 @@ export default function ContractIQ() {
                     with the demo account below.
                   </div>
                 )}
+                {DEMO_MODE && (
+                  <div style={{ background: "#EAF7F5", border: "1px solid #B7E2DC", color: "#1F5F58",
+                    borderRadius: 7, padding: "10px 13px", fontSize: 12.5, lineHeight: 1.55, marginBottom: 16 }}>
+                    This is the public demo. Sign in with <b>{DEMO_USERNAME}</b> / <b>{DEMO_PASSWORD}</b> and load
+                    the sample portfolio from Settings to explore. The AI engine is off in the demo.
+                  </div>
+                )}
                 <div className="fld"><label>Username</label>
                   <input value={login.username} onChange={(e) => setLogin((p) => ({ ...p, username: e.target.value }))}
                     placeholder="username" autoComplete="username" /></div>
@@ -3487,6 +3830,17 @@ export default function ContractIQ() {
         if (doc.type === "Meeting transcript" && doc.text) {
           const parsed = parseTranscript(doc.text);
           if (parsed.text) { doc.text = parsed.text; doc.speakers = parsed.speakers; }
+          // Pseudonymise here, in the browser, before this text is written to
+          // a record or sent anywhere. The map is kept per contract so the
+          // same person is the same Participant across every meeting on it.
+          if (pseudonymise && doc.text) {
+            const map = pseudoMaps.current[selected.id] || (pseudoMaps.current[selected.id] = newPseudoMap());
+            const safe = pseudonymiseTranscript(doc.text, doc.speakers, map);
+            doc.text = safe.text;
+            doc.speakers = safe.speakers;
+            doc.pseudonymised = true;
+            doc.pseudonymisedCount = Object.keys(map.toReal).length;
+          }
           // Evidence trail: which consent acceptance this transcript came in under.
           if (consent) doc.consent = { by: consent.acceptedBy, at: consent.acceptedAt, version: consent.version };
         }
@@ -3551,6 +3905,45 @@ export default function ContractIQ() {
     const affordable = Math.floor(creditsLeft / CREDIT_COST.analysis);
     if (affordable === 0) return notify(`Not enough credits — an analysis costs ${CREDIT_COST.analysis}.`);
     const run = queue.slice(0, affordable);
+
+    // ── The queued path ──────────────────────────────────────────
+    // Single analyses have always been able to go to the background
+    // worker; bulk ran in the tab, which made "start the run and shut the
+    // lid" untrue for the one case where it mattered most. Hand the whole
+    // selection to the queue and the browser is free to close.
+    if (canQueue()) {
+      setBulkRun({ done: 0, total: run.length, current: run[0]?.ref, results: [], queued: true });
+      const queuedResults = [];
+      let limited = false;
+      for (let i = 0; i < run.length; i++) {
+        const c = run[i];
+        setBulkRun({ done: i, total: run.length, current: c.ref, results: [...queuedResults], queued: true });
+        try {
+          await enqueueAnalysis(c, "analysis");
+          queuedResults.push({ ref: c.ref, ok: true, queued: true });
+        } catch (e) {
+          const m = String(e?.message || e);
+          // The account is allowed 20 analyses an hour. Stop at the wall
+          // rather than firing another nineteen refusals at it.
+          if (/rate|too many|CIQ0?3|429/i.test(m)) { limited = true; break; }
+          queuedResults.push({ ref: c.ref, ok: false, error: m.slice(0, 80) });
+        }
+      }
+      const sent = queuedResults.filter((r) => r.ok).length;
+      const notSent = run.length - queuedResults.length;
+      setBulkRun({ done: queuedResults.length, total: run.length, current: null, results: queuedResults, queued: true });
+      notify(
+        `${sent} of ${run.length} queued — they will finish whether this tab is open or not.` +
+        (limited ? ` ${notSent} held back: this account is allowed ${AI_RATE_HINT.analysis} analyses an hour. Select them again after the hour turns.` : "") +
+        (skipped ? ` · ${skipped} skipped (no text)` : "") +
+        (queue.length > affordable ? ` · ${queue.length - affordable} not run (out of credits)` : "")
+      );
+      setSelectedIds([]);
+      refreshEntitlement();
+      setTimeout(() => setBulkRun(null), 8000);
+      return;
+    }
+
     setBulkRun({ done: 0, total: run.length, current: run[0]?.ref, results: [] });
     const results = [];
     for (let i = 0; i < run.length; i++) {
@@ -3729,24 +4122,11 @@ export default function ContractIQ() {
       setAnalysisStage((p) => p ? { ...p, pct: Math.min(stageTop - 1, Math.round(stageBase + (stageTop - stageBase) * into)) } : p);
     }, 400);
     try {
-      const a = await runAnalysis(selected, playbook, policyPacks, onStage);
+      const a = await runAnalysis(selected, playbook, policyPacks, onStage, revision);
       clearInterval(ticker);
       setAnalysisStage({ pct: 100, label: "Done" });
-      const ex = a.extracted || {};
-      const patch = { analysis: a };
-      // H-I-L GATE: only auto-apply an extracted value to the record when its
-      // data point cleared the high-confidence threshold. Anything below that
-      // stays in the Verify queue until a human accepts or corrects it — an
-      // unverified value never silently becomes "the record".
-      const dpFor = (k) => (a.dataPoints || []).find((d) => d.field === k && d.kind === "extraction");
-      ["name", "category", "annualValue", "currency", "startDate", "endDate", "noticePeriodDays", "autoRenew", "owner", "users"]
-        .forEach((k) => {
-          if (ex[k] === null || ex[k] === undefined) return;
-          const dp = dpFor(k);
-          if (!dp || hilTier(dp.confidence).key === "auto") patch[k] = ex[k];
-        });
       const zr = ED.zeroRetention && zeroRetention;
-      if (zr) patch.documents = selected.documents.map(({ text, ...m }) => ({ ...m, purged: true }));
+      const patch = analysisPatchFor(selected, a, zr);
       update(selected.id, patch);
       if (!revision) spend("analysis", selected.id);
       setTab("Insights");
@@ -3937,12 +4317,29 @@ export default function ContractIQ() {
     setCedricBusy(false);
   };
 
+  // Manual sync is now a belt-and-braces control rather than the only way
+  // anything reaches the database. Autosave above does the routine work.
   const doSync = async (dir) => {
-    if (!sb.url || !sb.key) { setShowSettings(true); return notify("Add your Supabase URL and anon key first"); }
+    if (!sb.url || !sb.key) { setShowSettings(true); return notify("Add your Supabase URL and publishable key first"); }
+    if (!session) return notify("Sign in first — saving is scoped to your own workspace.");
+    if (!accountId) return notify("Still working out which workspace you are in. Try again in a moment.");
     try {
-      if (dir === "push") { await supabasePush(sb, contracts); notify("Synced to Supabase"); }
-      else { const rows = await supabasePull(sb); if (rows.length) setContracts(rows); notify(`Loaded ${rows.length} contracts`); }
-    } catch (e) { notify("Supabase sync failed — check settings"); console.error(e); }
+      const client = await getSb(sb.url, sb.key);
+      if (dir === "push") {
+        const n = await supabasePush(client, accountId, contracts, { zeroRetention: ED.zeroRetention && zeroRetention });
+        setSaveState("saved");
+        notify(n ? `Saved ${n} contract${n === 1 ? "" : "s"}` : "Nothing to save yet");
+      } else {
+        const rows = await supabasePull(client);
+        setContracts(rows);
+        setHydrated(true);
+        notify(`Loaded ${rows.length} contract${rows.length === 1 ? "" : "s"}`);
+      }
+    } catch (e) {
+      setSaveState("error");
+      notify(`Sync failed — ${e.message || e}`);
+      console.error(e);
+    }
   };
 
   const addTeamUser = async () => {
@@ -3955,6 +4352,17 @@ export default function ContractIQ() {
   };
 
   // ── Render ──
+  // The one place the pseudonyms are undone: on screen, for the person
+  // entitled to read them. Everything above this line — the stored record,
+  // the analysis request, Cedric's context, a Supabase sync — has only ever
+  // held "Participant B". If the map has gone (a reload, another device),
+  // this returns the text untouched and you read the labels.
+  const deAnon = (v) => rehydrate(v, pseudoMaps.current[selected?.id]);
+  const pseudoActive = !!(selected && pseudoMaps.current[selected.id]
+    && Object.keys(pseudoMaps.current[selected.id].toReal).length);
+  const knowledgeView = selected?.analysis?.knowledge ? deAnon(selected.analysis.knowledge) : null;
+  const contractTrail = selected ? auditTrail.filter((t) => t.contractId === selected.id) : [];
+
   return (
     <div className="ciq">
       <style>{CSS}</style>
@@ -4838,22 +5246,30 @@ export default function ContractIQ() {
         <>
           <div className="hero">
             <h1>Your contracts.<br /><em>Your data. Full stop.</em></h1>
-            <p>Enterprise legal work demands impeccable data handling. ContractIQ is built on clear data-protection parameters.</p>
+            <p>Exactly where your documents go, what is kept, and what is not — stated plainly.</p>
           </div>
           <div className="container">
             <div className="panel">
-              <h4>Ephemeral processing — Zero-Retention mode</h4>
-              <p>For compliance-focused environments, ContractIQ offers a no-storage ephemeral pipeline. When activated, uploaded documents are held only in volatile memory while structural checks run; the moment analysis completes, all source text is permanently expunged — only the extracted schema indicators remain in your ledger. Toggle it per-workspace in Settings.</p>
+              <h4>Your original files never leave your computer</h4>
+              <p>PDFs, Word files, spreadsheets and scans are opened and read inside your browser, including text recognition on scanned pages. What leaves your machine is the text read from them — never the file itself.</p>
             </div>
             <div className="panel">
-              <h4>Total model-training siloing</h4>
-              <p>Your commercial documents, playbook rules, revisions and metadata are completely isolated. They are never collected, cached or used to train, refine or evaluate any AI model — public or proprietary.</p>
+              <h4>AI in the UK and EU, and the AI provider keeps nothing</h4>
+              <p>Analysis and Cedric run on Anthropic's Claude model through Amazon Bedrock, processed in AWS data centres in the UK, the European Economic Area and Switzerland. Amazon Bedrock does not store what is sent to the model or what it answers, and does not pass it to Anthropic. Nothing you upload is used to train any AI model.</p>
             </div>
             <div className="panel">
-              <h4>Cryptographic security controls</h4>
-              <p>Documents are protected with AES-256 encryption at rest and TLS 1.3 in transit. The platform undergoes automated vulnerability auditing, and backend operations are designed to run in security-certified datacentre environments.</p>
+              <h4>Names in meeting transcripts are swapped out first</h4>
+              <p>Before a transcript is saved or analysed, the names, email addresses and phone numbers in it are replaced with labels in your browser. The key that puts the real names back stays in your browser tab and is never saved or sent.</p>
             </div>
-            <p style={{ fontSize: 12, color: "#86868b", lineHeight: 1.5 }}>Security and certification claims describe the production architecture design; published certifications will be listed here as they are attained. See also the <a onClick={() => setPage("terms")}>Terms & commercial guardrails</a>.</p>
+            <div className="panel">
+              <h4>What we store, and Zero-Retention</h4>
+              <p>Your workspace keeps the text read from your documents, so contracts can be searched and re-analysed, plus the analysis itself — in a database hosted in London, with separation between workspaces enforced by the database. On the Enterprise plan, Zero-Retention mode means document text is never saved at all: it stays in your browser tab for the analysis, and only the extracted details are kept.</p>
+            </div>
+            <div className="panel">
+              <h4>Security controls</h4>
+              <p>Encryption in transit and at rest, database-enforced separation between workspaces, and back-office functions that only the server can call. Our providers (Supabase, Amazon Web Services, Stripe) hold independent security certifications; ContractIQ itself does not yet, and we will list any we achieve.</p>
+            </div>
+            <p style={{ fontSize: 12, color: "#86868b", lineHeight: 1.5 }}>The full position, including every sub-processor and where it is, is in the <a href="../legal.html#security" target="_blank" rel="noopener">Security Statement</a> and <a href="../legal.html#subprocessors" target="_blank" rel="noopener">Sub-processor list</a>.</p>
           </div>
         </>
       ) : page === "terms" ? (
@@ -5112,7 +5528,7 @@ export default function ContractIQ() {
                 </div>
 
                 <div style={{ marginTop: 22, paddingTop: 18, borderTop: "1px solid #EEF3FA", fontSize: 12.5, color: "#7A8DA6", lineHeight: 1.6 }}>
-                  Sample data is clearly fictional and can be wiped in one click from Settings. Nothing you upload leaves your machine until you run an analysis.
+                  Sample data is clearly fictional and can be wiped in one click from Settings. Your original files never leave your machine; the text read from them is saved to your workspace so it can be analysed.
                 </div>
               </div>
             )}
@@ -5199,9 +5615,22 @@ export default function ContractIQ() {
               {currentUser.role === "Admin" && (
                 <button className="btn ghost sm" style={{ color: "#c0271d", borderColor: "rgba(192,39,29,0.4)" }} onClick={() => {
                   if (window.confirm(`Permanently delete ${selected.ref} (${selected.supplier}) and all its documents and analysis? This cannot be undone.`)) {
-                    setContracts((cs) => cs.filter((c) => c.id !== selected.id));
+                    const goneId = selected.id;
+                    setContracts((cs) => cs.filter((c) => c.id !== goneId));
                     setSelectedId(null);
                     notify("Contract Record and all associated data deleted");
+                    // Autosave upserts; it never deletes. Without this the
+                    // record would reappear at the next load.
+                    if (!DEMO_MODE && session && accountId) {
+                      (async () => {
+                        try {
+                          await supabaseDelete(await getSb(sb.url, sb.key), goneId);
+                        } catch (e) {
+                          notify("Deleted here, but the database refused — it may come back on reload.");
+                          console.error("Delete failed:", e);
+                        }
+                      })();
+                    }
                   }
                 }}>Delete record</button>
               )}
@@ -5370,7 +5799,7 @@ export default function ContractIQ() {
                           <div style={{ fontSize: 15, fontWeight: 600, margin: "5px 0 7px" }}>{String(d.value)}</div>
                           <div style={{ fontSize: 12.5, color: "#56718A", lineHeight: 1.55 }}>{d.reasoning}</div>
                           <div style={{ fontSize: 12, color: "#7A8DA6", marginTop: 6, fontStyle: "italic", lineHeight: 1.5 }}>
-                            <b style={{ fontStyle: "normal" }}>Source:</b> {d.sourceRef}
+                            <b style={{ fontStyle: "normal" }}>Source:</b> {deAnon(d.sourceRef)}
                           </div>
                           {done ? (
                             <div style={{ fontSize: 12, color: "#2E9E6B", fontWeight: 700, marginTop: 9 }}>
@@ -5503,19 +5932,26 @@ export default function ContractIQ() {
           ) : <div className="empty"><h3>Run AI analysis to see the compliance review</h3><p>Clause checklist, regulatory flags and the obligations register are generated from ingested documents.</p></div>)}
 
           {tab === "Knowledge" && (selected.analysis ? (
-            selected.analysis.knowledge ? (
+            knowledgeView ? (
               <>
                 <div className="panel">
                   <h4>Institutional knowledge {selected.documents.some((d) => d.type === "Meeting transcript")
                     ? <span className="pill blue" style={{ marginTop: 0, marginLeft: 8 }}>From {selected.documents.filter((d) => d.type === "Meeting transcript").length} transcript(s)</span>
                     : <span className="pill warn" style={{ marginTop: 0, marginLeft: 8 }}>No transcripts ingested</span>}</h4>
-                  <p>{selected.analysis.knowledge.summary}</p>
+                  <p>{knowledgeView.summary}</p>
+                  {selected.documents.some((d) => d.pseudonymised) && (
+                    <div style={{ fontSize: 12, color: "#3F6E68", background: "#EAF7F5", borderRadius: 6, padding: "9px 12px", marginTop: 10, lineHeight: 1.55 }}>
+                      {pseudoActive
+                        ? <>Participants were pseudonymised in your browser before analysis — the engine only ever saw <i>Participant A</i>. The real names are being put back here, on this machine.</>
+                        : <>Participants were pseudonymised in your browser before analysis, and the key that reverses it was held in the tab that uploaded them. That tab has since closed, so the labels below stay as labels. Re-upload the transcript in this session to read the names again.</>}
+                    </div>
+                  )}
                 </div>
 
-                {selected.analysis.knowledge.points?.length > 0 && (
+                {knowledgeView.points?.length > 0 && (
                   <>
                     <div className="section-sub" style={{ margin: "16px 0 10px", fontWeight: 700, color: "#56718A", fontSize: 12.5, textTransform: "uppercase", letterSpacing: "0.1em" }}>What the meetings tell us</div>
-                    {selected.analysis.knowledge.points.map((k, i) => (
+                    {knowledgeView.points.map((k, i) => (
                       <div className="item-row" key={i}>
                         <div className="sev low" />
                         <div style={{ flex: 1 }}>
@@ -5528,10 +5964,10 @@ export default function ContractIQ() {
                   </>
                 )}
 
-                {selected.analysis.knowledge.verbalCommitments?.length > 0 && (
+                {knowledgeView.verbalCommitments?.length > 0 && (
                   <>
                     <div className="section-sub" style={{ margin: "18px 0 10px", fontWeight: 700, color: "#56718A", fontSize: 12.5, textTransform: "uppercase", letterSpacing: "0.1em" }}>Said in a meeting — is it in the contract?</div>
-                    {selected.analysis.knowledge.verbalCommitments.map((v, i) => (
+                    {knowledgeView.verbalCommitments.map((v, i) => (
                       <div className="item-row" key={i}>
                         <div className={`sev ${v.inContract === "yes" ? "low" : v.inContract === "no" ? "high" : "medium"}`} />
                         <div style={{ flex: 1 }}>
@@ -5546,17 +5982,17 @@ export default function ContractIQ() {
                   </>
                 )}
 
-                {selected.analysis.knowledge.keyPersonRisk?.length > 0 && (
+                {knowledgeView.keyPersonRisk?.length > 0 && (
                   <div className="panel" style={{ borderLeftColor: "#E0493E", marginTop: 18 }}>
                     <h4>Knowledge at risk of walking out of the door</h4>
-                    <ul>{selected.analysis.knowledge.keyPersonRisk.map((k, i) => <li key={i}>{k}</li>)}</ul>
+                    <ul>{knowledgeView.keyPersonRisk.map((k, i) => <li key={i}>{k}</li>)}</ul>
                   </div>
                 )}
 
-                {selected.analysis.knowledge.openQuestions?.length > 0 && (
+                {knowledgeView.openQuestions?.length > 0 && (
                   <div className="panel">
                     <h4>Ask while you still can</h4>
-                    <ul>{selected.analysis.knowledge.openQuestions.map((q, i) => <li key={i}>{q}</li>)}</ul>
+                    <ul>{knowledgeView.openQuestions.map((q, i) => <li key={i}>{q}</li>)}</ul>
                   </div>
                 )}
 
@@ -5574,9 +6010,9 @@ export default function ContractIQ() {
               <div className="panel"><h4>Dates to watch</h4><ul>{selected.analysis.insights.watchDates.map((x, i) => <li key={i}>{x}</li>)}</ul></div>
               <div className="export-bar" style={{ marginTop: 8 }}>
                 <span style={{ fontSize: 13, color: "#56718a", fontWeight: 700 }}>EXPORT INSIGHT PACK</span>
-                <button className="btn ghost sm" onClick={() => exportWord(selected)}>Word (.doc)</button>
-                <button className="btn ghost sm" onClick={() => exportPDF(selected)}>PDF</button>
-                <button className="btn ghost sm" onClick={() => exportPPT(selected)}>PPT outline</button>
+                <button className="btn ghost sm" onClick={() => exportWord(deAnon(selected), contractTrail)}>Word (.doc)</button>
+                <button className="btn ghost sm" onClick={() => exportPDF(deAnon(selected), contractTrail)}>Print / PDF</button>
+                <button className="btn ghost sm" onClick={() => exportPPT(deAnon(selected))}>PPT outline</button>
               </div>
             </>
           ) : <div className="empty"><h3>Run AI analysis to unlock insights & exports</h3></div>)}
@@ -5588,17 +6024,17 @@ export default function ContractIQ() {
                 onDrop={(e) => { e.preventDefault(); onFiles([...e.dataTransfer.files]); }}>
                 <div style={{ fontSize: 30 }}>⌥</div>
                 <div style={{ fontWeight: 700, color: "#0B1D33", marginTop: 6 }}>Drop this contract's documents and meeting transcripts here, or click to browse</div>
-                <div style={{ fontSize: 13, marginTop: 4 }}>Contracts · Purchase Orders · SOWs · tracking sheets · user detail · Teams and Zoom meeting transcripts (.vtt, .srt, .txt, .docx). All record details are extracted from what you ingest — PDFs, Excel, CSV and text are read in full in-browser (nothing leaves your machine until you run analysis). Scanned/image-only PDFs are catalogued by metadata.</div>
+                <div style={{ fontSize: 13, marginTop: 4 }}>Contracts · Purchase Orders · SOWs · tracking sheets · user detail · Teams and Zoom meeting transcripts (.vtt, .srt, .txt, .docx). All record details are extracted from what you ingest — PDFs, Excel, CSV and text are read in full in-browser — the original file never leaves your machine; the text read from it is saved to your workspace (not at all under Zero-Retention). Scanned/image-only PDFs are catalogued by metadata.</div>
               </div>
               <input type="file" multiple hidden ref={fileRef} onChange={(e) => { onFiles([...e.target.files]); e.target.value = ""; }} />
               <p style={{ fontSize: 12, color: "#7B8CA3", marginTop: 10, lineHeight: 1.55 }}>
-                <b>Transcripts:</b> meeting recordings contain participants' personal data, so only upload transcripts of meetings your organisation had a lawful basis to record, and tell participants the record may be retained against the contract. Zero-Retention mode purges transcript text after analysis, keeping only the extracted knowledge.
+                <b>Transcripts:</b> meeting recordings contain participants' personal data, so only upload transcripts of meetings your organisation had a lawful basis to record, and tell participants the record may be retained against the contract. {pseudonymise ? "Names, e-mail addresses and phone numbers are replaced with labels in this browser before the transcript is stored or analysed — you still read the real names on screen, because the key stays on this machine and is never saved." : "Pseudonymisation is currently switched off in Settings, so transcripts are stored and analysed with real names in them."} Zero-Retention mode purges transcript text after analysis, keeping only the extracted knowledge.
               </p>
               {selected.documents.map((d) => (
                 <div className="doc-item" key={d.id} style={d.scanned ? { borderLeft: "3px solid #EE9420", background: "#FFFBF4" } : undefined}>
                   <div style={{ flex: 1 }}>
                     <span className="nm">{d.name}</span>
-                    <span className="tp">{d.type} · {(d.size / 1024).toFixed(0)} KB{d.pageCount ? ` · ${d.pageCount}pp` : ""} {d.purged ? "· text purged (Zero-Retention)" : d.scanned ? "· scanned image — no text layer" : d.ocr ? `· text recovered by OCR (${d.ocr.chars.toLocaleString()} chars)` : d.text ? "· content ingested" : "· metadata only"}{d.uploadedBy ? ` · by ${d.uploadedBy}` : ""}</span>
+                    <span className="tp">{d.type} · {(d.size / 1024).toFixed(0)} KB{d.pageCount ? ` · ${d.pageCount}pp` : ""} {d.purged ? "· text purged (Zero-Retention)" : d.scanned ? "· scanned image — no text layer" : d.ocr ? `· text recovered by OCR (${d.ocr.chars.toLocaleString()} chars)` : d.text ? "· content ingested" : "· metadata only"}{d.uploadedBy ? ` · by ${d.uploadedBy}` : ""}{d.pseudonymised ? ` · ${d.pseudonymisedCount} identifier${d.pseudonymisedCount === 1 ? "" : "s"} pseudonymised in-browser` : ""}</span>
                     {d.consent && <span className="tp" style={{ color: "#2E9E6B" }}>✓ recording consent accepted by {d.consent.by} on {new Date(d.consent.at).toLocaleDateString("en-GB")}</span>}
                     {d.scanned && (
                       <div style={{ marginTop: 8 }}>
@@ -5746,6 +6182,15 @@ export default function ContractIQ() {
               </div>
             </div>
 
+            {/* What we do on our side of the bargain, stated before they
+                accept rather than buried in a policy page afterwards. */}
+            <div style={{ background: pseudonymise ? "#EAF7F5" : "#FDF3E3", borderLeft: "4px solid " + (pseudonymise ? "#17A398" : "#C98A1E"),
+              borderRadius: 6, padding: "12px 14px", marginBottom: 14, fontSize: 12.5, lineHeight: 1.6, color: "#25404F" }}>
+              {pseudonymise
+                ? <>And what we do: every name, e-mail address and phone number is replaced with a label — Participant A, Participant B — <b>in this browser, before the transcript is stored, synced or sent for analysis</b>. You still read the real names on screen; the key that reverses it stays on this machine and is never saved. Switch it off in Settings → Data handling.</>
+                : <>Pseudonymisation is <b>switched off</b> in Settings → Data handling, so this transcript will be stored and analysed with the participants' real names in it. Turn it on to have names replaced in this browser first.</>}
+            </div>
+
             <div style={{ fontSize: 12, color: "#56718A", marginBottom: 12 }}>
               <b>File{consentPrompt.transcriptNames.length > 1 ? "s" : ""}:</b>{" "}
               {consentPrompt.transcriptNames.join(", ")}
@@ -5793,7 +6238,7 @@ export default function ContractIQ() {
             {cedricMsgs.length === 0 && (
               <div className="cmsg bot">Hello {currentUser.displayName.split(" ")[0]} — I'm Cedric. To keep answers accurate, I only recall a contract you name: include its ref, name or supplier in your question{selected ? " (this open record counts, so ask away)" : ""}. Costs, renewal dates, risks, missing clauses, what to push for in negotiation — I answer only from what's been ingested and analysed.</div>
             )}
-            {cedricMsgs.map((m, i) => <div key={i} className={`cmsg ${m.role === "user" ? "user" : "bot"}`}>{m.text}</div>)}
+            {cedricMsgs.map((m, i) => <div key={i} className={`cmsg ${m.role === "user" ? "user" : "bot"}`}>{deAnon(m.text)}</div>)}
             {cedricBusy && <div className="cmsg bot"><span className="spin b" style={{ marginRight: 8 }} />Thinking…</div>}
             <div ref={cedricEnd} />
           </div>
@@ -5940,7 +6385,7 @@ export default function ContractIQ() {
               </ul>
               {EDITION !== "enterprise" && (
                 <p style={{ fontSize: 12.5, color: "#56718A", marginTop: 12 }}>
-                  Need more? {EDITION === "sandbox" ? "Growth adds 15 audits a month, custom playbooks and advanced cross-clause logic." : "Enterprise adds custom volume, Zero-Retention, dedicated API keys and corporate SSO."}
+                  Need more? {EDITION === "sandbox" ? "Growth adds 500 credits a month — about 50 analyses — plus custom playbooks and advanced cross-clause logic." : "Enterprise adds custom volume, Zero-Retention, dedicated API keys and corporate SSO."}
                 </p>
               )}
             </div>
@@ -6017,19 +6462,35 @@ export default function ContractIQ() {
             )}
 
             <h2 style={{ fontSize: 18, marginTop: 18 }}>Data handling</h2>
+
+            {/* Available on every edition. A safety property should not be a
+                paid upgrade, and this one costs nothing to run. */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, background: "#F5F9FE", borderRadius: 6, padding: "14px 16px", marginBottom: 16, borderLeft: "4px solid #17A398" }}>
+              <div>
+                <b style={{ fontSize: 14 }}>Pseudonymise transcripts in this browser</b>
+                <div style={{ fontSize: 12, color: "#56718a", marginTop: 2, lineHeight: 1.5 }}>
+                  Names, e-mail addresses and phone numbers in a meeting transcript are replaced with labels — Participant A, Participant B — before the transcript is stored, synced or sent for analysis. You still read the real names on screen: the key that reverses it is held in this tab's memory and is never written to your database, never synced and never sent with a request. Close the tab and it is gone, which is the point.
+                </div>
+              </div>
+              <button className={`btn sm ${pseudonymise ? "" : "ghost"}`}
+                onClick={() => { setPseudonymise(!pseudonymise); notify(!pseudonymise ? "Pseudonymisation on — applies to transcripts uploaded from now" : "Pseudonymisation off — transcripts will be stored with real names"); }}>
+                {pseudonymise ? "On" : "Off"}
+              </button>
+            </div>
+
             {ED.zeroRetention ? (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#F5F9FE", borderRadius: 6, padding: "14px 16px", marginBottom: 16, borderLeft: "4px solid #2F7BD9" }}>
                 <div>
                   <b style={{ fontSize: 14 }}>Zero-Retention mode</b>
-                  <div style={{ fontSize: 12, color: "#56718a", marginTop: 2 }}>Purge document text immediately after each analysis — only extracted details and metadata are kept.</div>
+                  <div style={{ fontSize: 12, color: "#56718a", marginTop: 2, lineHeight: 1.5 }}>Document text is never saved to our database for this workspace — it stays in this browser tab while the analysis runs, then is dropped. Only the extracted details, the analysis and file names are kept. Analysis runs in this tab, so keep it open; to re-analyse later you upload the document again. Applies to the whole workspace.</div>
                 </div>
-                <button className={`btn sm ${zeroRetention ? "" : "ghost"}`} onClick={() => { setZeroRetention(!zeroRetention); notify(!zeroRetention ? "Zero-Retention enabled" : "Zero-Retention disabled"); }}>{zeroRetention ? "On" : "Off"}</button>
+                <button className={`btn sm ${zeroRetention ? "" : "ghost"}`} onClick={toggleZeroRetention}>{zeroRetention ? "On" : "Off"}</button>
               </div>
             ) : (
               <div className="locked">
                 <div>
                   <b>Zero-Retention processing</b>
-                  <span>Hold documents in memory only — source text is expunged the moment analysis completes, leaving just the extracted schema.</span>
+                  <span>Document text is never saved to our database — it stays in the browser tab for the analysis, then is dropped, leaving just the extracted details.</span>
                 </div>
                 <span className="pill blue" style={{ marginTop: 0 }}>Enterprise</span>
               </div>

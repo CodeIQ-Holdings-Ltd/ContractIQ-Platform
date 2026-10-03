@@ -1,526 +1,1015 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ContractIQ Platform — AI Contract Analysis & Renewal Management Software</title>
-<meta name="description" content="Know every contract, win every negotiation. AI contract analysis for CFOs and procurement: cost, risk, compliance, renewal alerts and savings tracking." />
-<link rel="canonical" href="https://www.contractiq.example/" />
-<meta name="theme-color" content="#152238" />
-<meta property="og:type" content="website" /><meta property="og:site_name" content="ContractIQ Platform" />
-<meta property="og:title" content="ContractIQ Platform — AI Contract Analysis & Renewal Management Software" /><meta property="og:description" content="Know every contract, win every negotiation. AI contract analysis for CFOs and procurement: cost, risk, compliance, renewal alerts and savings tracking." />
-<meta property="og:url" content="https://www.contractiq.example/" /><meta name="twitter:card" content="summary_large_image" />
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ContractIQ Platform","applicationCategory":"BusinessApplication","operatingSystem":"Windows, macOS, Web","description":"AI-powered contract analysis: cost, users, risk, opportunities, legal compliance and renewal management.","offers":{"@type":"AggregateOffer","lowPrice":"0","highPrice":"79","priceCurrency":"GBP"}}</script>
+<title>ContractIQ Platform — Know every contract. Win every negotiation.</title>
+<meta name="description" content="AI contract analysis across cost, users, risk, opportunity and legal compliance — before the renewal clock runs out." />
+
+<!-- Set the js flag BEFORE first paint. Everything below is visible by
+     default in CSS and only hidden once this line proves JavaScript is
+     running, so a script error can never leave content stuck invisible.
+     That is the failure the old build needed a 2.6-second failsafe for. -->
+<script>document.documentElement.className += ' js';</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy-950: #081627; --navy-900: #0B1D33; --navy-800: #0F2B4C; --navy-700: #163B66;
-    --blue: #2F7BD9; --blue-light: #5FA8F5; --sky: #A9CFF6; --teal: #37D5C3;
-    --ink: #16283E; --grey: #62748B; --line: #E1EAF6; --wash: #F5F9FE;
-  }
-  body { font-family: 'Quicksand', 'Trebuchet MS', 'Segoe UI', Verdana, sans-serif; color: var(--ink); background: #fff; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-  a { color: var(--blue); text-decoration: none; }
-  b, strong, h1, h2, h3 { font-weight: 700; }
-  /* ── Nav ── */
-  .nav { position: sticky; top: 0; z-index: 60; background: rgba(8,22,39,0.92); backdrop-filter: blur(14px); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid rgba(95,168,245,0.14); }
-  .brand { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; letter-spacing: 0.02em; color: #fff; }
-  .brand span { color: var(--blue-light); }
-  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; font-weight: 600; }
-  .nav-links a { color: #C7D8EE; letter-spacing: 0.02em; }
-  .nav-links a:hover { color: #fff; }
-  .btn { display: inline-block; background: var(--blue); color: #fff; border: none; border-radius: 100px; padding: 13px 30px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.02em; transition: all .18s; }
-  .btn:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 10px 26px rgba(47,123,217,0.35); }
-  .btn.ghost { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.55); }
-  .btn.ghost:hover { border-color: #fff; background: rgba(255,255,255,0.08); box-shadow: none; }
-  .btn.sm { padding: 9px 20px; font-size: 13px; }
-  .light-scope .btn.ghost, .price .btn.ghost { color: var(--blue); border-color: rgba(47,123,217,0.5); }
-  .light-scope .btn.ghost:hover { background: rgba(47,123,217,0.07); }
-  /* ── Dark hero band ── */
-  .hero, .page-hero { position: relative; color: #fff; background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-800) 55%, #1C4E8F 100%); overflow: hidden; }
-  .hero::before, .page-hero::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat; pointer-events: none; }
-  .hero { padding: 0; }
-  .hero-inner { position: relative; max-width: 1160px; margin: 0 auto; padding: 84px 5vw 96px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
-  .eyebrow { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sky); margin-bottom: 18px; }
-  .eyebrow::before { content: ""; width: 3px; height: 34px; background: var(--teal); border-radius: 2px; }
-  .hero h1 { font-size: clamp(38px, 4.6vw, 58px); line-height: 1.08; letter-spacing: -0.01em; font-weight: 700; }
-  .hero h1 em { font-style: normal; color: var(--blue-light); }
-  .hero p { font-size: 17px; color: #BFD5EF; margin: 20px 0 30px; max-width: 480px; }
-  .hero .cta { display: flex; gap: 14px; flex-wrap: wrap; }
-  .hero .note { font-size: 13px; color: #7E9CC4; margin-top: 18px; font-weight: 600; }
-  .hero-art { position: relative; display: flex; justify-content: center; }
-  .hero-art svg { width: min(440px, 90%); height: auto; filter: drop-shadow(0 24px 60px rgba(47,123,217,0.45)); animation: floaty 7s ease-in-out infinite; }
-  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-  .page-hero { text-align: center; padding: 76px 5vw 64px; }
-  .page-hero h1 { position: relative; font-size: clamp(32px, 4.2vw, 48px); line-height: 1.1; }
-  .page-hero h1 em { font-style: normal; color: var(--blue-light); }
-  .page-hero p { position: relative; font-size: 17px; color: #BFD5EF; margin: 14px auto 0; max-width: 620px; }
-  /* ── Sections ── */
-  section { padding: 68px 5vw; }
-  .wrap { max-width: 1100px; margin: 0 auto; }
-  .kicker { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); text-align: center; }
-  .kicker::before { content: ""; width: 26px; height: 26px; background: url("data:image/svg+xml,%3Csvg%20width%3D%2234%22%20height%3D%2234%22%20viewBox%3D%220%200%2048%2048%22%20fill%3D%22none%22%20aria-hidden%3D%22true%22%3E%3Cpath%20d%3D%22M24%203%20L42%2013.5%20V34.5%20L24%2045%20L6%2034.5%20V13.5%20Z%22%20stroke%3D%22%235FA8F5%22%20stroke-width%3D%222.6%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M24%2013%20L33%2018%20V28%20L24%2033%20L15%2028%20V18%20Z%20M24%2013%20V23%20M24%2023%20L33%2018%20M24%2023%20L15%2018%22%20stroke%3D%22%235FA8F5%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E") center/contain no-repeat; }
-  h2.head { font-size: clamp(26px, 3.4vw, 38px); font-weight: 700; text-align: center; margin: 12px 0 10px; color: var(--navy-900); line-height: 1.15; }
-  .lead { text-align: center; color: var(--grey); font-size: 16.5px; max-width: 640px; margin: 0 auto 34px; }
-  /* ── Cards + hex icons ── */
-  .feat-grid, .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-  .feat { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 22px 22px 20px; display: grid; grid-template-columns: 38px 1fr; column-gap: 16px; align-items: start; text-align: left; transition: all .2s; }
-  .feat:hover { box-shadow: 0 12px 30px rgba(15,43,76,0.10); transform: translateY(-2px); border-color: rgba(95,168,245,0.5); }
-  .feat .hexic { grid-row: 1 / 3; margin-top: 2px; }
-  .feat h3 { grid-column: 2; font-size: 16.5px; color: var(--navy-900); margin-bottom: 6px; }
-  .feat p { grid-column: 2; font-size: 14px; color: var(--grey); line-height: 1.6; }
-  .feat a { font-weight: 700; }
-  /* ── Zigzag timeline (roadmap style) ── */
-  .steps { position: relative; max-width: 860px; margin: 0 auto; padding: 10px 0; }
-  .steps::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--line); transform: translateX(-50%); }
-  .step { position: relative; width: calc(50% - 56px); background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 26px 26px 22px; margin-bottom: 46px; box-shadow: 0 10px 30px rgba(15,43,76,0.06); }
-  .step:nth-child(odd) { margin-left: 0; text-align: right; }
-  .step:nth-child(even) { margin-left: calc(50% + 56px); }
-  .step b { display: block; font-size: 17px; color: var(--navy-900); margin-bottom: 5px; }
-  .step p { font-size: 14px; color: var(--grey); }
-  .step::before { counter-increment: none; content: attr(data-n); position: absolute; top: 50%; width: 44px; height: 50px; transform: translateY(-50%); background: linear-gradient(160deg, var(--blue) 0%, var(--blue-light) 100%); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; }
-  .step:nth-child(odd)::before { right: -78px; }
-  .step:nth-child(even)::before { left: -78px; }
-  .step::after { content: ""; position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 3px solid var(--blue); transform: translateY(-50%); }
-  .step:nth-child(odd)::after { right: -62px; }
-  .step:nth-child(even)::after { left: -62px; }
-  /* ── Navy striped band (comparison) ── */
-  .band { position: relative; color: #fff; background: linear-gradient(120deg, var(--navy-900), var(--navy-700)); overflow: hidden; }
-  .band::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat; }
-  .band .wrap { position: relative; }
-  .band .kicker { color: var(--sky); }
-  .band h2.head { color: #fff; }
-  .band .lead { color: #A9C4E6; }
-  .striped { max-width: 880px; margin: 0 auto; }
-  .striped .row { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 26px; font-size: 15.5px; font-weight: 600; margin-bottom: 12px; }
-  .striped .row:nth-child(odd) { background: #fff; color: var(--navy-900); }
-  .striped .row:nth-child(even) { background: rgba(8,22,39,0.55); color: #fff; border: 1px solid rgba(95,168,245,0.25); }
-  .striped .row .r { font-weight: 500; font-size: 14px; opacity: 0.85; text-align: right; }
-  .striped .row.hl { outline: 2px solid var(--teal); }
-  /* ── Pricing ── */
-  .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: stretch; }
-  .price { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 40px 32px; display: flex; flex-direction: column; text-align: center; }
-  .price.pop { border: 2px solid var(--blue); box-shadow: 0 24px 56px rgba(47,123,217,0.18); position: relative; }
-  .badge-pop { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--blue), var(--blue-light)); color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 100px; padding: 6px 16px; }
-  .price .tier { font-size: 12.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); }
-  .price .tier::after { content: ""; display: block; width: 34px; height: 3px; background: var(--teal); margin: 8px auto 0; border-radius: 2px; }
-  .price .amt { font-size: 44px; font-weight: 700; margin: 16px 0 2px; color: var(--navy-900); }
-  .price .amt small { font-size: 15px; font-weight: 600; color: var(--grey); }
-  .price .per { color: var(--grey); font-size: 13.5px; margin-bottom: 20px; }
-  .price ul { list-style: none; margin-bottom: 26px; flex: 1; text-align: left; }
-  .price li { font-size: 14.5px; color: var(--ink); padding: 8px 0 8px 28px; position: relative; }
-  .price li::before { content: ""; position: absolute; left: 0; top: 11px; width: 14px; height: 16px; background: var(--blue); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
-  /* ── FAQ (numbered) ── */
-  .faq { max-width: 760px; margin: 0 auto; counter-reset: faq; }
-  .faq details { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 20px 24px; margin-bottom: 12px; }
-  .faq summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 18px; font-weight: 700; font-size: 16px; color: var(--navy-900); }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::before { counter-increment: faq; content: "0" counter(faq); color: var(--blue-light); font-size: 15px; font-weight: 700; }
-  .faq summary::after { content: "▾"; margin-left: auto; width: 24px; height: 28px; background: linear-gradient(160deg, var(--blue), var(--blue-light)); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: transform .2s; }
-  .faq details[open] summary::after { transform: rotate(180deg); }
-  .faq p { color: var(--grey); font-size: 14.5px; margin-top: 14px; line-height: 1.7; padding-left: 40px; }
-  /* ── Prose (terms/privacy) ── */
-  .prose { max-width: 760px; margin: 0 auto; }
-  .prose h2 { font-size: 21px; color: var(--navy-900); margin: 36px 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
-  .prose h2::first-letter { color: var(--blue); }
-  .prose p, .prose li { font-size: 15px; color: #3D4F66; line-height: 1.75; margin-bottom: 12px; }
-  .prose ul { padding-left: 22px; }
-  .prose .meta { font-size: 13px; color: var(--grey); }
-  /* ── ROI calculator ── */
-  .roi-card { background: linear-gradient(135deg, var(--navy-900), var(--navy-700)); border-radius: 6px; padding: 40px; color: #fff; position: relative; overflow: hidden; }
-  .roi-card::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover; }
-  .roi-card > * { position: relative; }
-  .roi-card label { font-size: 12.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sky); }
-  .roi-card input { width: 100%; margin-top: 10px; border: 1.5px solid rgba(95,168,245,0.4); background: rgba(8,22,39,0.5); color: #fff; border-radius: 6px; padding: 14px 16px; font-size: 18px; font-family: inherit; font-weight: 600; outline: none; }
-  .roi-card input:focus { border-color: var(--teal); }
-  .roi-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 22px; text-align: center; }
-  .roi-grid > div { background: rgba(255,255,255,0.06); border: 1px solid rgba(95,168,245,0.25); border-radius: 6px; padding: 18px 10px; }
-  .roi-grid > div.mid { border-color: var(--teal); }
-  .roi-grid b { display: block; font-size: 22px; }
-  .roi-grid span { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sky); font-weight: 700; }
-  .roi-note { font-size: 12px; color: #7E9CC4; margin-top: 16px; text-align: center; }
-  /* ── Product mock ── */
-  .shot { max-width: 940px; margin: 64px auto 0; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 34px 90px rgba(4,14,28,0.55); text-align: left; position: relative; }
-  .shot-bar { height: 40px; background: var(--navy-900); display: flex; align-items: center; gap: 8px; padding: 0 18px; }
-  .dot { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,0.22); }
-  .shot-body { padding: 26px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .mini-stat { background: var(--wash); border-radius: 6px; padding: 16px; border-left: 3px solid var(--blue); }
-  .mini-stat .v { font-size: 20px; font-weight: 700; color: var(--navy-900); }
-  .mini-stat .l { font-size: 10px; color: var(--grey); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-top: 3px; }
-  .mini-card { grid-column: span 2; border: 1px solid var(--line); border-radius: 6px; padding: 16px; }
-  .mini-card .t { font-size: 10px; color: var(--blue); font-weight: 700; letter-spacing: 0.12em; }
-  .mini-card b { display: block; font-size: 15px; margin: 4px 0 8px; color: var(--navy-900); }
-  .pill { display: inline-block; font-size: 10.5px; font-weight: 700; border-radius: 100px; padding: 4px 10px; margin-right: 5px; }
-  .pill.ok { background: #E4F8F0; color: #14805E; } .pill.warn { background: #FFF2E0; color: #A85A00; } .pill.blue { background: #E5F0FD; color: #1D5FB8; }
-  /* ── Founding / final CTA ── */
-  .final { position: relative; text-align: center; color: #fff; background: linear-gradient(135deg, var(--navy-950), var(--navy-700)); overflow: hidden; }
-  .final::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover; }
-  .final .wrap { position: relative; }
-  .final h2.head { color: #fff; }
-  .final .lead { color: #A9C4E6; }
-  .final .kicker { color: var(--sky); }
-  /* ── Footer ── */
-  .footer { position: relative; background: var(--navy-950); color: #A9C4E6; padding: 64px 5vw 0; overflow: hidden; }
-  .footer::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.07' fill='none'%3E%3Cpath d='M-20 180 L240 60 L520 200 L780 40 L1080 190 L1240 90'/%3E%3Cpath d='M240 60 L300 340 L520 200 M780 40 L740 320 L1080 190 M300 340 L740 320'/%3E%3Cpath d='M-40 620 L260 500 L560 660 L860 520 L1180 680'/%3E%3Cpath d='M260 500 L300 340 M560 660 L740 320 M860 520 L1080 190'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.18'%3E%3Ccircle cx='240' cy='60' r='3'/%3E%3Ccircle cx='520' cy='200' r='3'/%3E%3Ccircle cx='780' cy='40' r='3'/%3E%3Ccircle cx='1080' cy='190' r='3'/%3E%3Ccircle cx='300' cy='340' r='3'/%3E%3Ccircle cx='740' cy='320' r='3'/%3E%3Ccircle cx='260' cy='500' r='3'/%3E%3Ccircle cx='560' cy='660' r='3'/%3E%3Ccircle cx='860' cy='520' r='3'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Ccircle cx='150' cy='250' r='2'/%3E%3Ccircle cx='650' cy='120' r='2'/%3E%3Ccircle cx='950' cy='400' r='2'/%3E%3Ccircle cx='420' cy='560' r='2'/%3E%3Ccircle cx='1120' cy='560' r='2'/%3E%3C/g%3E%3C/svg%3E") center/cover; opacity: 0.6; }
-  .foot-grid { position: relative; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 44px; padding-bottom: 44px; }
-  .foot-grid h4 { color: #fff; font-size: 16px; margin-bottom: 8px; }
-  .foot-grid h4::after { content: ""; display: block; width: 30px; height: 3px; background: var(--teal); border-radius: 2px; margin-top: 9px; }
-  .foot-grid a { display: block; color: #A9C4E6; font-size: 14px; padding: 6px 0; font-weight: 500; }
-  .foot-grid a:hover { color: #fff; }
-  .foot-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 14px; }
-  .foot-brand span { color: var(--blue-light); }
-  .foot-grid p { font-size: 13.5px; line-height: 1.7; max-width: 300px; }
-  .foot-base { position: relative; border-top: 1px solid rgba(95,168,245,0.18); max-width: 1100px; margin: 0 auto; padding: 20px 0 26px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12.5px; color: #6E8CB4; }
-  .foot-base a { color: #A9C4E6; }
-  .legal { position: relative; font-size: 12px; color: #7E9CC4; max-width: 780px; margin: 0 auto; line-height: 1.6; text-align: center; }
-  section .legal { color: var(--grey); }
-  @media (max-width: 880px) {
-    .hero-inner { grid-template-columns: 1fr; padding: 60px 5vw 70px; }
-    .hero-art { order: -1; } .hero-art svg { width: 260px; }
-    .nav-links a.hide-m { display: none; }
-    .steps::before { left: 20px; }
-    .step, .step:nth-child(even) { width: calc(100% - 70px); margin-left: 70px; text-align: left; }
-    .step:nth-child(odd) { text-align: left; }
-    .step:nth-child(odd)::before, .step:nth-child(even)::before { left: -66px; right: auto; width: 40px; height: 46px; font-size: 12.5px; }
-    .step::after { display: none; }
-    .foot-grid { grid-template-columns: 1fr; gap: 28px; }
-    .roi-grid { grid-template-columns: 1fr; }
-    .shot-body { grid-template-columns: 1fr 1fr; }
-  }
+/* ══════════════════════════════════════════════════════════════
+   TOKENS — the blues are sampled from the photograph itself, so
+   the page and the picture are the same palette rather than two
+   that nearly match.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#050C1E;          /* deeper than the photo's darkest ridge */
+  --navy:#0A1830;
+  --navy-2:#122745;
+  --slate:#28456D;
+  --steel:#4D75A8;
+  --haze:#7DA3D1;
+  --mist:#C2D7EE;
+  --paper:#F4F8FC;
+  --white:#FFFFFF;
 
-  /* ── Hex icon rows (hexgrid / hcard / hexicon) ── */
-  .hexgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-  .hcard { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 20px 22px 18px; display: grid; grid-template-columns: 38px 1fr; column-gap: 15px; align-items: start; text-align: left; transition: all .2s; }
-  .hcard:hover { box-shadow: 0 12px 30px rgba(15,43,76,0.10); transform: translateY(-2px); border-color: rgba(95,168,245,0.5); }
-  .hexicon { grid-row: 1 / 3; width: 38px; height: 38px; display: block; margin-top: 2px; }
-  .hexicon svg { width: 38px; height: 38px; display: block; }
-  .hcard h3 { grid-column: 2; font-size: 16px; color: var(--navy-900); margin: 0 0 5px; font-weight: 700; }
-  .hcard p { grid-column: 2; font-size: 13.5px; color: var(--grey); line-height: 1.6; margin: 0; }
-  .hcard a { font-weight: 700; }
-  .band .hcard { background: rgba(255,255,255,0.05); border-color: rgba(95,168,245,0.25); }
-  .band .hcard h3 { color: #fff; }
-  .band .hcard p { color: #A9C4E6; }
+  --teal:#45D6C6;         /* the one warm-cool accent — used sparingly */
+  --teal-dim:#1E9E93;
+  --glow:rgba(69,214,198,.42);
 
-  /* ── Unified styles for restructured sections (audit fix) ── */
-  .center { text-align: center; } .mt40 { margin-top: 40px; }
-  .soft-band { background: var(--wash); }
-  .sec-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 34px; }
-  .sec-head .hexmark { width: 30px; height: 30px; }
-  .sec-head .k { font-size: 12.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); }
-  .sec-head h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 700; color: var(--navy-900); line-height: 1.15; }
-  .band .sec-head h2, .final .sec-head h2 { color: #fff; }
-  .band .sec-head .k, .final .sec-head .k { color: var(--sky); }
-  .sec-head .s { color: var(--grey); font-size: 16px; max-width: 620px; }
-  .band .sec-head .s, .final .sec-head .s { color: #A9C4E6; }
-  /* Pricing plans */
-  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: stretch; }
-  .plan { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 38px 30px; display: flex; flex-direction: column; text-align: center; position: relative; }
-  .plan.pop { border: 2px solid var(--blue); box-shadow: 0 24px 56px rgba(47,123,217,0.16); }
-  .plan .tier { font-size: 12.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); }
-  .plan .tier::after { content: ""; display: block; width: 34px; height: 3px; background: var(--teal); margin: 8px auto 0; border-radius: 2px; }
-  .plan .amt { font-size: 42px; font-weight: 700; margin: 16px 0 2px; color: var(--navy-900); }
-  .plan .amt small { font-size: 15px; font-weight: 600; color: var(--grey); }
-  .plan .per { color: var(--grey); font-size: 13.5px; margin-bottom: 20px; }
-  .plan ul { list-style: none; margin: 0 0 26px; padding: 0; flex: 1; text-align: left; }
-  .plan li { font-size: 14.5px; color: var(--ink); padding: 8px 0 8px 26px; position: relative; }
-  .plan li::before { content: ""; position: absolute; left: 0; top: 12px; width: 13px; height: 15px; background: var(--blue); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
-  .legal-note { text-align: center; color: var(--grey); font-size: 13px; margin-top: 24px; }
-  /* FAQ numbering: explicit .num spans replace auto-counters */
-  .faq summary::before { content: none; }
-  .faq .num { color: var(--blue-light); font-weight: 700; font-size: 14.5px; margin-right: 16px; }
-  .faq .fp { color: var(--grey); font-size: 14.5px; margin-top: 14px; line-height: 1.7; padding-left: 34px; }
-  /* Horizontal timeline (tl) */
-  .tl { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; max-width: 1060px; margin: 0 auto; }
-  .tl-item { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; transition: all .2s; }
-  .tl-item:hover { box-shadow: 0 12px 30px rgba(15,43,76,0.10); transform: translateY(-2px); }
-  .hexq { flex-shrink: 0; width: 46px; height: 52px; background: linear-gradient(160deg, var(--blue), var(--blue-light)); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; }
-  .hexq b { font-size: 14px; } .hexq span { font-size: 6.5px; letter-spacing: 0.16em; font-weight: 700; opacity: 0.9; }
-  .tl-card b { display: block; font-size: 15.5px; color: var(--navy-900); margin-bottom: 4px; }
-  .tl-card p { font-size: 13.5px; color: var(--grey); line-height: 1.55; margin: 0; }
-  /* Band split + comparison table (ztable) */
-  .band-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; align-items: center; }
-  .band-grid .bp { color: #A9C4E6; font-size: 15.5px; line-height: 1.7; margin: 14px 0 22px; }
-  .band-grid h2 { color: #fff; font-size: clamp(24px, 3vw, 34px); line-height: 1.18; }
-  .ztable { border-radius: 6px; overflow: hidden; border: 1px solid rgba(95,168,245,0.3); }
-  .zhead { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; padding: 13px 22px; background: rgba(8,22,39,0.75); color: var(--sky); font-size: 11.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
-  .zrow { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; padding: 17px 22px; font-size: 14px; align-items: center; }
-  .zrow > span:first-child { font-weight: 700; }
-  .zrow:nth-of-type(odd) { background: #fff; color: var(--navy-900); }
-  .zrow:nth-of-type(even) { background: rgba(8,22,39,0.5); color: #E7F0FB; }
-  .zrow.hl { box-shadow: inset 0 0 0 2px var(--teal); }
-  /* ROI numbers */
-  .roi-nums { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 22px; text-align: center; }
-  .roi-nums > div { background: rgba(255,255,255,0.06); border: 1px solid rgba(95,168,245,0.25); border-radius: 6px; padding: 18px 10px; }
-  .roi-nums > div.hi { border-color: var(--teal); }
-  .roi-nums b { display: block; font-size: 22px; color: #fff; }
-  .roi-nums .hi b { color: var(--teal); }
-  .roi-nums small { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sky); font-weight: 700; }
-  @media (max-width: 880px) {
-    .band-grid { grid-template-columns: 1fr; gap: 26px; }
-    .roi-nums { grid-template-columns: 1fr; }
-    .plans { grid-template-columns: 1fr; }
-  }
+  --tx-on-dark:#EAF2FB;
+  --tx-on-dark-2:#A9C3DE;
+  --tx-on-dark-3:#6E8CB4;
+  --tx:#101D33;
+  --tx-2:#465D7C;
+  --tx-3:#7890AE;
+
+  --display:'Quicksand',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+
+  --shell:1220px;
+  --gut:clamp(20px,4vw,40px);
+  --r:18px;
+  --r-lg:26px;
+
+  --ease:cubic-bezier(.22,.68,.32,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{
+  margin:0;background:var(--ink);color:var(--tx-on-dark);
+  font-family:var(--body);font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--display);margin:0;line-height:1.08;letter-spacing:-.025em;font-weight:700;text-wrap:balance}
+p{margin:0}
+.shell{max-width:var(--shell);margin:0 auto;padding-inline:var(--gut)}
+
+/* ══════════════════════════════════════════════════════════════
+   MOTION — the contract with the reader
+   Default state is VISIBLE. `.js` opts in to the hidden start.
+   Reduced motion opts straight back out again.
+   ══════════════════════════════════════════════════════════════ */
+.js [data-rise]{opacity:0;transform:translate3d(0,26px,0)}
+.js [data-rise].in{
+  opacity:1;transform:none;
+  transition:opacity .85s var(--ease-out),transform .85s var(--ease-out);
+  transition-delay:var(--d,0ms);
+}
+.js [data-scale]{opacity:0;transform:scale(.965) translate3d(0,30px,0)}
+.js [data-scale].in{
+  opacity:1;transform:none;
+  transition:opacity 1s var(--ease-out),transform 1.1s var(--ease-out);
+  transition-delay:var(--d,0ms);
+}
+
+/* The hero headline reveals per word: blur + lift, on load, no observer. */
+.word{display:inline-block;overflow:hidden;vertical-align:top}
+.word > span{display:inline-block;will-change:transform,opacity,filter}
+.js .word > span{
+  opacity:0;transform:translate3d(0,.9em,0);filter:blur(9px);
+  animation:wordIn 1s var(--ease-out) forwards;
+  animation-delay:calc(var(--i) * 72ms + 180ms);
+}
+@keyframes wordIn{to{opacity:1;transform:none;filter:blur(0)}}
+
+.js .fade-up{opacity:0;transform:translate3d(0,18px,0);
+  animation:fadeUp .9s var(--ease-out) forwards;animation-delay:var(--d,0ms)}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js [data-rise],.js [data-scale],.js .word > span,.js .fade-up{
+    opacity:1!important;transform:none!important;filter:none!important;animation:none!important;transition:none!important}
+  .ciq-orb,.sheen{display:none!important}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NAV
+   ══════════════════════════════════════════════════════════════ */
+.nav{position:fixed;inset:0 0 auto;z-index:90;padding:18px 0;
+  transition:padding .45s var(--ease),background .45s var(--ease),backdrop-filter .45s var(--ease),border-color .45s var(--ease);
+  border-bottom:1px solid transparent}
+.nav.stuck{padding:10px 0;background:rgba(8,20,40,.72);backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);border-bottom-color:rgba(125,163,209,.16)}
+.nav-in{display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;
+  font-size:18px;letter-spacing:-.02em;flex:0 0 auto}
+.brand svg{width:30px;height:30px;flex:0 0 auto;transition:transform .6s var(--ease)}
+.brand:hover svg{transform:rotate(30deg)}
+.brand .pl{color:var(--haze);font-weight:500}
+.nav-links{display:flex;gap:4px;margin-left:14px;flex:1}
+.nav-links a{position:relative;padding:9px 14px;border-radius:10px;font-size:14.5px;font-weight:500;
+  color:var(--tx-on-dark-2);transition:color .3s var(--ease),background .3s var(--ease)}
+.nav-links a::after{content:"";position:absolute;left:14px;right:14px;bottom:5px;height:1.5px;
+  background:var(--teal);transform:scaleX(0);transform-origin:left;border-radius:2px;
+  transition:transform .45s var(--ease-out)}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--body);font-weight:600;font-size:14.5px;letter-spacing:.01em;
+  padding:12px 22px;border-radius:999px;border:1px solid transparent;cursor:pointer;
+  transition:transform .35s var(--ease),box-shadow .45s var(--ease),background .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease);
+  overflow:hidden;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn-pri{background:linear-gradient(135deg,var(--teal),#38B9C8);color:#03221F;
+  box-shadow:0 6px 22px -8px var(--glow),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-pri:hover{box-shadow:0 14px 38px -10px var(--glow),inset 0 1px 0 rgba(255,255,255,.6)}
+/* A light sweeps across the primary button on hover. */
+.btn-pri .sheen{position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%);
+  transform:translateX(-110%);transition:transform .85s var(--ease-out)}
+.btn-pri:hover .sheen{transform:translateX(110%)}
+.btn-ghost{border-color:rgba(160,196,236,.32);color:var(--tx-on-dark);background:rgba(255,255,255,.035)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);border-color:rgba(160,196,236,.55)}
+.btn-lg{padding:15px 30px;font-size:15.5px}
+
+.burger{display:none;width:42px;height:42px;border-radius:11px;border:1px solid rgba(160,196,236,.28);
+  background:rgba(255,255,255,.05);cursor:pointer;position:relative}
+.burger i{position:absolute;left:11px;right:11px;height:1.6px;background:var(--tx-on-dark);border-radius:2px;
+  transition:transform .4s var(--ease),opacity .3s}
+.burger i:nth-child(1){top:15px}.burger i:nth-child(2){top:20px}.burger i:nth-child(3){top:25px}
+.nav.open .burger i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.nav.open .burger i:nth-child(2){opacity:0}
+.nav.open .burger i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+
+@media (max-width:940px){
+  .burger{display:block;margin-left:auto}
+  .nav-links{position:fixed;inset:70px 16px auto;flex-direction:column;gap:2px;margin:0;padding:14px;
+    background:rgba(8,20,40,.95);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:1px solid rgba(125,163,209,.18);border-radius:20px;
+    opacity:0;visibility:hidden;transform:translateY(-12px);
+    transition:opacity .4s var(--ease),transform .4s var(--ease),visibility .4s}
+  .nav.open .nav-links{opacity:1;visibility:visible;transform:none}
+  .nav-links a{padding:13px 16px;font-size:16px}
+  .nav-cta .btn-ghost{display:none}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO — the photograph, used as the whole stage
+   ══════════════════════════════════════════════════════════════ */
+.hero{position:relative;min-height:min(880px,98vh);display:flex;align-items:center;
+  padding:150px 0 0;isolation:isolate;overflow-x:clip;overflow-y:visible}
+.ciq-bg{position:absolute;inset:0;z-index:-3}
+.ciq-bg img{width:100%;height:100%;object-fit:cover;object-position:center 42%;
+  transform:scale(1.06);will-change:transform}
+/* Two washes: one to deepen the whole frame so white type holds, one to
+   sink the bottom edge into the section that follows with no visible seam. */
+.ciq-bg::after{content:"";position:absolute;inset:0;
+  background:
+    /* just enough under the nav for white type to hold */
+    linear-gradient(180deg,rgba(5,12,30,.58) 0%,rgba(5,12,30,.20) 13%,rgba(5,12,30,0) 26%),
+    /* a soft pool behind the headline, not a blanket over the picture */
+    radial-gradient(78% 52% at 26% 52%,rgba(5,12,30,.56) 0%,rgba(5,12,30,.24) 52%,rgba(5,12,30,0) 78%),
+    /* and the last stretch dissolves into the section below */
+    linear-gradient(180deg,rgba(5,12,30,0) 62%,rgba(5,12,30,.55) 84%,var(--ink) 100%)}
+
+.ciq-orb{position:absolute;border-radius:50%;filter:blur(90px);z-index:-2;pointer-events:none;opacity:.5}
+.ciq-orb.a{width:min(620px,72vw);aspect-ratio:1;left:-12%;top:14%;
+  background:radial-gradient(circle,rgba(69,214,198,.34),transparent 68%);animation:drift 22s ease-in-out infinite}
+.ciq-orb.b{width:min(700px,80vw);aspect-ratio:1;right:-16%;top:34%;
+  background:radial-gradient(circle,rgba(93,150,226,.40),transparent 68%);animation:drift 27s ease-in-out infinite reverse}
+@keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(38px,-46px,0) scale(1.1)}}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:7px 16px 7px 8px;border-radius:999px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(160,196,236,.24);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  font-size:12.5px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--mist)}
+.eyebrow .dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--teal),#38B9C8);color:#03221F;font-size:11px;font-weight:700}
+.eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);
+  box-shadow:0 0 0 0 var(--glow);animation:pulse 2.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--glow)}70%{box-shadow:0 0 0 11px rgba(69,214,198,0)}100%{box-shadow:0 0 0 0 rgba(69,214,198,0)}}
+
+.hero h1{font-size:clamp(38px,6.1vw,78px);margin:26px auto 0;max-width:21ch}
+.hero h1 .line2{display:block;color:#5FE0D0;
+  text-shadow:0 2px 30px rgba(69,214,198,.28),0 1px 2px rgba(3,14,30,.30)}
+.hero h1 .line2 .word:last-child > span{
+  /* the closing word carries the eye back to the horizon in the photo */
+  color:#9CC4EE}
+.hero .lede{margin:26px auto 0;max-width:62ch;font-size:clamp(16.5px,1.65vw,19.5px);
+  line-height:1.72;color:var(--tx-on-dark-2)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px;justify-content:center}
+.trust{margin-top:26px;font-size:13.5px;color:var(--tx-on-dark-3);display:flex;flex-wrap:wrap;
+  align-items:center;justify-content:center;gap:8px 18px}
+.hero-copy{text-align:center}
+.trust .sep{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.55}
+
+/* ── The glass console ─────────────────────────────────────── */
+.console{position:relative;z-index:3;margin-top:clamp(52px,6vw,76px);
+  margin-bottom:clamp(-190px,-14vw,-110px);border-radius:var(--r-lg);
+  background:linear-gradient(165deg,rgba(255,255,255,.115),rgba(255,255,255,.035));
+  border:1px solid rgba(175,209,243,.20);
+  backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%);
+  box-shadow:0 40px 90px -32px rgba(2,8,22,.78),inset 0 1px 0 rgba(255,255,255,.20);
+  overflow:hidden}
+.console::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(140deg,rgba(69,214,198,.55),transparent 34%,transparent 66%,rgba(125,163,209,.42));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.console-bar{display:flex;align-items:center;gap:12px;padding:15px 20px;
+  border-bottom:1px solid rgba(175,209,243,.14);background:rgba(255,255,255,.045)}
+.dots{display:flex;gap:6px}
+.dots i{width:9px;height:9px;border-radius:50%;background:rgba(175,209,243,.34)}
+.dots i:first-child{background:rgba(69,214,198,.75)}
+.console-bar .label{font-size:12.5px;font-weight:600;color:var(--tx-on-dark-2);letter-spacing:.02em}
+.console-bar .tag{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  padding:5px 11px;border-radius:999px;background:rgba(69,214,198,.13);color:var(--teal);
+  border:1px solid rgba(69,214,198,.26)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(175,209,243,.12)}
+.kpi{padding:24px 22px;background:rgba(9,21,42,.44)}
+.kpi .n{font-family:var(--display);font-size:clamp(24px,3.2vw,34px);font-weight:700;letter-spacing:-.03em;
+  color:var(--white);line-height:1;font-variant-numeric:tabular-nums}
+.kpi .k{margin-top:9px;font-size:12.5px;color:var(--tx-on-dark-3);font-weight:500}
+.kpi:nth-child(3) .n{color:var(--teal)}
+
+.rows{padding:8px}
+.row{display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:center;
+  padding:17px 16px;border-radius:14px;transition:background .4s var(--ease),transform .4s var(--ease)}
+.row:hover{background:rgba(255,255,255,.055);transform:translateX(4px)}
+.row + .row{border-top:1px solid rgba(175,209,243,.10)}
+.row .ref{font-size:11px;font-weight:700;letter-spacing:.10em;color:var(--tx-on-dark-3);text-transform:uppercase}
+.row .name{font-family:var(--display);font-size:16.5px;font-weight:600;color:var(--white);margin-top:4px}
+.row .when{font-size:13px;color:var(--tx-on-dark-2);margin-top:3px}
+.score{text-align:right}
+.score .v{font-family:var(--display);font-size:19px;font-weight:700;color:var(--white);font-variant-numeric:tabular-nums}
+.score .l{font-size:11px;color:var(--tx-on-dark-3);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.grade{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  font-family:var(--display);font-weight:700;font-size:16px}
+.grade.b{background:rgba(69,214,198,.14);color:var(--teal);border:1px solid rgba(69,214,198,.3)}
+.grade.c{background:rgba(224,165,62,.14);color:#E8B45C;border:1px solid rgba(224,165,62,.3)}
+.console-foot{padding:12px 20px;font-size:11.5px;color:var(--tx-on-dark-3);
+  border-top:1px solid rgba(175,209,243,.12);background:rgba(255,255,255,.025)}
+@media (max-width:760px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .row{grid-template-columns:1fr auto;gap:12px}
+  .row .grade{display:none}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RIDGES — the photograph's own shapes, redrawn as a divider
+   ══════════════════════════════════════════════════════════════ */
+.ridge{display:block;width:100%;height:clamp(80px,10vw,150px);margin-bottom:-2px;
+  background:var(--ink)}
+.ridge.up{background:var(--paper)}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════════════════════════════════ */
+section{position:relative}
+.band{padding:clamp(78px,10vw,132px) 0}
+.band.light{background:var(--paper);color:var(--tx)}
+.band.light h2,.band.light h3{color:var(--tx)}
+.band.deep{background:linear-gradient(180deg,var(--ink),var(--navy) 55%,var(--ink))}
+
+.head{max-width:64ch;margin:0 auto;text-align:center}
+.head.left{margin:0;text-align:left}
+.head .kick{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--teal-dim);margin-bottom:16px}
+.band.deep .head .kick{color:var(--teal)}
+.head h2{font-size:clamp(30px,4.5vw,50px);line-height:1.06}
+.head p{margin:20px auto 0;font-size:clamp(16px,1.5vw,18.5px);line-height:1.72;color:var(--tx-2);max-width:60ch}
+.head.left p{margin-left:0}
+.band.deep .head p{color:var(--tx-on-dark-2)}
+
+/* ── Bento ─────────────────────────────────────────────────── */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:clamp(40px,5vw,62px)}
+.cell{position:relative;grid-column:span 2;padding:30px 28px;border-radius:var(--r);
+  background:var(--white);border:1px solid #E1EAF5;overflow:hidden;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+.cell:hover{transform:translateY(-6px);box-shadow:0 26px 54px -26px rgba(16,45,86,.30);border-color:#C9DBEF}
+/* A soft light follows the cursor across the card. */
+.cell::after{content:"";position:absolute;inset:0;opacity:0;pointer-events:none;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(69,214,198,.13),transparent 62%);
+  transition:opacity .5s var(--ease)}
+.cell:hover::after{opacity:1}
+.cell.wide{grid-column:span 3}
+.cell .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin-bottom:20px;
+  background:linear-gradient(140deg,rgba(69,214,198,.17),rgba(47,123,217,.13));
+  border:1px solid rgba(69,214,198,.24)}
+.cell .ic svg{width:21px;height:21px;stroke:var(--teal-dim);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.cell h3{font-size:19.5px;letter-spacing:-.018em;line-height:1.28}
+.cell p{margin-top:11px;font-size:14.8px;line-height:1.68;color:var(--tx-2)}
+@media (max-width:1000px){.bento{grid-template-columns:repeat(4,1fr)}.cell.wide{grid-column:span 4}}
+@media (max-width:680px){.bento{grid-template-columns:1fr;gap:14px}.cell,.cell.wide{grid-column:span 1}}
+
+/* ── Showcase Carousel ───────────────────────────────────────── */
+.carousel-showcase{position:relative;padding:clamp(60px,8vw,100px) 0;background:var(--ink);
+  overflow:hidden;isolation:isolate}
+.carousel-wrapper{position:relative;max-width:1440px;margin:0 auto;padding:0 16px}
+.carousel-container{position:relative;display:grid;grid-template-columns:1fr;min-height:clamp(400px,60vh,600px);
+  border-radius:20px;overflow:hidden;background:linear-gradient(135deg,rgba(69,214,198,.06),rgba(93,150,226,.04));
+  border:1px solid rgba(125,163,209,.2);box-shadow:0 20px 60px -20px rgba(3,10,26,.6)}
+/* Inactive slides are hidden deliberately. opacity:0 alone left their
+   buttons and dots in the tab order and in the accessibility tree, so a
+   keyboard user tabbed into a slide they could not see. visibility is
+   transitioned with a delay so the slide stays paintable for the length
+   of the animation and only then goes properly away. */
+.carousel-slide{position:absolute;inset:0;opacity:0;transform:translateX(100%);
+  visibility:hidden;
+  transition:opacity .8s var(--ease),transform .8s var(--ease),visibility 0s linear .8s;
+  pointer-events:none;
+  display:flex;align-items:center;padding:clamp(40px,6vw,60px)}
+.carousel-slide.active{opacity:1;transform:translateX(0);pointer-events:auto;position:relative;
+  visibility:visible;transition-delay:0s}
+.carousel-slide.prev{transform:translateX(-100%)}
+.slide-content{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,60px);align-items:center;
+  width:100%;height:100%}
+.slide-text{display:flex;flex-direction:column;justify-content:center;z-index:2}
+.slide-text h2{font-family:var(--display);font-size:clamp(28px,5vw,42px);font-weight:700;
+  letter-spacing:-.02em;line-height:1.15;color:var(--white);margin:0 0 16px;animation:fadeUp .6s var(--ease-out) forwards}
+.slide-text p{font-size:clamp(15px,2vw,16.5px);line-height:1.7;color:var(--tx-2);margin:0 0 32px;
+  animation:fadeUp .7s var(--ease-out) .1s forwards;opacity:0}
+.slide-meta{display:flex;align-items:center;justify-content:space-between;animation:fadeUp .8s var(--ease-out) .2s forwards;opacity:0}
+.meta-tag{font-size:13px;font-weight:600;color:var(--teal);letter-spacing:.05em}
+.slide-dots{display:flex;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;border:2px solid rgba(125,163,209,.4);background:transparent;
+  cursor:pointer;transition:all .4s var(--ease)}
+.dot.active{background:var(--teal);border-color:var(--teal)}
+.dot:hover{border-color:var(--teal)}
+.slide-visual{position:relative;display:flex;align-items:center;justify-content:center;
+  min-height:300px;animation:slideIn .7s var(--ease-out) .15s forwards;opacity:0;transform:translateX(20px)}
+.visual-card{position:relative;width:100%;height:280px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(69,214,198,.1),rgba(93,150,226,.06));
+  border:1px solid rgba(125,163,209,.3);padding:30px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px}
+.demo-icon{width:140px;height:100px;opacity:.8}
+.visual-label{margin-top:12px;font-size:13px;font-weight:600;color:var(--tx-2);text-align:center}
+.upload-demo{}.extraction-demo{}.chat-demo{overflow:auto}.chat-bubble{padding:12px 14px;border-radius:11px;
+  font-size:13.5px;line-height:1.5;margin-bottom:8px;animation:slideUp .4s var(--ease-out);
+  max-width:85%;word-wrap:break-word}
+.chat-bubble.user{background:var(--teal);color:#03221F;align-self:flex-end;margin-left:auto}
+.chat-bubble.assistant{background:rgba(125,163,209,.15);color:var(--tx-on-dark);align-self:flex-start}
+.export-demo{}
+.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;
+  border-radius:999px;border:1px solid rgba(125,163,209,.3);background:rgba(255,255,255,.07);
+  color:var(--tx-on-dark);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .35s var(--ease)}
+.carousel-nav:hover{background:rgba(69,214,198,.2);border-color:var(--teal);color:var(--teal)}
+.carousel-nav svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.5;fill:none}
+.carousel-nav.prev{left:16px}
+.carousel-nav.next{right:16px}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (max-width:960px){
+  .slide-content{grid-template-columns:1fr;gap:40px}
+  .slide-visual{min-height:240px}
+  .visual-card{height:240px}
+  .carousel-nav{width:40px;height:40px}
+}
+@media (max-width:640px){
+  .carousel-slide{padding:30px 16px}
+  .slide-text h2{font-size:24px}
+  .slide-text p{font-size:14.5px;margin-bottom:24px}
+  .carousel-nav{width:36px;height:36px;opacity:.7}
+  .carousel-nav:hover{opacity:1}
+}
+
+/* ── Process rail ──────────────────────────────────────────── */
+.rail{position:relative;margin-top:clamp(46px,5vw,66px);display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.rail::before{content:"";position:absolute;left:26px;right:26px;top:27px;height:2px;
+  background:linear-gradient(90deg,rgba(125,163,209,.28),rgba(125,163,209,.10));border-radius:2px}
+.rail .line{position:absolute;left:26px;top:27px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--teal),rgba(69,214,198,.25));width:0;
+  transition:width 2.1s var(--ease-out) .25s}
+.rail.in .line{width:calc(100% - 52px)}
+.step{position:relative;padding-top:0}
+.step .num{position:relative;z-index:2;width:54px;height:54px;border-radius:17px;display:grid;place-items:center;
+  font-family:var(--display);font-weight:700;font-size:17px;color:var(--white);
+  background:linear-gradient(150deg,var(--navy-2),var(--slate));
+  border:1px solid rgba(125,163,209,.34);box-shadow:0 12px 28px -14px rgba(3,10,26,.9);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+.step:hover .num{transform:translateY(-4px) scale(1.05);border-color:var(--teal);
+  box-shadow:0 16px 34px -12px var(--glow)}
+.step .tag{margin-top:20px;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--teal)}
+.step h3{margin-top:9px;font-size:19px;color:var(--white)}
+.step p{margin-top:9px;font-size:14.6px;line-height:1.68;color:var(--tx-on-dark-2)}
+@media (max-width:860px){
+  .rail{grid-template-columns:1fr 1fr;gap:34px 22px}
+  .rail::before,.rail .line{display:none}
+}
+@media (max-width:520px){.rail{grid-template-columns:1fr}}
+
+/* ── Comparison ────────────────────────────────────────────── */
+.compare{margin-top:clamp(40px,5vw,58px);border-radius:var(--r);overflow:hidden;
+  border:1px solid #E1EAF5;background:var(--white)}
+.crow{display:grid;grid-template-columns:minmax(220px,1fr) 1.4fr;gap:20px;padding:22px 26px;
+  border-bottom:1px solid #EDF3F9;transition:background .4s var(--ease)}
+.crow:last-child{border-bottom:0}
+.crow:hover{background:#F7FBFF}
+.crow .a{font-family:var(--display);font-weight:700;font-size:16.5px;color:var(--tx)}
+.crow .b{font-size:14.8px;color:var(--tx-2);line-height:1.62}
+.crow.us{background:linear-gradient(100deg,rgba(69,214,198,.10),rgba(47,123,217,.06));
+  border-left:3px solid var(--teal)}
+.crow.us:hover{background:linear-gradient(100deg,rgba(69,214,198,.15),rgba(47,123,217,.08))}
+.crow.us .a{color:var(--teal-dim)}
+@media (max-width:640px){.crow{grid-template-columns:1fr;gap:6px}}
+
+/* ── ROI ───────────────────────────────────────────────────── */
+.roi{margin-top:clamp(40px,5vw,58px);display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(24px,4vw,52px);
+  align-items:center}
+.roi-ctl{padding:32px;border-radius:var(--r);background:rgba(255,255,255,.05);
+  border:1px solid rgba(175,209,243,.18);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.roi-ctl label{display:block;font-size:12.5px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;
+  color:var(--tx-on-dark-3)}
+.roi-ctl .amount{font-family:var(--display);font-size:clamp(32px,4.6vw,46px);font-weight:700;
+  letter-spacing:-.03em;color:var(--white);margin-top:10px;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;margin-top:26px;
+  background:linear-gradient(90deg,var(--teal) var(--pct,30%),rgba(175,209,243,.22) var(--pct,30%));cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+  background:var(--white);border:5px solid var(--teal);box-shadow:0 4px 16px -3px var(--glow);cursor:grab;
+  transition:transform .25s var(--ease)}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.14)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--white);
+  border:5px solid var(--teal);box-shadow:0 4px 16px -3px var(--glow);cursor:grab}
+.roi-scale{display:flex;justify-content:space-between;font-size:12px;color:var(--tx-on-dark-3);margin-top:12px}
+.roi-out{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.oc{padding:26px 22px;border-radius:var(--r);background:rgba(255,255,255,.05);
+  border:1px solid rgba(175,209,243,.18);transition:transform .45s var(--ease),border-color .45s var(--ease)}
+.oc:hover{transform:translateY(-5px);border-color:rgba(69,214,198,.42)}
+.oc .v{font-family:var(--display);font-size:clamp(24px,3.1vw,33px);font-weight:700;letter-spacing:-.03em;
+  color:var(--white);font-variant-numeric:tabular-nums;line-height:1}
+.oc:nth-child(2) .v,.oc:nth-child(3) .v{color:var(--teal)}
+.oc .k{margin-top:10px;font-size:12.5px;color:var(--tx-on-dark-3);line-height:1.5}
+@media (max-width:900px){.roi{grid-template-columns:1fr}.roi-out{grid-template-columns:1fr}}
+
+/* ── Founding ──────────────────────────────────────────────── */
+.found{position:relative;margin-top:clamp(50px,6vw,70px);padding:clamp(38px,5vw,64px);
+  border-radius:var(--r-lg);overflow:hidden;
+  background:linear-gradient(150deg,rgba(18,39,69,.92),rgba(10,24,48,.96));
+  border:1px solid rgba(69,214,198,.26)}
+.found::before{content:"";position:absolute;width:520px;aspect-ratio:1;right:-140px;top:-180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(69,214,198,.28),transparent 68%);filter:blur(60px)}
+.found-grid{position:relative;display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(28px,4vw,54px);align-items:center}
+.seats{display:flex;gap:7px;margin:22px 0 0}
+.seat{width:26px;height:34px;border-radius:7px;
+  background:linear-gradient(160deg,rgba(69,214,198,.55),rgba(69,214,198,.22));
+  border:1px solid rgba(69,214,198,.62);box-shadow:0 4px 14px -6px var(--glow);
+  animation:seatIn .55s var(--ease-out) backwards;animation-delay:calc(var(--s) * 55ms)}
+@keyframes seatIn{from{opacity:0;transform:translateY(10px) scale(.8)}}
+.found h2{font-size:clamp(27px,3.8vw,40px);color:var(--white)}
+.found p{margin-top:18px;font-size:15.6px;line-height:1.72;color:var(--tx-on-dark-2)}
+.found .small{margin-top:18px;font-size:12.6px;color:var(--tx-on-dark-3);line-height:1.62}
+.found .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+@media (max-width:860px){.found-grid{grid-template-columns:1fr}}
+
+/* ── Footer ────────────────────────────────────────────────── */
+footer{background:var(--ink);border-top:1px solid rgba(125,163,209,.14);padding:clamp(56px,7vw,84px) 0 40px}
+.fgrid{display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:clamp(28px,4vw,56px)}
+.fgrid p{font-size:14.5px;color:var(--tx-on-dark-2);margin-top:16px;line-height:1.7;max-width:42ch}
+.fgrid h4{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tx-on-dark-3);margin:0 0 16px}
+.fgrid a{display:block;font-size:14.5px;color:var(--tx-on-dark-2);padding:6px 0;
+  transition:color .3s var(--ease),transform .3s var(--ease)}
+.fgrid a:hover{color:var(--teal);transform:translateX(4px)}
+.fbase{margin-top:clamp(40px,5vw,60px);padding-top:26px;border-top:1px solid rgba(125,163,209,.14);
+  font-size:12.5px;color:var(--tx-on-dark-3);line-height:1.75}
+.fbase strong{color:var(--tx-on-dark-2);font-weight:600}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid > div:first-child{grid-column:1/-1}}
+
+
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />  <link rel="stylesheet" href="assets/motion.css" />
-  <script src="assets/motion.js" defer></script>
+<link rel="stylesheet" href="assets/ciq-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 </head>
 <body>
-<nav class="nav">
-  <a href="index.html" class="brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</a>
-  <div class="nav-links">
-    <a href="index.html" style="color:#fff" class="hide-m">Home</a><a href="features.html" class="hide-m">Features</a><a href="pricing.html" class="hide-m">Pricing</a><a href="security.html" class="hide-m">Security</a><a href="about.html" class="hide-m">About</a><a href="contact.html" class="hide-m">Contact</a>
-    <a class="btn sm" href="app/">Start free</a>
+
+<!-- ══ NAV ══════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Platform <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="features.html"><b>Features</b><span>Every capability, and how each one shows its working</span></a>
+          <a href="security.html"><b>Security</b><span>How your documents are handled, stored and erased</span></a>
+          <a href="index.html#process"><b>How it works</b><span>Two fields, then the AI does the reading</span></a>
+          <a href="demo/"><b>Live demo</b><span>The real interface on sample data — no sign-up</span></a>
+          <a class="full" href="app/"><b>Open the application →</b><span>Sign in, or create a free Evaluation Sandbox workspace</span></a>
+        </div>
+      </li>
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Plans <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="pricing.html"><b>Pricing</b><span>Sandbox, Growth, Scale and Enterprise, and what a credit buys</span></a>
+          <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
+          <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
+          <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
+          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
+        </div>
+      </li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="legal.html">Legal</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn ghost" href="demo/">Live demo</a>
+      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
   </div>
 </nav>
 
-<header class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow">Contract intelligence</div>
-      <h1>Know every contract.<br /><em>Win every negotiation.</em></h1>
-      <p>ContractIQ turns contracts, purchase orders, SOWs and tracking sheets into decisions — AI analysis across cost, users, risk, opportunity and legal compliance, before the renewal clock runs out.</p>
-      <div class="cta">
-        <a class="btn" href="app/">Start free</a>
-        <a class="btn ghost" href="#" id="try-demo">Try the live demo</a>
-      </div>
-      <div class="note">Three editions of the ContractIQ Platform · Free evaluation tier &nbsp;·&nbsp; No card required &nbsp;·&nbsp; Web, Windows &amp; macOS</div>
+<!-- ══ HERO ═════════════════════════════════════════════════ -->
+<header class="hero" id="top">
+  <div class="ciq-bg"><img src="assets/hero-mountains.jpg" alt="" /></div>
+  <div class="ciq-orb a"></div><div class="ciq-orb b"></div>
+
+  <div class="shell hero-copy" style="position:relative;z-index:2;width:100%">
+    <div class="eyebrow fade-up" style="--d:60ms">
+      <span class="dot">IQ</span><span class="pulse"></span>Contract intelligence
     </div>
-    <div class="hero-art"><svg viewBox="0 0 460 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ContractIQ network illustration">
-<defs>
-<linearGradient id="cg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FB8F7"/><stop offset="1" stop-color="#1E4E93"/></linearGradient>
-<linearGradient id="cg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5FA8F5"/><stop offset="1" stop-color="#153A6E"/></linearGradient>
-<linearGradient id="cg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A9CFF6"/><stop offset="1" stop-color="#2F7BD9"/></linearGradient>
-</defs>
-<g opacity="0.5" stroke="#5FA8F5" stroke-width="1"><path d="M60 90 L150 60 M310 40 L390 110 M80 330 L170 380 M340 340 L420 290 M40 210 L110 180"/></g>
-<polygon points="230,24 330,80 330,180 230,236 130,180 130,80" fill="url(#cg1)" opacity="0.92"/>
-<path d="M230 24 L230 130 L330 80 M230 130 L130 80 M230 130 L230 236" stroke="#DCEBFC" stroke-width="1.6" opacity="0.8"/>
-<polygon points="150,220 230,262 230,352 150,394 70,352 70,262" fill="url(#cg2)" opacity="0.9"/>
-<path d="M150 220 L150 306 L230 262 M150 306 L70 262 M150 306 L150 394" stroke="#DCEBFC" stroke-width="1.4" opacity="0.75"/>
-<polygon points="330,230 396,266 396,338 330,374 264,338 264,266" fill="url(#cg3)" opacity="0.88"/>
-<path d="M330 230 L330 302 L396 266 M330 302 L264 266 M330 302 L330 374" stroke="#EAF3FD" stroke-width="1.3" opacity="0.8"/>
-<g stroke="#7FB8F7" stroke-width="1" opacity="0.7"><path d="M230 236 L150 220 M230 236 L330 230 M150 394 L264 338"/></g>
-<g fill="#fff"><circle cx="230" cy="24" r="4"/><circle cx="330" cy="80" r="3.4"/><circle cx="130" cy="180" r="3.4"/><circle cx="230" cy="236" r="4"/><circle cx="150" cy="220" r="3.2"/><circle cx="70" cy="352" r="3.2"/><circle cx="330" cy="230" r="3.2"/><circle cx="396" cy="338" r="3"/><circle cx="150" cy="394" r="3.4"/></g>
-<g fill="#fff" opacity="0.6"><circle cx="60" cy="90" r="2"/><circle cx="390" cy="110" r="2"/><circle cx="420" cy="290" r="2"/><circle cx="80" cy="330" r="2"/></g>
-<g font-family="Quicksand, sans-serif" font-weight="700" font-size="15">
-<circle cx="92" cy="132" r="17" fill="#12305B" stroke="#5FA8F5" stroke-width="1.4"/><text x="92" y="138" text-anchor="middle" fill="#A9CFF6">£</text>
-<circle cx="392" cy="180" r="16" fill="#12305B" stroke="#5FA8F5" stroke-width="1.4"/><text x="392" y="186" text-anchor="middle" fill="#A9CFF6">§</text>
-<circle cx="226" cy="400" r="15" fill="#12305B" stroke="#37D5C3" stroke-width="1.4"/><text x="226" y="406" text-anchor="middle" fill="#37D5C3">%</text>
-</g></svg></div>
+
+    <h1 id="heroH1">
+      <span class="word" style="--i:0"><span>Know</span></span>
+      <span class="word" style="--i:1"><span>every</span></span>
+      <span class="word" style="--i:2"><span>contract.</span></span>
+      <span class="line2">
+        <span class="word" style="--i:3"><span>Win</span></span>
+        <span class="word" style="--i:4"><span>every</span></span>
+        <span class="word" style="--i:5"><span>negotiation.</span></span>
+      </span>
+    </h1>
+
+    <p class="lede fade-up" style="--d:640ms">
+      ContractIQ turns contracts, purchase orders, SOWs and tracking sheets into decisions —
+      AI analysis across cost, users, risk, opportunity and legal compliance, before the
+      renewal clock runs out.
+    </p>
+
+    <div class="hero-cta fade-up" style="--d:760ms">
+      <a class="btn pri lg" href="app/"><span class="sheen"></span>Start free
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn ghost lg" href="demo/">Try the live demo</a>
+    </div>
+
+    <div class="trust fade-up" style="--d:880ms">
+      <span>Four plans</span><span class="sep"></span>
+      <span>Free evaluation tier</span><span class="sep"></span>
+      <span>No card required</span><span class="sep"></span>
+      <span>Web, Windows &amp; macOS</span>
+    </div>
+
+    <!-- The product, shown rather than described. -->
+    <div class="console" data-scale style="--d:120ms">
+      <div class="console-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <span class="label">Portfolio · Consumer Digital</span>
+        <span class="tag">Live</span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="n" data-count="3.9" data-prefix="£" data-suffix="m" data-dp="1">£3.9m</div><div class="k">Portfolio value</div></div>
+        <div class="kpi"><div class="n" data-count="2">2</div><div class="k">Renewals in 180 days</div></div>
+        <div class="kpi"><div class="n" data-count="217" data-prefix="£" data-suffix="k">£217k</div><div class="k">Savings identified</div></div>
+        <div class="kpi"><div class="n" data-count="1">1</div><div class="k">High risks flagged</div></div>
+      </div>
+
+      <div class="rows">
+        <div class="row">
+          <div>
+            <div class="ref">CTR-0001 · Software &amp; SaaS</div>
+            <div class="name">Enterprise Agreement</div>
+            <div class="when">Renews in 172 days</div>
+          </div>
+          <div class="score"><div class="v">62<span style="font-size:13px;color:var(--tx-on-dark-3)">/100</span></div><div class="l">IQ score</div></div>
+          <div class="grade c">C</div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="ref">CTR-0003 · Telecoms &amp; Network</div>
+            <div class="name">Network Maintenance MSA</div>
+            <div class="when">Active · 5 months left</div>
+          </div>
+          <div class="score"><div class="v">78<span style="font-size:13px;color:var(--tx-on-dark-3)">/100</span></div><div class="l">IQ score</div></div>
+          <div class="grade b">B</div>
+        </div>
+      </div>
+
+      <div class="console-foot">Dashboard shows illustrative example data.</div>
+    </div>
   </div>
 </header>
-<section style="padding-top:0;margin-top:-40px;position:relative;z-index:2;padding-bottom:40px">
-  <div class="shot" aria-hidden="true">
-    <div class="shot-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-    <div class="shot-body">
-      <div class="mini-stat"><div class="v"><span data-count="3.9" data-prefix="£" data-suffix="m" data-dp="1">£3.9m</span></div><div class="l">Portfolio value</div></div>
-      <div class="mini-stat"><div class="v"><span data-count="2">2</span></div><div class="l">Renewals in 180 days</div></div>
-      <div class="mini-stat"><div class="v" style="color:#14805E"><span data-count="217" data-prefix="£" data-suffix="k">£217k</span></div><div class="l">Savings identified</div></div>
-      <div class="mini-stat"><div class="v" style="color:#B23A31"><span data-count="1">1</span></div><div class="l">High risks flagged</div></div>
-      <div class="mini-card"><div class="t">CTR-0001 · SOFTWARE &amp; SAAS</div><b>Enterprise Agreement</b><span class="pill warn">Renews in 172 days</span><span class="pill blue">IQ 62/100</span><span class="pill warn">Grade C</span></div>
-      <div class="mini-card"><div class="t">CTR-0003 · TELECOMS &amp; NETWORK</div><b>Network Maintenance MSA</b><span class="pill ok">Active · 5 mo left</span><span class="pill blue">IQ 78/100</span><span class="pill ok">Grade B</span></div>
-    </div>
-  </div>
-  <p style="text-align:center;font-size:12.5px;color:#62748B;margin-top:14px;font-weight:600">Dashboard shows illustrative example data</p>
-</section>
 
-<section>
-  <div class="wrap">
-    <div class="sec-head"><svg class="hexmark" width="44" height="44" viewBox="0 0 100 100" aria-hidden="true">
-<defs><linearGradient id="hxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b71c1"/><stop offset="1" stop-color="#5fa0e0"/></linearGradient></defs>
-<path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="none" stroke="url(#hxg)" stroke-width="6"/>
-<path d="M32 38 h36 M32 50 h36 M32 62 h22" stroke="url(#hxg)" stroke-width="6" stroke-linecap="round"/></svg><div class="k">Intelligence in every record</div><h2>Everything you need before you sign — and before you renew.</h2><p class="s">Decentralised spreadsheets and six-figure CLM suites both fail the same way — ContractIQ closes the gap with analysis a stakeholder can act on.</p></div>
-    <div class="hexgrid">
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="28" y="32" width="44" height="40" rx="5" fill="none" stroke="#fff" stroke-width="5"/><path d="M28 44h44M38 26v10M62 26v10" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="58" cy="58" r="3.5" fill="#fff"/></svg></span><h3>Never miss a renewal</h3><p>A twelve-month runway plotted by notice deadline — the date you must act by, not the date the contract ends. Windows already closed are flagged the moment you import.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 26c-12 0-20 9-20 21v27l7-6 6 6 7-6 7 6 6-6 7 6V47c0-12-8-21-20-21z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><circle cx="43" cy="46" r="3" fill="#fff"/><circle cx="57" cy="46" r="3" fill="#fff"/></svg></span><h3>The knowledge nobody wrote down</h3><p>Ingest the Teams or Zoom transcript alongside the contract. Verbal concessions, undocumented history and the people who hold it — captured before they leave.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 62a24 24 0 0148 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M50 62L64 44" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="62" r="4" fill="#fff"/></svg></span><h3>Confidence you can audit</h3><p>Every extracted value carries a confidence score, the reasoning behind it and a quote from the source. Anything uncertain is routed to a human before it counts.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="30" cy="34" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><circle cx="70" cy="34" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><circle cx="50" cy="70" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><path d="M37 34h26M34 40l12 24M66 40L54 64" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span><h3>Duplicate and fragmented spend</h3><p>The same supplier bought twice under two legal names becomes one line. Two suppliers doing the same job surface as a consolidation question.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="26" y="30" width="48" height="40" rx="4" fill="none" stroke="#fff" stroke-width="5"/><path d="M26 50h48" stroke="#fff" stroke-width="5"/><path d="M34 24v-6h10M66 24v-6H56M34 76v6h10M66 76v6H56" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/></svg></span><h3>Reads scanned contracts too</h3><p>Photocopied, image-only PDFs are detected and read with on-device OCR — the estate you actually have, not the tidy one.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M28 32h44v28H46l-10 10V60h-8z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M38 44h24M38 52h14" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Ask Cedric anything</h3><p>A conversational analyst on every contract, answering only from your ingested documents. Renewal dates, missing clauses, the strongest lever.</p></div>
-        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 38v16M50 62v2" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg></span><h3>How exposed are you?</h3><p>Every supplier scored on what is missing from the paperwork, how concentrated your spend is and what would happen if they stopped &mdash; with the whole calculation shown.</p></div>
-        <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M26 36h48M26 50h48M26 64h48" stroke="#fff" stroke-width="5.5" stroke-linecap="round"/><circle cx="76" cy="36" r="7" fill="#37D5C3"/></svg></span><h3>Forty contracts, one click</h3><p>Queue the whole estate and close the laptop. Work runs in the background, retries itself when a service is busy, and is waiting when you come back.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="soft-band">
-  <div class="wrap">
-    <div class="sec-head"><svg class="hexmark" width="44" height="44" viewBox="0 0 100 100" aria-hidden="true">
-<defs><linearGradient id="hxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b71c1"/><stop offset="1" stop-color="#5fa0e0"/></linearGradient></defs>
-<path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="none" stroke="url(#hxg)" stroke-width="6"/>
-<path d="M32 38 h36 M32 50 h36 M32 62 h22" stroke="url(#hxg)" stroke-width="6" stroke-linecap="round"/></svg><div class="k">The process</div><h2>Two fields. Then the AI does the reading.</h2><p class="s">Creating a Contract Record takes a reference and a supplier name — everything else is extracted from what you ingest.</p></div>
-    <div class="tl">
-      <div class="tl-item"><div class="hexq"><b>01</b><span>CREATE</span></div><div class="tl-card"><b>Create a record</b><p>Contract Ref + Supplier. That's all ContractIQ asks of you.</p></div></div>
-      <div class="tl-item"><div class="hexq"><b>02</b><span>INGEST</span></div><div class="tl-card"><b>Ingest documents</b><p>Drop in contracts, POs, SOWs, tracking sheets and user detail.</p></div></div>
-      <div class="tl-item"><div class="hexq"><b>03</b><span>ANALYSE</span></div><div class="tl-card"><b>Run analysis</b><p>Value, term, dates, users, clauses, risks and savings — extracted and graded automatically.</p></div></div>
-      <div class="tl-item"><div class="hexq"><b>04</b><span>DECIDE</span></div><div class="tl-card"><b>Decide &amp; export</b><p>Negotiation levers and dates to watch, exported for the boardroom.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="band">
-  <div class="wrap band-grid">
-    <div>
-      <div class="kick">Where ContractIQ fits</div>
-      <h2>Beyond the spreadsheet.<br />Below the six-figure CLM.</h2>
-      <p class="bp">Enterprise contract platforms cost five to six figures and take months to implement. Spreadsheets cost you missed deadlines. ContractIQ is the unserved middle — live in an afternoon, from £0.</p>
-      <a class="btn pri" href="features.html">Explore the platform</a>
-    </div>
-    <div class="ztable">
-      <div class="zhead"><span>Your situation</span><span>What fits</span></div>
-      <div class="zrow"><span>Tracker spreadsheet + email reminders</span><span>Free until a missed notice auto-renews at uplifted rates</span></div>
-      <div class="zrow"><span>ContractIQ</span><span>CLM-grade insight at SaaS money — hours to live</span></div>
-      <div class="zrow"><span>Enterprise CLM suite</span><span>£50k–£500k/yr + 4–6 month implementation</span></div>
-      <div class="zrow"><span>Doing nothing</span><span>Uncapped uplifts compound quietly, every year</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="band" style="padding-top:0;">
-  <div class="wrap" style="max-width:820px">
-    <div class="sec-head" ><svg class="hexmark" width="44" height="44" viewBox="0 0 100 100" aria-hidden="true">
-<defs><linearGradient id="hxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b71c1"/><stop offset="1" stop-color="#5fa0e0"/></linearGradient></defs>
-<path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="none" stroke="url(#hxg)" stroke-width="6"/>
-<path d="M32 38 h36 M32 50 h36 M32 62 h22" stroke="url(#hxg)" stroke-width="6" stroke-linecap="round"/></svg><div class="k">The CFO question</div><h2 style="color:#fff">What could ContractIQ find in your estate?</h2><p class="s" style="color:rgba(255,255,255,0.75)">Independent procurement studies consistently find 3–6% of annual contract spend recoverable through rightsizing, uplift caps and renewal leverage.</p></div>
-    <div class="roi-card">
-      <label>Your annual contract spend (£)</label>
-      <input id="roi-spend" type="number" value="2000000" min="0" step="50000" />
-      <div class="roi-nums">
-        <div><b id="roi-low">£60,000</b><small>Conservative (3%)</small></div>
-        <div class="hi"><b id="roi-high">£120,000</b><small>Typical (6%)</small></div>
-        <div><b id="roi-x">127×</b><small>Return vs Growth plan</small></div>
-
-        
+<!-- ══ SHOWCASE CAROUSEL ════════════════════════════════════ -->
+<section class="carousel-showcase" id="showcase">
+  <div class="carousel-wrapper">
+    <div class="carousel-container">
+      <div class="carousel-slide active" data-slide="0">
+        <div class="slide-content">
+          <div class="slide-text">
+            <h2>Ingest Everything</h2>
+            <p>Upload contracts, POs, emails, transcripts—any format. ContractIQ reads PDFs, Word docs, spreadsheets, even handwritten scans.</p>
+            <div class="slide-meta">
+              <span class="meta-tag">01/04</span>
+              <div class="slide-dots">
+                <button class="dot active" data-slide="0"></button>
+                <button class="dot" data-slide="1"></button>
+                <button class="dot" data-slide="2"></button>
+                <button class="dot" data-slide="3"></button>
               </div>
-      <p style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:16px;text-align:center;font-weight:500;">Estimates only, based on published category benchmarks — your results depend on your contracts. Growth plan £948/year (£79/month).</p>
+            </div>
+          </div>
+          <div class="slide-visual">
+            <div class="visual-card upload-demo">
+              <svg viewBox="0 0 300 200" class="demo-icon">
+                <rect x="20" y="30" width="260" height="140" rx="8" fill="none" stroke="var(--teal)" stroke-width="2"/>
+                <path d="M150 80 L150 130 M130 110 L150 130 L170 110" stroke="var(--teal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <text x="150" y="155" text-anchor="middle" font-size="12" fill="var(--tx-on-dark)" opacity="0.6">Drop files here or click to upload</text>
+              </svg>
+              <p class="visual-label">Multi-format ingestion</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-slide" data-slide="1">
+        <div class="slide-content">
+          <div class="slide-text">
+            <h2>Extract with Confidence</h2>
+            <p>AI pulls out every data point: value, term, dates, users, risk factors. Each extraction carries confidence scoring and source attribution.</p>
+            <div class="slide-meta">
+              <span class="meta-tag">02/04</span>
+              <div class="slide-dots">
+                <button class="dot" data-slide="0"></button>
+                <button class="dot active" data-slide="1"></button>
+                <button class="dot" data-slide="2"></button>
+                <button class="dot" data-slide="3"></button>
+              </div>
+            </div>
+          </div>
+          <div class="slide-visual">
+            <div class="visual-card extraction-demo">
+              <svg viewBox="0 0 300 200" class="demo-icon">
+                <rect x="30" y="20" width="240" height="160" rx="6" fill="rgba(69,214,198,.08)" stroke="rgba(69,214,198,.3)" stroke-width="1.5"/>
+                <g opacity="0.7">
+                  <rect x="40" y="30" width="220" height="12" rx="2" fill="var(--teal)" opacity="0.3"/>
+                  <rect x="40" y="50" width="180" height="10" rx="2" fill="var(--teal)" opacity="0.2"/>
+                  <rect x="40" y="68" width="200" height="10" rx="2" fill="var(--teal)" opacity="0.2"/>
+                  <circle cx="250" cy="69" r="8" fill="var(--teal)" opacity="0.6"/>
+                  <text x="260" y="73" font-size="11" fill="var(--teal)">98%</text>
+                </g>
+                <g opacity="0.5">
+                  <rect x="40" y="90" width="220" height="10" rx="2" fill="var(--tx-on-dark)" opacity="0.15"/>
+                  <rect x="40" y="110" width="160" height="10" rx="2" fill="var(--tx-on-dark)" opacity="0.15"/>
+                  <rect x="40" y="130" width="190" height="10" rx="2" fill="var(--tx-on-dark)" opacity="0.15"/>
+                </g>
+              </svg>
+              <p class="visual-label">Confidence-scored extraction</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-slide" data-slide="2">
+        <div class="slide-content">
+          <div class="slide-text">
+            <h2>Ask Cedric Anything</h2>
+            <p>Conversational AI analyst that answers only from your ingested documents. "When does this renew?" "What's missing?" "Where can we negotiate?"</p>
+            <div class="slide-meta">
+              <span class="meta-tag">03/04</span>
+              <div class="slide-dots">
+                <button class="dot" data-slide="0"></button>
+                <button class="dot" data-slide="1"></button>
+                <button class="dot active" data-slide="2"></button>
+                <button class="dot" data-slide="3"></button>
+              </div>
+            </div>
+          </div>
+          <div class="slide-visual">
+            <div class="visual-card chat-demo">
+              <div class="chat-bubble user">
+                <span>When does this contract renew?</span>
+              </div>
+              <div class="chat-bubble assistant">
+                <span>March 31, 2025. You have 90 days' notice.</span>
+              </div>
+              <div class="chat-bubble user">
+                <span>What leverage do we have?</span>
+              </div>
+              <div class="chat-bubble assistant">
+                <span>Three options in the documents...</span>
+              </div>
+              <p class="visual-label">Cedric conversational analysis</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-slide" data-slide="3">
+        <div class="slide-content">
+          <div class="slide-text">
+            <h2>Export for the Boardroom</h2>
+            <p>Rich reports with negotiation levers, risk scores, renewal dates, and full audit trails. Everything a stakeholder needs to act.</p>
+            <div class="slide-meta">
+              <span class="meta-tag">04/04</span>
+              <div class="slide-dots">
+                <button class="dot" data-slide="0"></button>
+                <button class="dot" data-slide="1"></button>
+                <button class="dot" data-slide="2"></button>
+                <button class="dot active" data-slide="3"></button>
+              </div>
+            </div>
+          </div>
+          <div class="slide-visual">
+            <div class="visual-card export-demo">
+              <svg viewBox="0 0 300 200" class="demo-icon">
+                <rect x="40" y="30" width="220" height="140" rx="8" fill="rgba(69,214,198,.06)" stroke="rgba(69,214,198,.25)" stroke-width="2"/>
+                <rect x="50" y="40" width="200" height="20" rx="4" fill="var(--teal)" opacity="0.2"/>
+                <g opacity="0.7">
+                  <circle cx="80" cy="75" r="18" fill="none" stroke="var(--teal)" stroke-width="2"/>
+                  <text x="80" y="80" text-anchor="middle" font-size="14" fill="var(--teal)" font-weight="bold">85</text>
+                  <text x="80" y="100" text-anchor="middle" font-size="10" fill="var(--tx-on-dark)" opacity="0.6">Risk</text>
+                </g>
+                <line x1="120" y1="60" x2="120" y2="150" stroke="rgba(69,214,198,.2)" stroke-width="1"/>
+                <rect x="150" y="90" width="60" height="30" rx="4" fill="var(--teal)" opacity="0.15"/>
+                <text x="180" y="110" text-anchor="middle" font-size="11" fill="var(--tx-on-dark)">Export</text>
+              </svg>
+              <p class="visual-label">Ready for decisions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-nav prev" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <button class="carousel-nav next" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<!-- ══ CAPABILITIES ═════════════════════════════════════════ -->
+<svg class="ridge" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,74 C180,32 330,106 520,80 C700,56 840,114 1010,86 C1180,58 1320,102 1440,68 L1440,150 L0,150 Z" fill="#16253D"/>
+  <path d="M0,104 C200,70 360,128 560,106 C760,84 900,134 1080,110 C1240,88 1350,122 1440,102 L1440,150 L0,150 Z" fill="#6E86A6"/>
+  <path d="M0,124 C220,100 380,142 600,124 C820,106 960,146 1140,128 C1290,113 1370,132 1440,124 L1440,150 L0,150 Z" fill="#F4F8FC"/>
+</svg>
+
+<section class="band light" id="capabilities" style="padding-top:clamp(150px,17vw,230px)">
+  <div class="shell">
+    <div class="head" data-rise>
+      <span class="kick">Intelligence in every record</span>
+      <h2>Everything you need before you sign — and before you renew.</h2>
+      <p>Decentralised spreadsheets and six-figure CLM suites both fail the same way. ContractIQ
+         closes the gap with analysis a stakeholder can act on.</p>
+    </div>
+
+    <div class="bento">
+      <article class="cell wide" data-rise style="--d:0ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/><path d="M12 14v4M10 16h4"/></svg></div>
+        <h3>Never miss a renewal</h3>
+        <p>A twelve-month runway plotted by notice deadline — the date you must act by, not the date
+           the contract ends. Windows already closed are flagged the moment you import.</p></article>
+
+      <article class="cell wide" data-rise style="--d:70ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 18.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><path d="M9.5 12h5M12 9.5v5"/></svg></div>
+        <h3>The knowledge nobody wrote down</h3>
+        <p>Ingest the Teams or Zoom transcript alongside the contract. Verbal concessions,
+           undocumented history and the people who hold it — captured before they leave.</p></article>
+
+      <article class="cell" data-rise style="--d:140ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 3l7.5 3.8v5.1c0 4.4-3.1 8.5-7.5 9.6-4.4-1.1-7.5-5.2-7.5-9.6V6.8Z"/></svg></div>
+        <h3>Confidence you can audit</h3>
+        <p>Every extracted value carries a confidence score, the reasoning behind it and a quote
+           from the source. Anything uncertain is routed to a human before it counts.</p></article>
+
+      <article class="cell" data-rise style="--d:0ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M8 6h11M8 12h11M8 18h11"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></div>
+        <h3>Duplicate and fragmented spend</h3>
+        <p>The same supplier bought twice under two legal names becomes one line. Two suppliers
+           doing the same job surface as a consolidation question.</p></article>
+
+      <article class="cell" data-rise style="--d:70ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5Z"/><path d="M8 9h8M8 13h5"/></svg></div>
+        <h3>Reads scanned contracts too</h3>
+        <p>Photocopied, image-only PDFs are detected and read with on-device OCR — the estate you
+           actually have, not the tidy one.</p></article>
+
+      <article class="cell" data-rise style="--d:140ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.3A8 8 0 1 1 20 11.5Z"/><path d="M9 11h.01M12 11h.01M15 11h.01"/></svg></div>
+        <h3>Ask Cedric anything</h3>
+        <p>A conversational analyst on every contract, answering only from your ingested documents.
+           Renewal dates, missing clauses, the strongest lever.</p></article>
+
+      <article class="cell" data-rise style="--d:0ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M12 8v4l2.5 2.5"/></svg></div>
+        <h3>How exposed are you?</h3>
+        <p>Every supplier scored on what is missing from the paperwork, how concentrated your spend
+           is and what would happen if they stopped — with the whole calculation shown.</p></article>
+
+      <article class="cell" data-rise style="--d:70ms">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 4.5 13H11l-1 9 8.5-11H12Z"/></svg></div>
+        <h3>Forty contracts, one click</h3>
+        <p>Queue the whole estate and close the laptop. Work runs in the background, retries itself
+           when a service is busy, and is waiting when you come back.</p></article>
     </div>
   </div>
 </section>
 
-<section class="soft-band">
-  <div class="wrap center" style="max-width:680px">
-    <div class="sec-head"><svg class="hexmark" width="44" height="44" viewBox="0 0 100 100" aria-hidden="true">
-<defs><linearGradient id="hxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b71c1"/><stop offset="1" stop-color="#5fa0e0"/></linearGradient></defs>
-<path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="none" stroke="url(#hxg)" stroke-width="6"/>
-<path d="M32 38 h36 M32 50 h36 M32 62 h22" stroke="url(#hxg)" stroke-width="6" stroke-linecap="round"/></svg><div class="k">Founding customers</div><h2 id="founding-head">First 10 sign-ups get 200 free credits a month for six months.</h2><p class="s" id="founding-body">Enough for roughly twenty contract analyses a month, at no cost, while you decide whether this earns its place. After six months your account continues on Growth / Professional at &pound;79 a month. A direct line to the founder and a say in the roadmap come as standard. Ten places, then it closes.</p><p class="s" id="founding-terms" style="font-size:13.5px;opacity:.78;margin-top:14px;">The founding offer runs for a minimum term of six months. You can cancel at any point from the six-month anniversary onwards, and we'll remind you before it converts &mdash; no automatic charge without notice.</p></div>
-    <a class="btn pri" id="founding-cta" href="pricing.html" style="display:none">Claim one of the ten places</a>
-    <a class="btn pri" id="founding-fallback" href="pricing.html">See plans</a>
-    <div id="founding-count" style="margin-top:16px;font-size:13.5px;font-weight:600;color:var(--grey);min-height:20px"></div>
+<!-- ══ PROCESS ══════════════════════════════════════════════ -->
+<section class="band deep" id="process">
+  <div class="shell">
+    <div class="head" data-rise>
+      <span class="kick">The process</span>
+      <h2 style="color:var(--white)">Two fields. Then the AI does the reading.</h2>
+      <p>Creating a Contract Record takes a reference and a supplier name — everything else is
+         extracted from what you ingest.</p>
+    </div>
+
+    <div class="rail" id="rail">
+      <span class="line"></span>
+      <div class="step" data-rise style="--d:0ms">
+        <div class="num">01</div><div class="tag">Create</div>
+        <h3>Create a record</h3>
+        <p>Contract Ref and Supplier. That is all ContractIQ asks of you.</p></div>
+      <div class="step" data-rise style="--d:110ms">
+        <div class="num">02</div><div class="tag">Ingest</div>
+        <h3>Ingest documents</h3>
+        <p>Drop in contracts, POs, SOWs, tracking sheets and user detail.</p></div>
+      <div class="step" data-rise style="--d:220ms">
+        <div class="num">03</div><div class="tag">Analyse</div>
+        <h3>Run analysis</h3>
+        <p>Value, term, dates, users, clauses, risks and savings — extracted and graded automatically.</p></div>
+      <div class="step" data-rise style="--d:330ms">
+        <div class="num">04</div><div class="tag">Decide</div>
+        <h3>Decide &amp; export</h3>
+        <p>Negotiation levers and dates to watch, exported for the boardroom.</p></div>
+    </div>
   </div>
 </section>
-<script>
-(function(){
-  var s=document.getElementById('roi-spend');
-  function f(n){return '£'+Math.round(n).toLocaleString('en-GB');}
-  function u(){var v=Number(s.value)||0;
-    document.getElementById('roi-low').textContent=f(v*0.03);
-    document.getElementById('roi-high').textContent=f(v*0.06);
-    document.getElementById('roi-x').textContent=(v>0?Math.round((v*0.06)/948):0)+'×';}
-  s.addEventListener('input',u);u();
-  // Point at your GitHub Pages demo once deployed:
-  // document.getElementById('try-demo').href='https://YOUR-USERNAME.github.io/contractiq-demo/';
-})();
-</script>
+
+<!-- ══ WHERE IT FITS ════════════════════════════════════════ -->
+<svg class="ridge" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,80 C190,114 340,50 540,74 C740,98 880,44 1070,72 C1240,96 1350,62 1440,82 L1440,150 L0,150 Z" fill="#16253D"/>
+  <path d="M0,106 C210,132 360,74 560,100 C760,126 900,76 1090,102 C1250,124 1360,96 1440,110 L1440,150 L0,150 Z" fill="#6E86A6"/>
+  <path d="M0,128 C230,146 380,104 600,126 C820,148 960,110 1140,130 C1290,146 1370,126 1440,132 L1440,150 L0,150 Z" fill="#F4F8FC"/>
+</svg>
+
+<section class="band light" id="fit">
+  <div class="shell">
+    <div class="head" data-rise>
+      <span class="kick">Where ContractIQ fits</span>
+      <h2>Beyond the spreadsheet.<br />Below the six-figure CLM.</h2>
+      <p>Enterprise contract platforms cost five to six figures and take months to implement.
+         Spreadsheets cost you missed deadlines. ContractIQ is the unserved middle — live in an
+         afternoon, from £0.</p>
+    </div>
+
+    <div class="compare" data-rise>
+      <div class="crow"><div class="a">Tracker spreadsheet + email reminders</div><div class="b">Free until a missed notice auto-renews at uplifted rates</div></div>
+      <div class="crow us"><div class="a">ContractIQ Platform</div><div class="b">CLM-grade insight at SaaS money — hours to live, from £0</div></div>
+      <div class="crow"><div class="a">Enterprise CLM suite</div><div class="b">£50k–£500k a year, plus a four to six month implementation</div></div>
+      <div class="crow"><div class="a">Doing nothing</div><div class="b">Uncapped uplifts compound quietly, every year</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ROI ══════════════════════════════════════════════════ -->
+<section class="band deep" id="roi">
+  <div class="shell">
+    <div class="head" data-rise>
+      <span class="kick">The CFO question</span>
+      <h2 style="color:var(--white)">What could ContractIQ find in your estate?</h2>
+      <p>Independent procurement studies consistently find 3–6% of annual contract spend
+         recoverable through rightsizing, uplift caps and renewal leverage.</p>
+    </div>
+
+    <div class="roi">
+      <div class="roi-ctl" data-rise>
+        <label for="spend">Your annual contract spend</label>
+        <div class="amount" id="spendOut">£2,000,000</div>
+        <input type="range" id="spend" min="100000" max="10000000" step="100000" value="2000000" />
+        <div class="roi-scale"><span>£100k</span><span>£10m</span></div>
+      </div>
+
+      <div class="roi-out">
+        <div class="oc" data-rise style="--d:60ms"><div class="v" id="c3">£60,000</div><div class="k">Conservative recovery at 3%</div></div>
+        <div class="oc" data-rise style="--d:130ms"><div class="v" id="c6">£120,000</div><div class="k">Typical recovery at 6%</div></div>
+        <div class="oc" data-rise style="--d:200ms"><div class="v" id="mult">63×</div><div class="k">Return against the Growth plan</div></div>
+      </div>
+    </div>
+
+    <p style="margin-top:26px;font-size:12.5px;color:var(--tx-on-dark-3);line-height:1.7;max-width:80ch" data-rise>
+      Estimates only, based on published category benchmarks — your results depend on your contracts.
+      Growth plan £948 a year (£79 a month).
+    </p>
+  </div>
+</section>
+
+<!-- ══ FOUNDING ═════════════════════════════════════════════ -->
+<section class="band deep" id="founding">
+  <div class="shell">
+    <div class="found" data-scale>
+      <div class="found-grid">
+        <div>
+          <span class="kick" style="color:var(--teal);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">Founding customers</span>
+          <h2 style="margin-top:14px">First 10 sign-ups get 200 free credits a month for six months.</h2>
+          <p>Enough for roughly twenty contract analyses a month, at no cost, while you decide whether
+             this earns its place. After six months your account continues on Growth / Professional at
+             £79 a month. A direct line to the founder and a say in the roadmap come as standard.
+             Ten places, then it closes.</p>
+          <p class="small">The founding offer runs for a minimum term of six months. You can cancel at any
+             point from the six-month anniversary onwards, and we will remind you before it converts —
+             no automatic charge without notice.</p>
+          <div class="acts">
+            <a class="btn pri lg" href="app/"><span class="sheen"></span>Claim one of the ten places</a>
+            <a class="btn ghost lg" href="pricing.html">See plans</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-on-dark-3)">Places remaining</div>
+          <div style="font-family:var(--display);font-size:clamp(56px,9vw,92px);font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--white);margin-top:10px">
+            <span data-count="10">10</span><span style="color:var(--tx-on-dark-3);font-size:.42em"> / 10</span>
+          </div>
+          <div class="seats">
+            <span class="seat" style="--s:0"></span><span class="seat" style="--s:1"></span>
+            <span class="seat" style="--s:2"></span><span class="seat" style="--s:3"></span>
+            <span class="seat" style="--s:4"></span><span class="seat" style="--s:5"></span>
+            <span class="seat" style="--s:6"></span><span class="seat" style="--s:7"></span>
+            <span class="seat" style="--s:8"></span><span class="seat" style="--s:9"></span>
+          </div>
+          <p style="margin-top:18px;font-size:12.5px;color:var(--tx-on-dark-3);line-height:1.6">
+            Read live from the database on the real site — never hardcoded, so the page can
+            never advertise places that have gone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════ -->
 <footer class="footer">
   <div class="foot-grid">
     <div>
-      <div class="foot-brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</div>
-      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk, opportunity and legal compliance — before the renewal clock runs out.</p>
+      <a class="foot-brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk,
+         opportunity and legal compliance — before the renewal clock runs out.</p>
     </div>
     <div>
       <h4>Product</h4>
-      <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="security.html">Security</a><a href="about.html">About</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="demo/">Live demo</a>
+      <a href="app/">Open the app</a>
     </div>
     <div>
       <h4>Company</h4>
-      <a href="contact.html">Contact</a><a href="legal.html">Legal Centre</a><a href="legal.html#msa">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#dpa">Data Processing (DPA)</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="legal.html">Legal Centre</a>
+      <a href="legal.html#msa">Terms of Service</a>
+      <a href="legal.html#privacy">Privacy Policy</a>
+      <a href="legal.html#dpa">Data Processing (DPA)</a>
     </div>
   </div>
   <div class="foot-base">
-    <div>&copy; 2026 ContractIQ Platform. All rights reserved. Automated screening aid &mdash; not legal advice.<br><span style="opacity:.75">ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX. ICO registration ICO00015500673.</span></div>
-    <div><a href="legal.html#privacy">Privacy</a> &nbsp;|&nbsp; <a href="legal.html#msa">Terms</a></div>
+    © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
+    ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
+    Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
+    ICO registration ICO00015500673.
   </div>
 </footer>
-<script>
-/* Failsafe: never let a motion bug leave content hidden. */
-setTimeout(function(){
-  var h=document.querySelectorAll('.reveal:not(.is-in)');
-  for(var i=0;i<h.length;i++) h[i].classList.add('is-in');
-}, 2600);
-</script>
 
-<script>
-/* ── Founding places counter ──────────────────────────────────
-   The number of places left is read from the database, not baked
-   into this page — otherwise the site would keep advertising ten
-   places after they had gone.
-
-   Three states, and the failure case matters:
-     places left  → show the offer with the live number
-     none left    → say so plainly, and point at the normal plans
-     cannot read  → show a neutral "See plans" and claim nothing
-
-   The last one is deliberate. If Supabase is unreachable we do not
-   know how many places remain, and inventing a number would be a
-   lie in whichever direction we guessed. */
-(function () {
-  // Fill these in from Supabase → Project Settings. The publishable
-  // key is designed to be public; this call returns only a count.
-  var SUPABASE_URL = '';                  // https://xxxx.supabase.co
-  var SUPABASE_PUBLISHABLE_KEY = '';      // sb_publishable_…
-
-  var cta   = document.getElementById('founding-cta');
-  var fall  = document.getElementById('founding-fallback');
-  var count = document.getElementById('founding-count');
-  var head  = document.getElementById('founding-head');
-  var body  = document.getElementById('founding-body');
-  if (!cta || !fall) return;
-
-  function offerOpen(n) {
-    cta.style.display = '';
-    fall.style.display = 'none';
-    count.textContent = n === 1
-      ? 'One place left.'
-      : n + ' of 10 places still open.';
-  }
-
-  function offerClosed() {
-    cta.style.display = 'none';
-    fall.style.display = '';
-    fall.textContent = 'See plans';
-    var terms = document.getElementById('founding-terms');
-    if (terms) terms.style.display = 'none';
-    if (head) head.textContent = 'The ten founding places have gone.';
-    if (body) body.textContent = 'Thank you to everyone who took one. ContractIQ is still free to '
-      + 'evaluate on the Sandbox plan, with no card required — and Growth / Professional is '
-      + '\u00a379 a month whenever you are ready.';
-    count.textContent = '';
-  }
-
-  function unknown() {          // cannot reach the database
-    cta.style.display = 'none';
-    fall.style.display = '';
-    count.textContent = '';
-  }
-
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) { unknown(); return; }
-
-  fetch(SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/rpc/founding_places_remaining', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_PUBLISHABLE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_PUBLISHABLE_KEY
-    },
-    body: '{}'
-  })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function (n) {
-      n = Number(n);
-      if (!isFinite(n)) return unknown();
-      if (n > 0) offerOpen(n); else offerClosed();
-    })
-    .catch(unknown);
-})();
-</script>
+<script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

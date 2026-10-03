@@ -1,0 +1,25 @@
+{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Sid": "EuProfileOnly",
+   "Effect": "Allow",
+   "Action": "bedrock:InvokeModel",
+   "Resource":
+    "arn:aws:bedrock:eu-west-2:YOUR_ACCOUNT_ID:inference-profile/eu.anthropic.claude-sonnet-5"
+  },
+  {
+   "Sid": "ModelOnlyThroughEuProfile",
+   "Effect": "Allow",
+   "Action": "bedrock:InvokeModel",
+   "Resource":
+    "arn:aws:bedrock:eu-*::foundation-model/anthropic.claude-sonnet-5*",
+   "Condition": {
+    "StringLike": {
+     "bedrock:InferenceProfileArn":
+      "arn:aws:bedrock:eu-west-2:YOUR_ACCOUNT_ID:inference-profile/eu.anthropic.claude-sonnet-5"
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,405 @@
+/* ═══════════════════════════════════════════════════════════════
+   ContractIQ Platform — shared theme
+   CodeIQ Holdings Ltd · September 2026
+
+   Loaded LAST on every page, so it settles anything the page's own
+   <style> block says. One file: change a colour here and all nine
+   pages follow.
+
+   The blues are sampled from the photograph in assets/hero-mountains.jpg,
+   so the palette and the picture are the same set of blues rather than
+   two that nearly match.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  --ink:#050C1E;
+  --navy:#0A1830;
+  --navy-2:#122745;
+  --slate:#28456D;
+  --steel:#4D75A8;
+  --haze:#7DA3D1;
+  --mist:#C2D7EE;
+  --paper:#F4F8FC;
+  --paper-2:#EAF1F9;
+  --white:#FFFFFF;
+
+  --teal:#45D6C6;
+  --teal-2:#5FE0D0;
+  --teal-dim:#1E9E93;
+  --glow:rgba(69,214,198,.42);
+
+  --on-dark:#EAF2FB;
+  --on-dark-2:#A9C3DE;
+  --on-dark-3:#6E8CB4;
+  --tx:#101D33;
+  --tx-2:#465D7C;
+  --tx-3:#7890AE;
+  --line:#DCE7F3;
+
+  --display:'Quicksand',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+
+  --shell:1220px;
+  --gut:clamp(20px,4vw,40px);
+  --r:18px;
+  --r-lg:26px;
+  --ease:cubic-bezier(.22,.68,.32,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{
+  background:var(--paper);color:var(--tx);
+  font-family:var(--body);font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:clip;margin:0;
+}
+h1,h2,h3,h4{font-family:var(--display);letter-spacing:-.024em;line-height:1.1;font-weight:700;text-wrap:balance}
+a{text-decoration:none}
+img{max-width:100%}
+.wrap,.shell{max-width:var(--shell);margin-inline:auto;padding-inline:var(--gut)}
+
+/* ═══ MOTION ══════════════════════════════════════════════════
+   Content is VISIBLE by default. The `.js` class — set before first
+   paint — is what opts into the hidden start. So if the script fails,
+   errors, or never loads, the page still reads. That is the failure
+   the old build needed a timed failsafe to paper over.
+   ═══════════════════════════════════════════════════════════════ */
+.js [data-rise]{opacity:0;transform:translate3d(0,26px,0)}
+.js [data-rise].in{opacity:1;transform:none;
+  transition:opacity .85s var(--ease-out),transform .85s var(--ease-out);transition-delay:var(--d,0ms)}
+.js [data-scale]{opacity:0;transform:scale(.965) translate3d(0,30px,0)}
+.js [data-scale].in{opacity:1;transform:none;
+  transition:opacity 1s var(--ease-out),transform 1.1s var(--ease-out);transition-delay:var(--d,0ms)}
+
+.word{display:inline-block;overflow:hidden;vertical-align:top}
+.word > span{display:inline-block}
+.js .word > span{opacity:0;transform:translate3d(0,.9em,0);filter:blur(9px);
+  animation:ciqWord 1s var(--ease-out) forwards;animation-delay:calc(var(--i) * 72ms + 180ms)}
+@keyframes ciqWord{to{opacity:1;transform:none;filter:blur(0)}}
+.js .fade-up{opacity:0;transform:translate3d(0,18px,0);
+  animation:ciqFade .9s var(--ease-out) forwards;animation-delay:var(--d,0ms)}
+@keyframes ciqFade{to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js [data-rise],.js [data-scale],.js .word > span,.js .fade-up{
+    opacity:1!important;transform:none!important;filter:none!important;
+    animation:none!important;transition:none!important}
+  .ciq-orb,.sheen,.ciq-bg img{animation:none!important;transition:none!important}
+}
+
+/* Any element the retired motion system still marks must never be
+   left hidden. Belt and braces: this wins over anything that sets
+   opacity:0 and waits for a script that is no longer there. */
+.reveal,.reveal-l,.reveal-r,.reveal-s{opacity:1!important;transform:none!important;
+  visibility:visible!important;filter:none!important}
+
+/* ═══ BUTTONS ═════════════════════════════════════════════════ */
+.btn,a.btn,button.btn{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--body);font-weight:600;font-size:14.5px;line-height:1;
+  padding:13px 24px;border-radius:999px;border:1px solid transparent;cursor:pointer;
+  overflow:hidden;white-space:nowrap;text-decoration:none;
+  transition:transform .35s var(--ease),box-shadow .45s var(--ease),
+             background .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+.btn.pri,.btn-pri{background:linear-gradient(135deg,var(--teal),#38B9C8);color:#03221F;border-color:transparent;
+  box-shadow:0 6px 22px -8px var(--glow),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn.pri:hover,.btn-pri:hover{box-shadow:0 14px 38px -10px var(--glow),inset 0 1px 0 rgba(255,255,255,.6);color:#03221F}
+.btn .sheen{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%);
+  transform:translateX(-110%);transition:transform .85s var(--ease-out)}
+.btn:hover .sheen{transform:translateX(110%)}
+
+.btn.ghost,.btn-ghost{border-color:rgba(160,196,236,.34);color:var(--on-dark);background:rgba(255,255,255,.04)}
+.btn.ghost:hover,.btn-ghost:hover{background:rgba(255,255,255,.10);border-color:rgba(160,196,236,.58)}
+.on-light .btn.ghost,.band-light .btn.ghost{border-color:#C8D9EC;color:var(--tx);background:#fff}
+.on-light .btn.ghost:hover,.band-light .btn.ghost:hover{background:var(--paper-2);border-color:var(--steel)}
+.btn.sm{padding:9px 17px;font-size:13.2px}
+.btn.lg,.btn-lg{padding:15px 30px;font-size:15.5px}
+
+/* ═══ NAV ═════════════════════════════════════════════════════ */
+.nav{position:fixed;inset:0 0 auto;z-index:90;padding:16px 0;border-bottom:1px solid transparent;
+  transition:padding .45s var(--ease),background .45s var(--ease),border-color .45s var(--ease);
+  background:transparent}
+.nav.stuck{padding:9px 0;background:#081428;border-bottom-color:rgba(125,163,209,.20);
+  box-shadow:0 10px 30px -18px rgba(2,8,22,.9)}
+.nav-in{max-width:var(--shell);margin-inline:auto;padding-inline:var(--gut);
+  display:flex;align-items:center;gap:22px}
+a.brand,.brand,a.foot-brand,.foot-brand{display:flex;align-items:center;gap:11px;
+  font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em;
+  color:var(--on-dark)!important;flex:0 0 auto;text-decoration:none}
+a.brand:hover,a.foot-brand:hover{color:var(--white)!important}
+.brand > span,.foot-brand > span{color:var(--on-dark)!important}
+.brand .iq,.foot-brand .iq{color:var(--teal)!important}
+.brand .pl,.foot-brand .pl{color:var(--haze)!important;font-weight:500}
+.brand svg{width:30px;height:30px;flex:0 0 auto;transition:transform .6s var(--ease)}
+.brand:hover svg{transform:rotate(30deg)}
+.brand .pl{color:var(--haze);font-weight:500}
+.brand .iq{color:var(--teal)}
+
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:10px;flex:1;list-style:none;padding:0}
+.nav-links > li{position:relative}
+.nav-links a,.nav-links .trigger{
+  position:relative;display:inline-flex;align-items:center;gap:6px;background:none;border:0;cursor:pointer;
+  padding:10px 14px;border-radius:11px;font-family:var(--body);font-size:14.5px;font-weight:500;
+  color:var(--on-dark-2);transition:color .3s var(--ease),background .3s var(--ease)}
+.nav-links a::after,.nav-links .trigger::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;
+  height:1.5px;background:var(--teal);border-radius:2px;transform:scaleX(0);transform-origin:left;
+  transition:transform .45s var(--ease-out)}
+.nav-links a:hover,.nav-links .trigger:hover,.nav-links li.open .trigger{color:var(--white)}
+.nav-links a:hover::after,.nav-links .trigger:hover::after,.nav-links li.open .trigger::after{transform:scaleX(1)}
+.nav-links a[aria-current="page"]{color:var(--white)}
+.nav-links a[aria-current="page"]::after{transform:scaleX(1);background:var(--haze)}
+.trigger .chev{width:11px;height:11px;transition:transform .4s var(--ease)}
+.nav-links li.open .chev{transform:rotate(180deg)}
+
+/* ── The hover panels ─────────────────────────────────────── */
+.nav .nav-links .panel{position:absolute;top:calc(100% + 12px);left:-14px;width:min(560px,84vw);padding:10px;
+  background:#0C1B33;border:1px solid rgba(125,163,209,.26);border-radius:20px;
+  box-shadow:0 34px 70px -20px rgba(2,8,22,.92);
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;
+  opacity:0;visibility:hidden;transform:translateY(-10px) scale(.985);transform-origin:top left;
+  transition:opacity .32s var(--ease),transform .38s var(--ease-out),visibility .38s}
+.nav .nav-links li.open > .panel{opacity:1;visibility:visible;transform:none}
+.nav .nav-links .panel a{display:block;padding:13px 14px;border-radius:13px;color:var(--on-dark);
+  transition:background .3s var(--ease),transform .3s var(--ease)}
+.nav .nav-links .panel a::after{display:none}
+.nav .nav-links .panel a:hover{background:#14293F;transform:none}
+.nav .nav-links .panel .full:hover{background:#17414F}
+.nav .nav-links .panel a b{display:block;font-family:var(--display);font-size:15px;font-weight:700;color:var(--white)}
+.nav .nav-links .panel a span{display:block;margin-top:3px;font-size:12.8px;line-height:1.55;color:var(--on-dark-3)}
+.nav .nav-links .panel .full{grid-column:1/-1;margin-top:4px;padding:13px 14px;border-radius:13px;
+  background:#123243;border:1px solid rgba(69,214,198,.34)}
+.nav .nav-links .panel .full b{color:var(--teal-2)}
+
+.nav-cta{display:flex;align-items:center;gap:10px;flex:0 0 auto;margin-left:auto}
+.burger{display:none;width:42px;height:42px;border-radius:11px;border:1px solid rgba(160,196,236,.28);
+  background:rgba(255,255,255,.05);cursor:pointer;position:relative}
+.burger i{position:absolute;left:11px;right:11px;height:1.6px;background:var(--on-dark);border-radius:2px;
+  transition:transform .4s var(--ease),opacity .3s}
+.burger i:nth-child(1){top:15px}.burger i:nth-child(2){top:20px}.burger i:nth-child(3){top:25px}
+.nav.open .burger i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.nav.open .burger i:nth-child(2){opacity:0}
+.nav.open .burger i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+
+@media (max-width:1000px){
+  .burger{display:block}
+  .nav-links{position:fixed;inset:70px 16px auto;flex-direction:column;align-items:stretch;gap:2px;
+    margin:0;padding:14px;max-height:calc(100vh - 96px);overflow-y:auto;
+    background:rgba(8,20,40,.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:1px solid rgba(125,163,209,.18);border-radius:20px;
+    opacity:0;visibility:hidden;transform:translateY(-12px);
+    transition:opacity .4s var(--ease),transform .4s var(--ease),visibility .4s}
+  .nav.open .nav-links{opacity:1;visibility:visible;transform:none}
+  .nav-links a,.nav-links .trigger{padding:13px 16px;font-size:16px;width:100%;justify-content:space-between}
+  /* On a touch screen there is no hover, so the panel simply lives open. */
+  .nav .nav-links .panel{position:static;width:auto;opacity:1;visibility:visible;transform:none;display:none;
+    background:transparent;border:0;box-shadow:none;padding:0 0 6px 10px;backdrop-filter:none}
+  .nav .nav-links li.open > .panel{display:grid;grid-template-columns:1fr}
+  .nav .nav-links .panel a{padding:10px 12px}
+  .nav-cta .btn.ghost{display:none}
+}
+
+/* ═══ PAGE HERO — the mountains, on every page ════════════════ */
+.ciq-bg{position:absolute;inset:0;z-index:-3;overflow:hidden}
+.ciq-bg img{width:104%;height:104%;margin:-2%;object-fit:cover;object-position:center 44%;
+  will-change:transform;transition:transform .9s cubic-bezier(.2,.6,.3,1)}
+.ciq-bg::after{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(5,12,30,.58) 0%,rgba(5,12,30,.20) 13%,rgba(5,12,30,0) 26%),
+    radial-gradient(78% 52% at 26% 52%,rgba(5,12,30,.56) 0%,rgba(5,12,30,.24) 52%,rgba(5,12,30,0) 78%),
+    linear-gradient(180deg,rgba(5,12,30,0) 60%,rgba(5,12,30,.58) 84%,var(--ink) 100%)}
+
+.ciq-orb{position:absolute;border-radius:50%;filter:blur(90px);z-index:-2;pointer-events:none;opacity:.5}
+.ciq-orb.a{width:min(620px,72vw);aspect-ratio:1;left:-12%;top:12%;
+  background:radial-gradient(circle,rgba(69,214,198,.32),transparent 68%);animation:ciqDrift 22s ease-in-out infinite}
+.ciq-orb.b{width:min(700px,80vw);aspect-ratio:1;right:-16%;top:30%;
+  background:radial-gradient(circle,rgba(93,150,226,.38),transparent 68%);animation:ciqDrift 27s ease-in-out infinite reverse}
+@keyframes ciqDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(38px,-46px,0) scale(1.1)}}
+
+/* Inner pages: a shorter band of the same photograph. */
+header.page-hero,.page-hero{position:relative;isolation:isolate;overflow-x:clip;
+  padding:clamp(140px,16vw,190px) 0 clamp(60px,8vw,96px);
+  background:var(--ink);color:var(--on-dark);text-align:center;border:0}
+.page-hero > *:not(.ciq-bg):not(.ciq-orb){
+  position:relative;z-index:2;max-width:var(--shell);margin-inline:auto;padding-inline:var(--gut)}
+/* The photograph and the glows are layers, not content: they must keep
+   their own positioning whatever the page around them says. */
+.page-hero > .ciq-bg,.hero > .ciq-bg{position:absolute;inset:0;z-index:-3;max-width:none;
+  margin:0;padding:0;width:auto;height:auto}
+.page-hero > .ciq-orb,.hero > .ciq-orb{max-width:none;padding:0}
+.page-hero .kick{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.page-hero h1{font-size:clamp(34px,5.4vw,60px);color:var(--white);margin:0 auto;max-width:20ch}
+.page-hero h1 em{font-style:normal;color:var(--teal-2)}
+.page-hero p{margin:22px auto 0;max-width:62ch;font-size:clamp(16px,1.5vw,18.5px);
+  line-height:1.72;color:var(--on-dark-2)}
+
+/* ═══ RIDGES ══════════════════════════════════════════════════ */
+.ridge{display:block;width:100%;height:clamp(80px,10vw,150px);margin-bottom:-2px;background:var(--ink)}
+
+/* ═══ SECTIONS ════════════════════════════════════════════════ */
+.band{padding:clamp(78px,10vw,132px) 0;position:relative;display:flow-root}
+/* Belt and braces: no band may start with an escaping margin. */
+.band > *:first-child,.band .shell > *:first-child,.band .wrap > *:first-child{margin-top:0}
+.band.light,.soft-band{background:var(--paper);color:var(--tx)}
+.band.deep{background:linear-gradient(180deg,var(--ink),var(--navy) 55%,var(--ink));color:var(--on-dark)}
+.band.deep h2,.band.deep h3{color:var(--white)}
+
+.sec-head{max-width:64ch;margin:0 auto clamp(38px,5vw,58px);text-align:center;
+  display:block!important}
+.sec-head .kick,.kick{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--teal-dim);display:block;margin-bottom:14px}
+.band.deep .sec-head .kick,.page-hero .kick{color:var(--teal)}
+.sec-head h2{font-size:clamp(29px,4.3vw,48px)}
+.sec-head p{margin:18px auto 0;max-width:60ch;font-size:clamp(15.5px,1.45vw,18px);
+  line-height:1.72;color:var(--tx-2)}
+.band.deep .sec-head p{color:var(--on-dark-2)}
+
+/* ═══ CARDS ══════════════════════════════════════════════════
+   Two to a row, equal height, every word shown. The icon sits on its
+   own line above the title so it lands in the same place on every
+   card, whatever the heading does — headings no longer wrap around a
+   badge, and nothing is ever trimmed.
+   ═══════════════════════════════════════════════════════════════ */
+.hexgrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:20px;align-items:stretch}
+.hexgrid > *:last-child:nth-child(odd){grid-column:1/-1}
+@media (max-width:760px){.hexgrid{grid-template-columns:1fr!important}}
+
+.hcard{position:relative;display:flex!important;flex-direction:column;align-items:flex-start;
+  height:100%;padding:28px 26px;border-radius:var(--r);background:var(--white);
+  border:1px solid var(--line);overflow:hidden;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+.hcard::after{content:"";position:absolute;inset:0;opacity:0;pointer-events:none;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(69,214,198,.13),transparent 62%);
+  transition:opacity .5s var(--ease)}
+.hcard:hover,.hcard:focus-within{transform:translateY(-6px);
+  box-shadow:0 26px 54px -26px rgba(16,45,86,.30);border-color:#BFD6EE}
+.hcard:hover::after,.hcard:focus-within::after{opacity:1}
+
+/* Every child back into one column, whatever the page's own grid said. */
+.hcard > *{grid-column:auto!important;max-width:100%}
+.hcard h3{margin:0 0 10px!important;font-size:18.5px;line-height:1.32;color:var(--tx);
+  display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.hcard p{margin:0!important;font-size:14.8px;line-height:1.68;color:var(--tx-2);
+  display:block!important;overflow:visible!important;-webkit-line-clamp:none!important}
+.hcard p + p{margin-top:10px!important}
+.hcard a{color:var(--teal-dim);font-weight:600}
+.hcard .pill{align-self:flex-start;margin:0}
+
+/* The cue is gone. Any left in the HTML must never render. */
+.hcard .more,.cell .more,.more{display:none!important}
+
+.hexicon{flex:0 0 auto;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  margin:0 0 16px!important;padding:0;overflow:hidden;
+  background:linear-gradient(140deg,rgba(69,214,198,.17),rgba(47,123,217,.13));
+  border:1px solid rgba(69,214,198,.24);transition:transform .5s var(--ease)}
+.hcard:hover .hexicon{transform:translateY(-2px) rotate(-6deg)}
+.hexicon{color:var(--teal-dim)}
+.hexicon svg{width:22px;height:22px;display:block;stroke:currentColor;fill:none}
+.hcard:hover .hexicon{color:#12857C}
+
+/* The homepage cards follow exactly the same rule. */
+.bento{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:20px;align-items:stretch}
+.bento .cell,.bento .cell.wide{grid-column:auto!important;height:100%;
+  display:flex;flex-direction:column;align-items:flex-start}
+.bento > *:last-child:nth-child(odd){grid-column:1/-1!important}
+@media (max-width:760px){.bento{grid-template-columns:1fr!important}
+  .bento > *:last-child:nth-child(odd){grid-column:auto!important}}
+.cell .ic{margin-bottom:16px}
+.cell h3{margin:0 0 10px}
+.cell p{margin:0}
+
+/* ═══ PILLS ═══════════════════════════════════════════════════ */
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
+  font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  background:rgba(69,214,198,.12);color:var(--teal-dim);border:1px solid rgba(69,214,198,.26)}
+.band.deep .pill{color:var(--teal);background:rgba(69,214,198,.13)}
+.pill.blue{background:rgba(47,123,217,.12);color:#2F7BD9;border-color:rgba(47,123,217,.26)}
+
+/* ═══ PRICING ═════════════════════════════════════════════════ */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;align-items:stretch}
+.plan{position:relative;padding:32px 26px;border-radius:var(--r);background:var(--white);
+  border:1px solid var(--line);display:flex;flex-direction:column;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+.plan:hover{transform:translateY(-7px);box-shadow:0 30px 60px -28px rgba(16,45,86,.34);border-color:#BFD6EE}
+.plan.pop{border-color:rgba(69,214,198,.5);box-shadow:0 22px 50px -28px var(--glow)}
+.plan .tier{font-family:var(--display);font-weight:700;font-size:17px;color:var(--tx);
+  line-height:1.3;min-height:2.6em;display:flex;align-items:center;justify-content:center;text-align:center}
+.plan .per{min-height:3.2em}
+.plan .amt{font-family:var(--display);font-size:clamp(32px,4vw,42px);font-weight:700;
+  letter-spacing:-.035em;color:var(--tx);margin:10px 0 2px;line-height:1}
+.plan .amt small{font-size:15px;font-weight:600;color:var(--tx-3);letter-spacing:0}
+.plan .per{font-size:12.6px;color:var(--tx-3)}
+.plan ul{list-style:none;padding:0;margin:20px 0 24px;font-size:14.4px;color:var(--tx-2);line-height:1.62}
+.plan ul li{position:relative;padding-left:24px;margin-bottom:9px}
+.plan ul li::before{content:"";position:absolute;left:0;top:7px;width:13px;height:13px;border-radius:50%;
+  background:rgba(69,214,198,.16);border:1px solid rgba(69,214,198,.4)}
+.plan .btn{margin-top:auto;width:100%;padding:15px 22px;font-size:15px;font-weight:700}
+/* Every plan gets a solid, high-contrast action — a ghost button on a
+   white card was almost invisible, which is no way to sell anything. */
+.plan .btn,.plan .btn.ghost,.plan a.btn{
+  background:linear-gradient(135deg,var(--teal),#38B9C8)!important;color:#03221F!important;
+  border-color:transparent!important;
+  box-shadow:0 8px 24px -10px var(--glow),inset 0 1px 0 rgba(255,255,255,.5)!important}
+.plan .btn:hover{box-shadow:0 16px 40px -12px var(--glow),inset 0 1px 0 rgba(255,255,255,.6)!important}
+.plan.pop .btn{background:linear-gradient(135deg,#2FD0BE,#2AA6C4)!important}
+.badge-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  padding:5px 14px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;background:linear-gradient(135deg,var(--teal),#38B9C8);color:#03221F;
+  box-shadow:0 6px 18px -6px var(--glow);white-space:nowrap}
+
+/* ═══ FOOTER ══════════════════════════════════════════════════ */
+.footer{background:var(--ink);border-top:1px solid rgba(125,163,209,.14);
+  padding:clamp(56px,7vw,84px) 0 40px;color:var(--on-dark-2)}
+.foot-grid{max-width:var(--shell);margin-inline:auto;padding-inline:var(--gut);
+  display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:clamp(28px,4vw,56px)}
+.foot-brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;
+  font-size:18px;color:var(--on-dark);margin-bottom:14px}
+.foot-brand svg{width:30px;height:30px}
+.footer p{font-size:14.4px;line-height:1.7;color:var(--on-dark-2);max-width:42ch;margin:0}
+.footer h4{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--on-dark-3);margin:0 0 14px}
+.footer .foot-grid a{display:block;font-size:14.4px;color:var(--on-dark-2);padding:6px 0;
+  transition:color .3s var(--ease),transform .3s var(--ease)}
+.footer .foot-grid a:hover{color:var(--teal);transform:translateX(4px)}
+.foot-base{display:block!important;max-width:var(--shell);margin:clamp(38px,5vw,56px) auto 0;
+  padding:24px var(--gut) 0;border-top:1px solid rgba(125,163,209,.14);
+  font-size:12.4px;color:var(--on-dark-3);line-height:1.75;text-align:left}
+.foot-base strong{display:inline;float:none}
+.foot-base strong{color:var(--on-dark-2);font-weight:600}
+.foot-base a{color:var(--on-dark-3)}
+.foot-base a:hover{color:var(--teal)}
+@media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.foot-grid > div:first-child{grid-column:1/-1}}
+
+/* The footer must look the same on every page, whatever the page's own
+   stylesheet says about text alignment or width. */
+footer.footer{text-align:left!important}
+footer.footer .foot-grid{text-align:left!important;max-width:var(--shell)!important;width:auto!important}
+footer.footer .foot-brand{justify-content:flex-start!important}
+
+/* The checkout's own submit button was a different blue from every other
+   primary action on the site. One primary colour, everywhere. */
+#submitBtn,.btn#submitBtn{
+  background:linear-gradient(135deg,var(--teal),#38B9C8)!important;color:#03221F!important;
+  border-color:transparent!important;font-weight:700;
+  box-shadow:0 8px 26px -10px var(--glow),inset 0 1px 0 rgba(255,255,255,.5)!important}
+#submitBtn:hover{box-shadow:0 16px 42px -12px var(--glow)!important}
+
+/* ═══ ODDS AND ENDS ═══════════════════════════════════════════ */
+.legal-note{font-size:12.4px;color:var(--tx-3);line-height:1.65}
+.band.deep .legal-note{color:var(--on-dark-3)}
+.center{text-align:center}
+.mt40{margin-top:40px}
+.hide-m{display:initial}
+@media (max-width:700px){.hide-m{display:none}}
+::selection{background:rgba(69,214,198,.28);color:var(--white)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:6px}

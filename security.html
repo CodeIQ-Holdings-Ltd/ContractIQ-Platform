@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
+<script>document.documentElement.className+=' js';</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Data Integrity & Security — ContractIQ Platform</title>
@@ -261,32 +262,70 @@
     .plans { grid-template-columns: 1fr; }
   }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />  <link rel="stylesheet" href="assets/motion.css" />
-  <script src="assets/motion.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/ciq-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 </head>
 <body>
-<nav class="nav">
-  <a href="index.html" class="brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</a>
-  <div class="nav-links">
-    <a href="index.html" class="hide-m">Home</a><a href="features.html" class="hide-m">Features</a><a href="pricing.html" class="hide-m">Pricing</a><a href="security.html" style="color:#fff" class="hide-m">Security</a><a href="about.html" class="hide-m">About</a><a href="contact.html" class="hide-m">Contact</a>
-    <a class="btn sm" href="app/">Start free</a>
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Platform <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="features.html"><b>Features</b><span>Every capability, and how each one shows its working</span></a>
+          <a href="security.html"><b>Security</b><span>How your documents are handled, stored and erased</span></a>
+          <a href="index.html#process"><b>How it works</b><span>Two fields, then the AI does the reading</span></a>
+          <a href="demo/"><b>Live demo</b><span>The real interface on sample data — no sign-up</span></a>
+          <a class="full" href="app/"><b>Open the application →</b><span>Sign in, or create a free Evaluation Sandbox workspace</span></a>
+        </div>
+      </li>
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Plans <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="pricing.html"><b>Pricing</b><span>Sandbox, Growth, Scale and Enterprise, and what a credit buys</span></a>
+          <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
+          <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
+          <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
+          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
+        </div>
+      </li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="legal.html">Legal</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn ghost" href="demo/">Live demo</a>
+      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
   </div>
 </nav>
 
 <header class="page-hero">
+  <div class="ciq-bg"><img src="assets/hero-mountains.jpg" alt="" /></div><div class="ciq-orb a"></div><div class="ciq-orb b"></div>
   <div class="kick">Data Integrity</div>
   <h1>Your contracts. Your data. Full stop.</h1>
   <p>Enterprise legal work demands impeccable data handling. ContractIQ is built on clear data-protection parameters.</p>
 </header>
+<svg class="ridge" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,74 C180,32 330,106 520,80 C700,56 840,114 1010,86 C1180,58 1320,102 1440,68 L1440,150 L0,150 Z" fill="#16253D"/>
+  <path d="M0,104 C200,70 360,128 560,106 C760,84 900,134 1080,110 C1240,88 1350,122 1440,102 L1440,150 L0,150 Z" fill="#6E86A6"/>
+  <path d="M0,124 C220,100 380,142 600,124 C820,106 960,146 1140,128 C1290,113 1370,132 1440,124 L1440,150 L0,150 Z" fill="#F4F8FC"/>
+</svg>
 <section>
   <div class="wrap">
     <div class="hexgrid">
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 26 c-12 0 -20 9 -20 21 v27 l7 -6 6 6 7 -6 7 6 6 -6 7 6 v-27 c0 -12 -8 -21 -20 -21 z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><circle cx="43" cy="46" r="3" fill="#fff"/><circle cx="57" cy="46" r="3" fill="#fff"/></svg></span><h3>Zero-Retention Mode</h3><p>A no-storage pipeline for compliance-focused environments. Uploaded documents are held only in volatile memory while structural checks run; the moment analysis completes, all source text is permanently expunged — only the extracted schema indicators remain in your ledger.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M34 34 l32 32" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg></span><h3>No Model Training. Ever.</h3><p>Your commercial documents, playbook rules, revisions and metadata are completely isolated. They are never collected, cached or used to train, refine or evaluate any AI model — public or proprietary.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><rect x="32" y="46" width="36" height="28" rx="6" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 46 v-8 a12 12 0 0 1 24 0 v8" fill="none" stroke="#fff" stroke-width="5"/><circle cx="50" cy="60" r="4" fill="#fff"/></svg></span><h3>Modern Cryptography</h3><p>AES-256 encryption at rest and TLS 1.3 in transit, automated vulnerability auditing, and a backend designed for security-certified datacentre environments.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M28 50 h44 M50 28 c8 8 8 36 0 44 c-8 -8 -8 -36 0 -44" fill="none" stroke="#fff" stroke-width="4"/></svg></span><h3>You Control Residency</h3><p>ContractIQ workspaces run on your own Supabase project, so you choose the hosting region your contract data lives in and hold the keys to it.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><circle cx="41" cy="42" r="9" fill="none" stroke="#fff" stroke-width="5"/><path d="M26 70 c2 -10 8 -15 15 -15 s13 5 15 15" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="63" cy="44" r="7" fill="none" stroke="#fff" stroke-width="4.5"/><path d="M60 55 c8 0 13 5 14 13" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg></span><h3>Role-Based Access</h3><p>Business accounts with individual sign-ins, admin-managed membership and viewer/member/admin roles — so the right people see the right contracts.</p></div>
-      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L92 27 L92 73 L50 96 L8 73 L8 27 Z" fill="#1e3554"/><path d="M50 24 l24 8 v20 c0 14 -10 24 -24 30 -14 -6 -24 -16 -24 -30 v-20 z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M40 50 l7 7 14 -14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Clear Guardrails</h3><p>Plain-English <a href="legal.html#msa">terms</a> and a <a href="legal.html#privacy">privacy policy</a> written to be read, not skimmed. ContractIQ is a screening aid, and says so everywhere it matters.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg></span><h3>AI in the UK and EU. Nothing kept.</h3><p>Analysis and Cedric run on Anthropic's Claude model through Amazon Bedrock, in AWS data centres in the UK, the EEA and Switzerland — never the cheaper worldwide route. Amazon Bedrock does not store what is sent to the model or what it answers, and the model's developer never sees it. Your original files never leave your browser at all.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6"/><path d="M14 14h7M14 18h7M17.5 11v10"/></svg></span><h3>Names Out Before Anything Leaves</h3><p>In meeting transcripts, names, email addresses and phone numbers are replaced with labels — Participant A, Participant B — in your browser, before the transcript is saved or analysed. The key that puts the names back stays in your browser tab and is never saved or sent.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><h3>Zero-Retention Mode</h3><p>An Enterprise option for compliance-focused environments. Normally the text read from your documents is saved to your workspace so contracts can be searched and re-analysed. With Zero-Retention on, it is never saved at all: it stays in your browser tab for the analysis, and only the extracted detail and the analysis are kept. The database itself refuses to store it.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.5a3 3 0 0 0-5.6-1.5A2.8 2.8 0 0 0 4 8.4a3 3 0 0 0 .6 4.7A3 3 0 0 0 7.5 19a3 3 0 0 0 4.5.8Z"/><path d="M12 5.5a3 3 0 0 1 5.6-1.5A2.8 2.8 0 0 1 20 8.4a3 3 0 0 1-.6 4.7A3 3 0 0 1 16.5 19a3 3 0 0 1-4.5.8Z"/><path d="M12 5.5v14.3"/></svg></span><h3>No Model Training. Ever.</h3><p>Nothing you upload — documents, playbook rules, revisions or metadata — is used to train, refine or evaluate any AI model. The AI runs on Amazon Bedrock, which does not use what is sent to it for training and does not pass it to the model's developer, Anthropic. The <a href="legal.html#subprocessors">sub-processor list</a> names everyone who handles your data.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><h3>Modern Cryptography</h3><p>AES-256 encryption at rest and TLS encryption in transit, provided by Supabase and Amazon Web Services. Those are our suppliers' protections rather than our own, and we describe them as such. Our own part: back-office database functions — the ones that grant credits, change plans or settle charges — can be called only by our server, never from a browser.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3Zm0 14.2a6.2 6.2 0 0 1-6-3.07c.03-2.84 4-4.35 6-4.35s5.97 1.51 6 4.35a6.2 6.2 0 0 1-6 3.07Z"/></svg></span><h3>Multi-Tenant Isolation via Row Level Security</h3><p>ContractIQ uses PostgreSQL Row Level Security (RLS) to enforce account isolation at the database layer. Every query automatically filters data by the authenticated user's account ID. No user can query, update, or delete another account's data through the app or its API — the database enforces it, not the interface. Your contracts, analyses, and credit ledgers are visible only to your team.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17"/><path d="M12 3a14 14 0 0 1 0 18A14 14 0 0 1 12 3Z"/></svg></span><h3>Database: Supabase PostgreSQL</h3><p>ContractIQ is built on Supabase, a managed PostgreSQL service on AWS infrastructure. Your data is held in a PostgreSQL database in London (AWS eu-west-2), backed up automatically every day with seven days of backups kept. All data at rest is encrypted with AES-256. The server functions that handle your documents are pinned to London too, wherever you are when you use the app. US hosting can be arranged for Enterprise customers who need it.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16.5 5.5a3.2 3.2 0 0 1 0 6M18 20a6.2 6.2 0 0 0-2.4-4.9"/></svg></span><h3>Role-Based Access</h3><p>Business accounts with individual sign-ins, admin-managed membership and viewer/member/admin roles — so the right people see the right contracts.</p></div>
+      <div class="hcard"><span class="hexicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 5h10l-1.5 3L15 11H5Z"/></svg></span><h3>Clear Guardrails</h3><p>Plain-English <a href="legal.html#msa">terms</a> and a <a href="legal.html#privacy">privacy policy</a> written to be read, not skimmed. ContractIQ is a screening aid, and says so everywhere it matters.</p></div>
     </div>
     <p class="legal-note">Security descriptions on this page reflect the production architecture design. Formal certifications (e.g. SOC 2, ISO 27001) will be listed here as they are attained — none are currently claimed.</p>
   </div>
@@ -294,29 +333,36 @@
 <footer class="footer">
   <div class="foot-grid">
     <div>
-      <div class="foot-brand"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#5FA8F5" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#5FA8F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>Contract<span>IQ</span> Platform</div>
-      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk, opportunity and legal compliance — before the renewal clock runs out.</p>
+      <a class="foot-brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk,
+         opportunity and legal compliance — before the renewal clock runs out.</p>
     </div>
     <div>
       <h4>Product</h4>
-      <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="security.html">Security</a><a href="about.html">About</a>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="demo/">Live demo</a>
+      <a href="app/">Open the app</a>
     </div>
     <div>
       <h4>Company</h4>
-      <a href="contact.html">Contact</a><a href="legal.html">Legal Centre</a><a href="legal.html#msa">Terms of Service</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#dpa">Data Processing (DPA)</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="legal.html">Legal Centre</a>
+      <a href="legal.html#msa">Terms of Service</a>
+      <a href="legal.html#privacy">Privacy Policy</a>
+      <a href="legal.html#dpa">Data Processing (DPA)</a>
     </div>
   </div>
   <div class="foot-base">
-    <div>&copy; 2026 ContractIQ Platform. All rights reserved. Automated screening aid &mdash; not legal advice.<br><span style="opacity:.75">ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX. ICO registration ICO00015500673.</span></div>
-    <div><a href="legal.html#privacy">Privacy</a> &nbsp;|&nbsp; <a href="legal.html#msa">Terms</a></div>
+    © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
+    ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
+    Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
+    ICO registration ICO00015500673.
   </div>
 </footer>
-<script>
-/* Failsafe: never let a motion bug leave content hidden. */
-setTimeout(function(){
-  var h=document.querySelectorAll('.reveal:not(.is-in)');
-  for(var i=0;i<h.length;i++) h[i].classList.add('is-in');
-}, 2600);
-</script>
+
+<script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

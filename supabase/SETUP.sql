@@ -1038,6 +1038,14 @@ end $$;
 
 
 -- ── B6 · What the app polls ────────────────────────────────────
+-- Dropped first rather than replaced. `create or replace view` cannot
+-- change a view's column list, and `dead_letter_jobs` below selects
+-- `j.*` — so once MIGRATION_004 adds jobs.hold_id, that star expands to
+-- a different set of columns and re-running this file fails with
+-- "cannot change name of view column". This script is meant to be safe
+-- to run again, and until this drop was added it was not: it failed
+-- part-way, after the statements above had already taken effect.
+drop view if exists my_jobs;
 create or replace view my_jobs as
   select j.id, j.contract_id, j.kind, j.status, j.progress, j.progress_note,
          j.attempts, j.max_attempts, j.error, j.enqueued_at, j.started_at,
@@ -1049,6 +1057,7 @@ create or replace view my_jobs as
      and j.enqueued_at > now() - interval '24 hours';
 
 -- The dead-letter queue, for the admin screen.
+drop view if exists dead_letter_jobs;
 create or replace view dead_letter_jobs as
   select j.*, c.ref, c.supplier
     from jobs j

@@ -909,6 +909,13 @@ grant execute on function my_entitlement() to authenticated;
 
 
 -- The credit statement a customer can actually read, for Settings.
+-- Dropped first for the same reason MIGRATION_005 drops it: a view's
+-- column list cannot be changed by `create or replace`, and 005 adds
+-- `reason` to this one. Without the drop, re-running this file on a
+-- database that already has 005 fails with "cannot drop columns from
+-- view" — and fails inside the transaction, so nothing in this file
+-- applies at all.
+drop view if exists my_credit_history;
 create or replace view my_credit_history as
   select l.created_at,
          l.kind,

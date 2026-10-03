@@ -1,135 +1,252 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CodeIQ Legal Centre</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className+=' js';</script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Legal Centre · ContractIQ Platform</title>
+<meta name="description" content="The Master Subscription Agreement, Product Schedule, Acceptable Use Policy, AI Use &amp; Limitations Notice, SLA, Privacy Policy, DPA, sub-processors, cookies, security statement and complaints procedure for ContractIQ Platform." />
+<link rel="canonical" href="https://www.contractiq.example/legal.html" />
+<meta name="theme-color" content="#152238" />
+<meta property="og:type" content="website" /><meta property="og:site_name" content="ContractIQ Platform" />
+<meta property="og:title" content="Legal Centre · ContractIQ Platform" /><meta property="og:description" content="Every agreement, notice and policy that governs ContractIQ Platform, in one place." />
+<meta property="og:url" content="https://www.contractiq.example/legal.html" /><meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
 <style>
+/* ═══════════════════════════════════════════════════════════════
+   ContractIQ Platform — Legal Centre, page styles
+   CodeIQ Holdings Ltd
+
+   Loaded BEFORE assets/ciq-theme.css, exactly like every other page,
+   so the shared theme keeps the last word on shared furniture (nav,
+   hero, buttons, footer). Where this page and the theme name the same
+   selector, this file raises its specificity just enough to hold the
+   dark reading surface a legal centre wants.
+
+   Colours are the theme's own tokens — no new palette.
+   ═══════════════════════════════════════════════════════════════ */
 :root{
-  --obsidian:#0A0B0D;--carbon:#111317;--slate:#191C22;--line:rgba(244,241,234,.11);
-  --bone:#F4F1EA;--steel:#8A919C;--steel-dim:#6B727D;--copper:#E0642F;--copper-deep:#B44E1E;--ember:#F5A65B;
-  --disp:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;--body:"Inter",ui-sans-serif,system-ui,sans-serif;
-  --gut:clamp(18px,4vw,56px);
+  /* Page-local names only, so nothing here can shadow a theme token.
+     The rule colours are the theme's own dark separators, taken from
+     .nav.stuck and .footer, because --line is a light-background rule. */
+  --lgl-rule:rgba(125,163,209,.22);
+  --lgl-rule-soft:rgba(125,163,209,.13);
+  --lgl-panel:#0C1B33;
+  --lgl-text:#C2D7EE;          /* 13.2:1 on --ink — long-read comfortable */
+  --lgl-gut:clamp(18px,4vw,48px);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:90px}
-body{margin:0;background:var(--obsidian);color:var(--bone);font-family:var(--body);font-weight:300;
-  line-height:1.72;-webkit-font-smoothing:antialiased;font-size:15px}
-a{color:var(--copper)}
-h1,h2,h3,h4{font-family:var(--disp);font-weight:500;letter-spacing:-.022em;line-height:1.12;margin:0}
-p{margin:0 0 14px}
-p:last-child{margin-bottom:0}
-strong{font-weight:500;color:var(--bone)}
 
-/* topbar */
-.top{position:sticky;top:0;z-index:60;background:rgba(10,11,13,.9);backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:14px var(--gut);
-  display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--bone)}
-.brand svg{width:30px;height:30px;flex:none}
-.brand .wm{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1;display:block}
-.brand .sb{font-family:var(--disp);font-weight:500;font-size:7px;letter-spacing:.42em;line-height:1;
-  text-transform:uppercase;margin-top:4px;display:block}
-.brand i{font-style:normal;color:var(--copper)}
-.top .tag{font-family:var(--disp);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--steel-dim)}
+html{scroll-padding-top:104px}
+/* `html body` outranks the theme's own `body{}` so the Legal Centre keeps
+   its dark ground while every other page stays on paper. */
+html body{background:var(--ink);color:var(--lgl-text);
+  font-size:15.5px;line-height:1.74}
 
-.shell{display:grid;grid-template-columns:268px minmax(0,1fr);gap:clamp(24px,4vw,60px);
-  max-width:1340px;margin:0 auto;padding:0 var(--gut) 100px}
-@media(max-width:980px){.shell{grid-template-columns:1fr;padding-top:8px}}
+/* ═══ THE TWO-COLUMN SHELL ═════════════════════════════════════
+   Deliberately NOT called .shell — the theme already uses that name
+   for a centred single column and would overwrite this grid. */
+.lgl-shell{display:grid;grid-template-columns:256px minmax(0,1fr);
+  gap:clamp(24px,4vw,56px);max-width:1260px;margin:0 auto;
+  padding:clamp(28px,4vw,52px) var(--lgl-gut) clamp(56px,7vw,92px)}
+@media(max-width:980px){
+  .lgl-shell{grid-template-columns:1fr;gap:28px;padding-top:clamp(24px,4vw,36px)}
+}
 
-/* sidebar */
-.side{position:sticky;top:72px;align-self:start;max-height:calc(100vh - 92px);overflow-y:auto;
-  padding:34px 0 30px;scrollbar-width:thin}
-@media(max-width:980px){.side{position:static;max-height:none;border-bottom:1px solid var(--line);padding-bottom:22px}}
-.side .grp{font-family:var(--disp);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
-  color:var(--copper);margin:26px 0 11px}
+/* ═══ THE DOCUMENT INDEX ═══════════════════════════════════════ */
+.side{position:sticky;top:96px;align-self:start;
+  max-height:calc(100vh - 128px);overflow-y:auto;padding:2px 0 20px;
+  scrollbar-width:thin;scrollbar-color:rgba(125,163,209,.34) transparent}
+.side::-webkit-scrollbar{width:6px}
+.side::-webkit-scrollbar-track{background:transparent}
+.side::-webkit-scrollbar-thumb{background:rgba(125,163,209,.32);border-radius:3px}
+.side .grp{font-family:var(--display);font-size:10px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin:26px 0 10px}
 .side .grp:first-child{margin-top:0}
-.side a{display:block;text-decoration:none;color:var(--steel);font-size:13.2px;padding:5px 0 5px 12px;
-  border-left:1px solid var(--line);transition:all .3s;line-height:1.45}
-.side a:hover{color:var(--bone);border-left-color:var(--copper)}
-.side a.on{color:var(--bone);border-left-color:var(--copper)}
+.side a{display:block;color:var(--on-dark-2);font-size:13.4px;line-height:1.45;
+  padding:6px 10px 6px 14px;border-left:1px solid var(--lgl-rule);
+  border-radius:0 9px 9px 0;text-decoration:none;
+  transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease)}
+.side a:hover{color:var(--white);border-left-color:var(--teal);background:rgba(69,214,198,.08)}
+.side a.on{color:var(--white);border-left-color:var(--teal);background:rgba(69,214,198,.12)}
+@media(max-width:980px){
+  /* On a phone the index becomes a bounded, scrollable card instead of a
+     screenful of links. Nothing is hidden — it is all still rendered and
+     reachable with the script switched off. */
+  .side{position:static;max-height:min(44vh,340px);
+    border:1px solid var(--lgl-rule);border-radius:var(--r);
+    background:var(--lgl-panel);padding:20px 18px}
+}
 
-/* content */
-.main{padding-top:clamp(30px,4vw,50px);min-width:0}
-.lead{border-bottom:1px solid var(--line);padding-bottom:clamp(30px,4vw,44px);margin-bottom:clamp(30px,4vw,44px)}
-.eyebrow{font-family:var(--disp);font-size:10px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;
-  color:var(--copper);margin:0 0 16px;display:flex;align-items:center;gap:11px}
-.eyebrow::before{content:"";width:24px;height:1px;background:var(--copper);flex:none}
-.lead h1{font-size:clamp(30px,4.6vw,50px);letter-spacing:-.032em;line-height:1.03;max-width:16ch}
-.lead p{color:var(--steel);max-width:66ch;margin-top:18px;font-size:16px}
-
-.doc{border-top:1px solid var(--line);padding-top:clamp(34px,4vw,48px);margin-top:clamp(34px,4vw,48px);scroll-margin-top:86px}
+/* ═══ THE DOCUMENTS ════════════════════════════════════════════ */
+.main{min-width:0}
+.doc{border-top:1px solid var(--lgl-rule-soft);
+  padding-top:clamp(34px,4vw,50px);margin-top:clamp(34px,4vw,50px);
+  scroll-margin-top:104px}
 .doc:first-of-type{border-top:0;margin-top:0;padding-top:0}
-.doc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:8px}
-.doc-num{font-family:var(--disp);font-size:10.5px;letter-spacing:.24em;color:var(--copper)}
-.doc h2{font-size:clamp(22px,3vw,33px);letter-spacing:-.028em}
-.doc .stamp{font-size:12px;color:var(--steel-dim);margin-bottom:22px;font-family:var(--disp);letter-spacing:.02em}
-.doc h3{font-size:16.5px;margin:30px 0 12px;letter-spacing:-.012em}
-.doc h4{font-size:14px;margin:20px 0 8px;font-weight:500;color:var(--ember);letter-spacing:0}
-.doc p,.doc li{color:var(--steel)}
-.doc>p:first-of-type{max-width:none}
 
-ol.cl{counter-reset:c;list-style:none;margin:0;padding:0}
-ol.cl>li{counter-increment:c;position:relative;padding-left:40px;margin-bottom:16px}
-ol.cl>li::before{content:counter(c);position:absolute;left:0;top:0;font-family:var(--disp);font-size:12px;
-  color:var(--copper);font-variant-numeric:tabular-nums}
+.doc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 14px;margin-bottom:9px}
+.doc-num{font-family:var(--display);font-weight:700;font-size:11px;
+  letter-spacing:.22em;color:var(--teal);font-variant-numeric:tabular-nums}
+
+/* Class-qualified so they beat the theme's blanket h1–h4 rule. */
+.doc h2{font-family:var(--display);font-weight:700;margin:0;
+  font-size:clamp(22px,3vw,34px);letter-spacing:-.028em;line-height:1.12;
+  color:var(--white);overflow-wrap:break-word}
+.doc h3{font-family:var(--display);font-weight:700;margin:32px 0 12px;
+  font-size:17.5px;line-height:1.3;letter-spacing:-.014em;
+  color:var(--on-dark);overflow-wrap:break-word}
+.doc h4{font-family:var(--display);font-weight:700;margin:22px 0 8px;
+  font-size:14px;line-height:1.4;letter-spacing:0;
+  color:var(--teal-2);overflow-wrap:break-word}
+.doc .stamp{margin:0 0 24px;max-width:none;font-size:12.6px;line-height:1.6;
+  letter-spacing:.01em;color:var(--haze)}
+
+.main p{margin:0 0 14px}
+.main p:last-child{margin-bottom:0}
+.doc p,.doc li{color:var(--lgl-text);max-width:74ch;overflow-wrap:break-word}
+.main strong{color:var(--on-dark);font-weight:600}
+.main a{color:var(--teal);text-decoration:underline;
+  text-decoration-color:rgba(69,214,198,.42);text-underline-offset:3px}
+.main a:hover{color:var(--teal-2);text-decoration-color:var(--teal-2)}
+
+/* ═══ CLAUSE LISTS ═════════════════════════════════════════════ */
+ol.cl{counter-reset:c;list-style:none;margin:0 0 14px;padding:0}
+ol.cl>li{counter-increment:c;position:relative;padding-left:42px;margin-bottom:16px}
+ol.cl>li::before{content:counter(c);position:absolute;left:0;top:1px;
+  font-family:var(--display);font-weight:700;font-size:12px;
+  color:var(--teal);font-variant-numeric:tabular-nums}
 ol.sub{counter-reset:s;list-style:none;margin:10px 0 0;padding:0}
 ol.sub>li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:10px}
-ol.sub>li::before{content:"(" counter(s, lower-alpha) ")";position:absolute;left:0;top:0;font-size:12.5px;
-  color:var(--steel-dim);font-variant-numeric:tabular-nums}
+ol.sub>li::before{content:"(" counter(s,lower-alpha) ")";position:absolute;left:0;top:0;
+  font-size:12.5px;color:var(--haze);font-variant-numeric:tabular-nums}
 ul.pl{margin:10px 0 0;padding:0;list-style:none}
-ul.pl li{position:relative;padding-left:20px;margin-bottom:9px}
-ul.pl li::before{content:"";position:absolute;left:0;top:12px;width:9px;height:1px;background:var(--copper)}
+ul.pl li{position:relative;padding-left:22px;margin-bottom:9px}
+ul.pl li::before{content:"";position:absolute;left:0;top:12px;
+  width:10px;height:1.5px;border-radius:2px;background:var(--teal)}
 
-.box{border:1px solid var(--line);border-radius:16px;background:var(--carbon);padding:22px 24px;margin:22px 0}
+/* ═══ CALL-OUTS ════════════════════════════════════════════════ */
+.box{border:1px solid var(--lgl-rule);border-radius:var(--r);
+  background:var(--lgl-panel);padding:24px 26px;margin:24px 0}
 .box h4{margin-top:0}
-.box.warn{border-color:rgba(224,100,47,.42);background:rgba(224,100,47,.06)}
-.box.warn h4{color:var(--copper)}
-.fill{color:var(--obsidian);background:var(--ember);padding:1px 7px;border-radius:4px;font-weight:500;
-  font-family:var(--disp);font-size:12.5px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.box p{max-width:none}
+.box p:last-child{margin-bottom:0}
+.box.warn{border-color:rgba(69,214,198,.34);background:rgba(69,214,198,.07)}
+.box.warn h4{color:var(--teal)}
 
-.tblwrap{overflow-x:auto;margin:18px 0}
-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-th{font-family:var(--disp);text-align:left;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--steel-dim);font-weight:500;padding:0 16px 12px 0}
-td{padding:12px 16px 12px 0;border-top:1px solid var(--line);vertical-align:top;color:var(--steel)}
-td strong{color:var(--bone)}
+/* The "still to be filled in" marker. Deliberately NOT the brand teal:
+   §17 tells the reader these gaps are "marked in orange", and a to-do
+   flag should not read as ordinary brand furniture. Amber, so the text
+   stays true and the gaps stay obvious until they are closed. */
+.fill{color:#2A1206;background:linear-gradient(135deg,#F5A65B,#E0742F);
+  padding:1px 8px;border-radius:5px;font-weight:700;
+  font-family:var(--display);font-size:12.5px;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone}
 
-.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:22px 0}
-.kv div{background:var(--obsidian);padding:19px 21px}
-.kv .k{font-family:var(--disp);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel-dim);margin-bottom:7px}
-.kv .v{font-size:14px;color:var(--bone);line-height:1.55}
+/* ═══ TABLES ═══════════════════════════════════════════════════
+   The wrapper takes the sideways scroll so the page never does. */
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0;
+  padding:2px 20px 6px;border:1px solid var(--lgl-rule);
+  border-radius:var(--r);background:var(--lgl-panel)}
+.main table{width:100%;border-collapse:collapse;font-size:13.6px;min-width:520px}
+.main th{font-family:var(--display);font-weight:700;text-align:left;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);
+  padding:16px 18px 12px 0;border-bottom:1px solid var(--lgl-rule)}
+.main td{padding:13px 18px 13px 0;border-top:1px solid var(--lgl-rule-soft);
+  vertical-align:top;color:var(--lgl-text)}
+.main td strong{color:var(--on-dark)}
 
-footer{border-top:1px solid var(--line);padding:40px var(--gut) 70px;color:var(--steel-dim);font-size:12.5px;
-  max-width:1340px;margin:0 auto;line-height:1.8}
-footer a{color:var(--steel-dim);text-decoration:none}
-footer a:hover{color:var(--copper)}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition-duration:.001ms !important}}
+/* ═══ THE COMPANY DETAILS GRID ═════════════════════════════════ */
+/* The 236px floor is measured, not guessed: it is the narrowest column
+   that still fits info@codeiqholdings.co.uk on one line at every width. */
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:1px;
+  background:var(--lgl-rule-soft);border:1px solid var(--lgl-rule);
+  border-radius:var(--r);overflow:hidden;margin:24px 0}
+.kv>div{background:var(--lgl-panel);padding:20px 20px}
+.kv .k{font-family:var(--display);font-weight:700;font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.kv .v{font-size:14.4px;line-height:1.55;color:var(--on-dark);overflow-wrap:break-word}
+
+/* ═══ THE ROUTE UP TO THE PARENT COMPANY ═══════════════════════ */
+.parent-note{display:flex;flex-wrap:wrap;align-items:center;gap:18px 22px;
+  margin:0 0 clamp(34px,4vw,46px);padding:22px 24px;border-radius:var(--r);
+  border:1px solid rgba(69,214,198,.30);
+  background:linear-gradient(135deg,rgba(69,214,198,.10),rgba(47,123,217,.11))}
+.parent-note .pn-mark{flex:0 0 auto;width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;background:rgba(5,12,30,.45);
+  border:1px solid rgba(69,214,198,.28)}
+.parent-note .pn-mark svg{width:23px;height:23px;display:block}
+.parent-note .pn-body{flex:1 1 300px;min-width:0}
+.parent-note .pn-k{font-family:var(--display);font-weight:700;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+.parent-note p{margin:0;max-width:62ch;font-size:14.8px;line-height:1.66;
+  color:var(--on-dark);overflow-wrap:break-word}
+.parent-note .btn{flex:0 0 auto;white-space:normal;text-align:center}
+.parent-note.at-foot{margin:clamp(40px,5vw,56px) 0 0}
+
+/* ═══ THE TRADING DISCLOSURE THAT CLOSES THE DOCUMENTS ═════════ */
+.colophon{margin-top:clamp(36px,4vw,48px);padding-top:26px;
+  border-top:1px solid var(--lgl-rule-soft);
+  font-size:12.9px;line-height:1.85;color:var(--on-dark-2)}
+.colophon strong{color:var(--on-dark);font-family:var(--display);font-weight:700}
+.colophon a{color:var(--on-dark-2);text-decoration:none}
+.colophon a:hover{color:var(--teal)}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<link rel="stylesheet" href="assets/ciq-theme.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 </head>
 <body>
-<div class="top">
-  <a class="brand" href="#top">
-    <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
-      <g stroke="#F4F1EA" stroke-width="10" stroke-linecap="round" fill="none">
-        <path d="M60 19 A41 41 0 0 1 88.48 30.51"/>
-        <path d="M95.51 39.5 A41 41 0 0 1 99.78 69.92" stroke="#E0642F"/>
-        <path d="M95.51 80.5 A41 41 0 0 1 71.3 99.41"/>
-        <path d="M60 101 A41 41 0 0 1 31.52 89.49"/>
-        <path d="M24.49 80.5 A41 41 0 0 1 20.22 50.08"/>
-        <path d="M24.49 39.5 A41 41 0 0 1 48.7 20.59"/>
-      </g><circle cx="60" cy="60" r="10" fill="#E0642F"/>
-    </svg>
-    <span><span class="wm">CODE<i>IQ</i></span><span class="sb">Holdings</span></span>
-  </a>
-  <span class="tag">Legal Centre</span>
-</div>
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Platform <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="features.html"><b>Features</b><span>Every capability, and how each one shows its working</span></a>
+          <a href="security.html"><b>Security</b><span>How your documents are handled, stored and erased</span></a>
+          <a href="index.html#process"><b>How it works</b><span>Two fields, then the AI does the reading</span></a>
+          <a href="demo/"><b>Live demo</b><span>The real interface on sample data — no sign-up</span></a>
+          <a class="full" href="app/"><b>Open the application →</b><span>Sign in, or create a free Evaluation Sandbox workspace</span></a>
+        </div>
+      </li>
+      <li class="has-panel">
+        <button class="trigger" type="button" aria-expanded="false">Plans <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="panel">
+          <a href="pricing.html"><b>Pricing</b><span>Sandbox, Growth, Scale and Enterprise, and what a credit buys</span></a>
+          <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
+          <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
+          <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
+          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
+        </div>
+      </li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="legal.html" aria-current="page">Legal</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn ghost" href="demo/">Live demo</a>
+      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</nav>
 
-<div class="shell" id="top">
+<header class="page-hero">
+  <div class="ciq-bg"><img src="assets/hero-mountains.jpg" alt="" /></div><div class="ciq-orb a"></div><div class="ciq-orb b"></div>
+  <div class="kick">CodeIQ Holdings Ltd &middot; Legal Centre</div>
+  <h1>The terms that govern everything we build.</h1>
+  <p>One Master Subscription Agreement covers every CodeIQ product. Each product adds a short Schedule for anything specific to it, so a new product does not mean a new contract. Everything on this page is written for business customers in England and Wales.</p>
+</header>
+<svg class="ridge" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,74 C180,32 330,106 520,80 C700,56 840,114 1010,86 C1180,58 1320,102 1440,68 L1440,150 L0,150 Z" fill="#17335A"/>
+  <path d="M0,104 C200,70 360,128 560,106 C760,84 900,134 1080,110 C1240,88 1350,122 1440,102 L1440,150 L0,150 Z" fill="#0D1F3B"/>
+  <path d="M0,124 C220,100 380,142 600,124 C820,106 960,146 1140,128 C1290,113 1370,132 1440,124 L1440,150 L0,150 Z" fill="#050C1E"/>
+</svg>
+
+<div class="lgl-shell" id="top">
   <nav class="side" id="side">
     <div class="grp">Company</div>
     <a href="#company">Company information</a>
@@ -156,11 +273,15 @@ footer a:hover{color:var(--copper)}
   </nav>
 
   <main class="main">
-    <div class="lead">
-      <p class="eyebrow">CodeIQ Holdings Ltd &middot; Legal Centre</p>
-      <h1>The terms that govern everything we build.</h1>
-      <p>One Master Subscription Agreement covers every CodeIQ product. Each product adds a short Schedule for anything specific to it, so a new product does not mean a new contract. Everything on this page is written for business customers in England and Wales.</p>
-    </div>
+      <!-- CODEIQ LEGAL URL — confirm exact path before go-live -->
+      <aside class="parent-note">
+        <span class="pn-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#45D6C6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M10 21v-6h4v6"/><path d="M9 12h.01M15 12h.01"/></svg></span>
+        <div class="pn-body">
+          <div class="pn-k">Parent company</div>
+          <p>ContractIQ Platform is a product of CodeIQ Holdings Ltd. Company-level legal notices are published at codeiqholdings.co.uk.</p>
+        </div>
+        <a class="btn pri" href="https://codeiqholdings.co.uk/" target="_blank" rel="noopener"><span class="sheen"></span>CodeIQ Holdings legal notices</a>
+      </aside>
 
 <!-- ================================================================ -->
 <section class="doc" id="company">
@@ -182,7 +303,7 @@ footer a:hover{color:var(--copper)}
 <!-- ================================================================ -->
 <section class="doc" id="msa">
   <div class="doc-head"><span class="doc-num">02</span><h2>Master Subscription Agreement</h2></div>
-  <p class="stamp">Version 1.0 &middot; Business customers only &middot; Governed by the laws of England and Wales</p>
+  <p class="stamp">Version 1.1 &middot; 19 September 2026 &middot; Business customers only &middot; Governed by the laws of England and Wales</p>
 
   <div class="box warn">
     <h4>Read this first</h4>
@@ -200,6 +321,7 @@ footer a:hover{color:var(--copper)}
 
   <h3>2. Definitions</h3>
   <ul class="pl">
+    <li><strong>AI Provider</strong> &mdash; the third party through which the Services obtain processing by an artificial intelligence model, as named in the Sub-processor list. At the date of this version it is Amazon Web Services EMEA SARL, providing Anthropic&rsquo;s Claude models through the Amazon Bedrock service.</li>
     <li><strong>Authorised User</strong> &mdash; an individual employee, worker or contractor of the Customer whom the Customer permits to use the Services and for whom a subscription has been purchased.</li>
     <li><strong>Customer Data</strong> &mdash; all data, documents, files, records and other content uploaded to, submitted to, or generated by the Customer or its Authorised Users through the Services, excluding Output and excluding Usage Data.</li>
     <li><strong>Documentation</strong> &mdash; the user guides and technical documentation we make generally available for a Product.</li>
@@ -242,6 +364,7 @@ footer a:hover{color:var(--copper)}
     <li>Where Customer Data includes a recording or transcript of any conversation, the Customer warrants that every participant was informed and that any consent required by law was obtained before the recording was made.</li>
     <li>The Customer shall keep its own independent copies of anything it uploads. The Services are not a system of record and are not a substitute for the Customer's own backups.</li>
     <li>The Customer shall notify us without undue delay of any unauthorised access to or use of the Services of which it becomes aware.</li>
+    <li><strong>AI Provider terms.</strong> The Services include AI features that we obtain from the AI Provider, whose terms require us to pass certain use restrictions on to our customers. Those restrictions are set out in clause 2 of the Acceptable Use Policy. The Customer shall ensure that its Authorised Users comply with them, and acknowledges that a breach may lead the AI Provider to suspend service to us, in which case we may suspend the affected features under clause 14.1.</li>
   </ol>
 
   <h3>6. Intellectual property</h3>
@@ -251,7 +374,8 @@ footer a:hover{color:var(--copper)}
     <li><strong>Output.</strong> Subject to payment and to clause 6.1, the Customer may use Output for its own internal business purposes. Output is generated in response to the Customer's data and instructions and may not be unique; substantially similar Output may be generated for other customers, and nothing in this Agreement grants the Customer exclusivity in Output.</li>
     <li><strong>Feedback.</strong> If the Customer or any Authorised User gives us suggestions, feature requests, bug reports, ideas or other feedback about the Services, the Customer assigns to us with full title guarantee all Intellectual Property Rights in that feedback, free of charge, and we may use it without restriction or obligation. This clause does not give us any right in Customer Data.</li>
     <li><strong>Usage Data.</strong> We may collect and use Usage Data to operate, secure, support, analyse and improve the Services and to produce statistics about our business. Usage Data as defined does not include Customer Data or Output, and we will not publish anything that identifies the Customer without its written consent.</li>
-    <li><strong>No model training.</strong> We do not use Customer Data or Output to train, fine-tune or otherwise improve any machine learning model, whether our own or a third party's, and we contract with our AI sub-processors on terms that prohibit them from doing so.</li>
+    <li><strong>No model training, and nothing kept by the AI Provider.</strong> We do not use Customer Data or Output to train, fine-tune or otherwise improve any machine learning model, whether our own or a third party's. Under the terms on which we use it, the AI Provider processes Customer Data only to return an answer to us: it does not store the text sent to it or the Output it returns, does not use either to train any model, and does not share either with the developer of the model.</li>
+    <li><strong>Where Customer Data is processed.</strong> Unless the Order Form records a different arrangement: (i) Customer Data stored by the Services is held in the United Kingdom; and (ii) AI processing of Customer Data takes place in data centres in the United Kingdom, the European Economic Area and Switzerland. We will not move either outside those locations without giving the notice required for a new sub-processor under clause 3.2 of the Data Processing Agreement. The Customer's original files are not uploaded to us at all: they are read in the Authorised User's browser, and only the text read from them is stored and processed.</li>
   </ol>
 
   <h3>7. Confidentiality</h3>
@@ -284,7 +408,7 @@ footer a:hover{color:var(--copper)}
 
   <h3>10. What we do not warrant</h3>
   <ol class="cl">
-    <li><strong>No warranty of accuracy.</strong> The Services use artificial intelligence and probabilistic techniques. We do not warrant that any Output is accurate, complete, current, reliable or fit for any particular purpose. Confidence indicators displayed by the Services express a model's estimate of its own certainty; they are not a measure of verified accuracy and must not be relied on as one. The AI Use &amp; Limitations Notice forms part of this Agreement and sets this out in full.</li>
+    <li><strong>No warranty of accuracy.</strong> The Services use artificial intelligence and probabilistic techniques. We do not warrant that any Output is accurate, complete, current, reliable or fit for any particular purpose. Confidence indicators displayed by the Services express a model's estimate of its own certainty; they are not a measure of verified accuracy and must not be relied on as one. Factual statements in Output &mdash; including dates, values, parties, obligations and quotations &mdash; must not be relied on without checking them against the source document, because they may be false, incomplete or misleading. The AI Use &amp; Limitations Notice forms part of this Agreement and sets this out in full.</li>
     <li><strong>Not advice.</strong> The Services do not provide legal, financial, tax, accounting, regulatory or professional advice of any kind. No part of the Output is a substitute for advice from a qualified professional, and no relationship of adviser and client arises between us and the Customer.</li>
     <li><strong>Human decision-making.</strong> The Customer is solely responsible for every decision it takes, or omits to take, in reliance on the Services, and for verifying Output before relying on it for any purpose that carries legal, financial, contractual, regulatory or safety consequences.</li>
     <li><strong>Availability.</strong> We do not warrant that the Services will be uninterrupted or error-free. Availability commitments, where they are given at all, are given only in the Service Level Agreement and only for the subscription tiers stated there.</li>
@@ -329,6 +453,7 @@ footer a:hover{color:var(--copper)}
     <li>We may modify the Services from time to time, including adding, changing or removing features, provided we do not materially reduce the core functionality of a Product during a paid Subscription Term. Where we do materially reduce core functionality, the Customer may terminate the affected Product within 30 days of notice and receive a pro-rata refund of prepaid fees.</li>
     <li>We may amend this Agreement and the policies that form part of it. We will give at least 30 days' notice of any amendment that materially and adversely affects the Customer, by email to the account's registered address and by posting the revised version here. If the Customer objects, it may terminate the affected Product before the change takes effect; continued use after that date constitutes acceptance.</li>
     <li>Changes required by law, by a regulator or to address a security risk may take effect immediately.</li>
+    <li><strong>Changing the AI Provider or model.</strong> We may change the AI Provider, or the model it provides, to maintain or improve the Services. A change of AI Provider is a change of sub-processor and is subject to clause 3 of the Data Processing Agreement. We will not make a change that weakens the commitments in clauses 6.6 and 6.7 unless the Customer agrees in writing.</li>
   </ol>
 
   <h3>16. General</h3>
@@ -365,6 +490,23 @@ footer a:hover{color:var(--copper)}
   <h3>3. Editions and allowances</h3>
   <p>ContractIQ is offered in the editions stated on the Order Form. Each edition carries a credit allowance which is consumed by chargeable operations. The current consumption rates, the operations that consume no credits, and the allowance for each edition are set out in the Documentation and on the Order Form. We may change consumption rates on 30 days' notice with effect from the next renewal.</p>
 
+  <h4>Credit allowances by edition</h4>
+  <p>A full contract analysis costs 10 credits. A question to Cedric costs 2. Re-running an analysis on the same record inside the revision window costs nothing. Ingesting documents, optical character recognition, renewal alerts and exports never consume credits. The figures below are the allowances held in the plan catalogue in the database, which is the operative record.</p>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Edition</th><th>Allowance</th><th>Period</th><th>Roll-over cap</th><th>Revision window</th><th>Typical mix</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Evaluation Sandbox</strong></td><td>100</td><td>90 days</td><td>None</td><td>None</td><td>5 analyses and 25 questions</td></tr>
+      <tr><td><strong>Growth / Professional</strong></td><td>500</td><td>30 days</td><td>500</td><td>30 days</td><td>12 analyses and 190 questions</td></tr>
+      <tr><td><strong>Scale</strong></td><td>1,800</td><td>30 days</td><td>1,800</td><td>30 days</td><td>45 analyses and 675 questions</td></tr>
+      <tr><td><strong>Enterprise Suite</strong></td><td>5,000</td><td>30 days</td><td>5,000</td><td>30 days</td><td>125 analyses and 1,875 questions</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The &ldquo;typical mix&rdquo; column is one way of spending the allowance, not an entitlement to that number of analyses. Credits are fungible between analyses and questions, and the mixes shown consume the allowance exactly.</p>
+  <p>Additional credits may be bought in packs of 100 for &pound;25. Bought credits are drawn on only after the period allowance is exhausted, are never subject to the roll-over cap, and do not expire.</p>
+  <p>Credits are placed on hold when work is queued and are charged only when that work completes. If a job fails, is abandoned or cannot be completed, the hold is released in full and nothing is charged.</p>
+
   <h3>4. Transcripts and recordings</h3>
   <ol class="cl">
     <li>Where the Customer uploads a recording or transcript, the Services require an Authorised User to confirm that all necessary notices were given and consents obtained. That confirmation is recorded with the identity of the user, the time, and the version of the consent wording.</li>
@@ -374,7 +516,15 @@ footer a:hover{color:var(--copper)}
   <h3>5. Optical character recognition</h3>
   <p>Scanned documents are processed using optical character recognition. Recognition of poor-quality scans, handwriting, stamps, marginalia, tables and signatures is unreliable. Where text cannot be extracted reliably the Services will indicate this, but the absence of an indication is not a warranty that recognition was complete or correct.</p>
 
-  <h3>6. Current status</h3>
+  <h3>6. Data handling</h3>
+<ol class="cl">
+<li><strong>Files.</strong> Documents are opened and read in the Authorised User's browser, including optical character recognition of scanned pages. The original file is not uploaded to us.</li>
+<li><strong>Text.</strong> The text read from a document is stored in the Customer's workspace so that it can be searched and re-analysed, and is sent to the AI Provider when an analysis is run or a question is asked of Cedric. On the Enterprise Suite, Zero-Retention mode can be switched on for the workspace, after which document text is not stored at all: it is held in the browser for the duration of the analysis and only the extracted details and the analysis are kept. The database refuses to store document text while the mode is on.</li>
+<li><strong>Transcripts.</strong> Unless an Authorised User switches it off, the names, email addresses and phone numbers in a meeting transcript are replaced with labels in the browser before the transcript is stored or analysed. The key that reverses the replacement stays in the browser and is never stored or sent to us.</li>
+<li><strong>Background processing.</strong> Where an analysis runs in the background, the copy of the document text queued for it is deleted as soon as the analysis finishes or fails.</li>
+</ol>
+
+<h3>7. Current status</h3>
   <div class="box warn">
     <h4>Stated plainly</h4>
     <p>ContractIQ is pre-launch. It has been built and tested but has not yet been operated across a paying customer's live contract portfolio. We publish no accuracy percentage because we have not measured accuracy against a labelled reference set, and a model's confidence score is not the same thing. Any customer contracting with us before we do publish a measured figure is doing so on that basis, and we will say so again in writing before taking payment.</p>
@@ -408,7 +558,12 @@ footer a:hover{color:var(--copper)}
     <li>You must not use the Services to generate material designed to deceive, including fabricated records, forged documents, or content falsely attributed to a real person or organisation.</li>
     <li>You must not attempt to extract, reconstruct or reverse engineer any system prompt, model weight, model configuration or training data through the Services, including by prompt injection.</li>
     <li>You must not use the Services, or Output from them, to develop, train, benchmark or market any competing product, as set out in clause 4 of the Master Subscription Agreement.</li>
+    <li>You must not use the Services to violate anyone's privacy, including by unlawfully tracking, monitoring, profiling or identifying individuals.</li>
+    <li>You must not attempt to bypass, disable or circumvent any safety filter, safeguard or limit in the Services or in the underlying AI model.</li>
+    <li>Where you use Output to support a decision with legal consequences &mdash; for example whether to renew, terminate, dispute or sign a contract &mdash; a suitably qualified person must review it before the decision is taken.</li>
+    <li>You must not use the Services for any purpose prohibited by the policies our AI Provider and the model's developer apply to us: the AWS Acceptable Use Policy, the AWS Responsible AI Policy and Anthropic's Usage Policy, each published on their websites. Those policies are the reason for the restrictions in this clause 2. Where one of them is stricter than this clause, it applies.</li>
   </ol>
+  <p>Our AI Provider requires us to pass these restrictions on. A breach can lead it to suspend the service we rely on for every customer, which is why we may suspend immediately under clause 3 below.</p>
 
   <h3>3. Enforcement</h3>
   <p>We may investigate suspected breaches and may suspend or restrict access immediately, without notice where the risk requires it. We will tell you what we have done and why as soon as we reasonably can. Repeated or serious breach is a material breach of the Agreement under clause 14.2. Where we are required to report conduct to a law enforcement agency or regulator, we will do so.</p>
@@ -425,11 +580,23 @@ footer a:hover{color:var(--copper)}
 
   <h3>1. How the AI is used</h3>
   <ul class="pl">
-    <li>Documents and text you supply are sent to one or more third-party large language models, operated by the providers listed in our Sub-processor list, to be read and interpreted.</li>
+    <li>The text read from your documents is sent to the AI Provider named in our Sub-processor list &mdash; at present Amazon Web Services, running Anthropic&rsquo;s Claude model through Amazon Bedrock &mdash; to be read and interpreted. That processing takes place in AWS data centres in the United Kingdom, the European Economic Area and Switzerland.</li>
+<li>Your original files never leave your browser. Scanned pages are read in your browser too. In meeting transcripts, names, email addresses and phone numbers are replaced with labels in your browser before anything is stored or sent.</li>
     <li>The models return structured information, summaries, classifications, drafts and answers. That is the Output.</li>
     <li>Output is generated probabilistically. The same input may not produce identical output every time.</li>
-    <li>Your content is not used to train, fine-tune or improve any model. Our AI providers are engaged on terms that prohibit training on customer content.</li>
+    <li>Your content is not used to train, fine-tune or improve any model. The AI Provider does not store what is sent to it or what it returns, and does not share either with the model's developer.</li>
   </ul>
+
+  <h4>What the analysis extracts</h4>
+  <p>ContractIQ's analysis pipeline extracts the following contract elements, each with a confidence score:</p>
+  <ul class="pl">
+    <li><strong>Financial:</strong> Annual value, price per unit, payment terms, uplift schedules, minimum commitments</li>
+    <li><strong>Temporal:</strong> Start date, end date, renewal window, notice period, contract duration</li>
+    <li><strong>Parties:</strong> Supplier name, legal entity, contact persons, escalation contacts</li>
+    <li><strong>Obligations:</strong> SLAs, warranties, liability caps, audit rights, compliance clauses</li>
+    <li><strong>Risk factors:</strong> Auto-renewal, regulatory dependencies, change of control, IP ownership</li>
+  </ul>
+  <p>Each extracted value is assigned a confidence score (0–100%) and tagged with the source location (page, section, exact quote). A value scoring below 81 is not written onto the contract record automatically: it waits in the Verify queue until a person accepts or corrects it.</p>
 
   <h3>2. What AI cannot be relied on to do</h3>
   <ol class="cl">
@@ -446,6 +613,7 @@ footer a:hover{color:var(--copper)}
     <li>Do not use Output as the sole basis for a decision that significantly affects an individual, without meaningful human review.</li>
     <li>Tell your own people that the Services use AI and that Output must be checked.</li>
     <li>Where you or your customers are subject to obligations concerning AI transparency, automated decision-making or record-keeping, satisfying those obligations in respect of your own use of the Services is your responsibility. We will provide reasonable information to help.</li>
+<li>If you share Output outside your organisation, say that it was produced with the help of AI and has not been verified by us.</li>
   </ol>
 
   <h3>4. Regulatory position</h3>
@@ -494,6 +662,11 @@ footer a:hover{color:var(--copper)}
   </table>
   </div>
   <p>Credits must be claimed in writing within 30 days of the end of the month concerned, are applied against future fees, are not payable in cash, and are capped at 25% of the monthly fees for the affected Product in any month. <strong>Service credits are the Customer's sole and exclusive financial remedy for any failure to meet the availability commitment.</strong> Where availability falls below 95.0% in each of three consecutive months, the Customer may terminate the affected Product on notice with a pro-rata refund of prepaid fees.</p>
+
+  <h4>Credit Rollover &amp; Banking Limits</h4>
+  <p>At each subscription renewal, unused credits from the previous period are automatically banked and carry forward to the new period, up to the plan's rolling cap. The rolling cap is set at one full period's credit allowance for that plan (e.g., 500 for Growth). Credits banked beyond the cap are not carried forward.</p>
+  <p><strong>Example:</strong> If you have Growth (500 credits/month) and use only 100 in Month 1, then 400 bank. In Month 2, your available balance is 900 (500 new + 400 banked). If you use only 50 in Month 2, you would bank 850, but the cap is 500, so only 500 carry to Month 3.</p>
+  <p>When a subscription is cancelled, banked credits expire and are not refunded. Credits purchased separately (bolt-on credits) are never banked and never expire.</p>
 
   <h3>4. AI processing times</h3>
   <p>Analysis and generation times depend on document size, queue depth and third-party model availability, and are not subject to any commitment. Where a queued job fails, it is retried automatically; where it cannot be completed, the credits consumed are returned. No service level applies to processing time.</p>
@@ -581,7 +754,7 @@ footer a:hover{color:var(--copper)}
   <p>We share personal data with the service providers listed in our Sub-processor list, each of which processes it only on our instructions and under a written contract. We may also disclose personal data to our professional advisers, to a purchaser in connection with a sale of our business, and where we are required to by law, a court or a regulator.</p>
 
   <h3>5. International transfers</h3>
-  <p>Some of our providers are located outside the United Kingdom, principally in the United States and the European Economic Area. Where personal data leaves the UK we rely on UK adequacy regulations where they apply, and otherwise on the International Data Transfer Agreement or the UK Addendum to the EU Standard Contractual Clauses, together with a transfer risk assessment. Details for each provider are in the Sub-processor list.</p>
+  <p>Customer workspaces are held in London. The AI processing behind analysis and Cedric takes place in AWS data centres in the United Kingdom, the European Economic Area and Switzerland, each covered by UK adequacy regulations. Some of our other providers &mdash; website hosting, payments and email &mdash; are located in, or make onward transfers to, the United States. Where personal data leaves the UK we rely on UK adequacy regulations where they apply, and otherwise on the International Data Transfer Agreement or the UK Addendum to the EU Standard Contractual Clauses, together with a transfer risk assessment. Details for each provider are in the Sub-processor list.</p>
 
   <h3>6. How long we keep it</h3>
   <div class="tblwrap">
@@ -592,6 +765,8 @@ footer a:hover{color:var(--copper)}
       <tr><td>Enquiries that do not become customers</td><td>24 months from last contact</td></tr>
       <tr><td>Account and user records</td><td>Duration of the account, then 12 months</td></tr>
       <tr><td>Customer content held on behalf of a customer</td><td>As set out in the Data Processing Agreement &mdash; 30 days after termination, then deleted</td></tr>
+<tr><td>Text sent to our AI Provider for analysis</td><td>Not kept by the AI Provider once it has answered</td></tr>
+<tr><td>The queued copy of a document sent for background analysis</td><td>Deleted as soon as that analysis finishes or fails</td></tr>
       <tr><td>Contracts, invoices and accounting records</td><td>7 years, to meet statutory requirements</td></tr>
       <tr><td>Marketing preferences and opt-outs</td><td>Indefinitely, so we can honour the opt-out</td></tr>
     </tbody>
@@ -622,13 +797,17 @@ footer a:hover{color:var(--copper)}
     <tbody>
       <tr><td><strong>Subject matter</strong></td><td>Provision of the Services described in the applicable Product Schedule</td></tr>
       <tr><td><strong>Duration</strong></td><td>The Subscription Term, plus the 30-day export window under clause 14.4</td></tr>
-      <tr><td><strong>Nature and purpose</strong></td><td>Hosting, storage, optical character recognition, automated extraction and analysis using AI models, indexing, search, reporting and export, all on the Customer's instructions</td></tr>
+      <tr><td><strong>Nature and purpose</strong></td><td>Hosting, storage, optical character recognition (in the user's browser), automated extraction and analysis using AI models through the AI Provider, indexing, search, reporting and export, all on the Customer's instructions</td></tr>
       <tr><td><strong>Types of personal data</strong></td><td>Whatever the Customer chooses to upload. Typically: names, job titles, business contact details and signatures of individuals named in contracts and commercial documents; names and speech of participants in uploaded meeting transcripts; and account data for Authorised Users</td></tr>
       <tr><td><strong>Categories of data subject</strong></td><td>The Customer's personnel; personnel of the Customer's suppliers and counterparties; individuals named in uploaded documents; participants in uploaded recordings</td></tr>
       <tr><td><strong>Special category data</strong></td><td>Not permitted without prior written agreement (see Acceptable Use Policy, clause 1(h))</td></tr>
     </tbody>
   </table>
   </div>
+
+  <h4>Where the data is held</h4>
+  <p>ContractIQ runs on Supabase, a managed PostgreSQL service. Customer Data is held in an encrypted PostgreSQL database in London (AWS eu-west-2) with automated daily backups, and is not replicated to another region except as part of that backup regime. Of the material a customer uploads, the extracted text and the analysis derived from it are stored; the original file is never uploaded to us. Where Zero-Retention mode is on, extracted text is not stored either.</p>
+<p>AI processing is carried out by the AI Provider in AWS data centres in the United Kingdom, the European Economic Area and Switzerland. The AI Provider does not store the text sent to it or the answers it returns, does not use them to train any model, and does not share them with the developer of the model. A different location applies only where the Customer has agreed it in writing on the Order Form.</p>
 
   <h3>2. Our obligations</h3>
   <ol class="cl">
@@ -647,6 +826,7 @@ footer a:hover{color:var(--copper)}
     <li>The Customer gives general written authorisation for us to appoint sub-processors. The current list is published in this Legal Centre.</li>
     <li>We will give at least <strong>30 days' notice</strong> before adding or replacing a sub-processor, by updating the list and, where the Customer has subscribed to notifications, by email. The Customer may object on reasonable data protection grounds within that period. If we cannot resolve the objection, the Customer may terminate the affected Product on notice with a pro-rata refund of prepaid fees, and that is the Customer's sole remedy.</li>
     <li>We shall impose on each sub-processor obligations equivalent to those in this DPA and remain fully liable to the Customer for their performance.</li>
+    <li>We will engage an AI Provider only on terms under which it does not keep Customer Data after processing it, does not use Customer Data to train any model, and does not share it with the developer of the model. Clause 3.2 applies to any change of AI Provider.</li>
   </ol>
 
   <h3>4. International transfers</h3>
@@ -664,9 +844,23 @@ footer a:hover{color:var(--copper)}
     <li>Audit logging of access and of material changes to records.</li>
     <li>Regular application of security patches to dependencies and infrastructure.</li>
     <li>Documented procedures for incident detection, escalation and notification.</li>
-    <li>Contractual prohibition on AI sub-processors retaining or training on customer content.</li>
+    <li>AI processing only through an AI Provider that does not store the text sent to it or the answers it returns, does not use either to train models, and does not share either with the model's developer; processing confined to AWS data centres in the UK, EEA and Switzerland, with worldwide routing refused by our own code.</li>
+    <li>Pseudonymisation in the user's browser of names, email addresses and phone numbers in meeting transcripts, before storage or analysis; the key that reverses it is never stored or transmitted.</li>
+    <li>Deletion of the queued copy of document text as soon as a background analysis finishes or fails.</li>
+    <li>Back-office database functions that add credits, change plans, settle charges or run the job queue can be called only by our server, never from a browser.</li>
+    <li>Server functions that handle Customer Data run in London, next to the database, wherever the user is.</li>
+    <li>An optional Zero-Retention mode (Enterprise Suite), under which document text is not stored, enforced by the database itself.</li>
   </ul>
   <p>The measures in Annex B may change as the Services develop. We will not make a change that materially reduces the overall level of security.</p>
+
+  <h4>Access control and tenant isolation</h4>
+  <p>Multi-tenant isolation is enforced through PostgreSQL row-level security. Every query is scoped to the authenticated user's account by the database itself, not by the application, so no fault in the application code can widen it. In practice:</p>
+  <ol class="cl">
+    <li>Data belonging to one account is invisible to all other accounts</li>
+    <li>API keys, JWT tokens, and session cookies can only access their own account's data</li>
+    <li>Team members invited to a workspace can see only the shared workspace data, not other team members' personal folders</li>
+    <li>If a compromise occurs, the blast radius is limited to that one account</li>
+  </ol>
 
   <h3>7. Liability</h3>
   <p>Each party's liability under this DPA is subject to the limitations and exclusions in clause 11 of the Master Subscription Agreement, save to the extent that the law does not permit those limitations to apply.</p>
@@ -680,15 +874,15 @@ footer a:hover{color:var(--copper)}
   <table>
     <thead><tr><th>Provider</th><th>Purpose</th><th>Location</th><th>Transfer mechanism</th></tr></thead>
     <tbody>
-      <tr><td><strong>Anthropic PBC</strong></td><td>Large language model inference &mdash; reading and interpreting documents, generating analysis and answers</td><td>United States</td><td>UK Addendum to the EU SCCs, with a transfer risk assessment. Engaged on terms prohibiting training on customer content</td></tr>
-      <tr><td><strong>Supabase</strong></td><td>Database, authentication, file storage and background job processing</td><td><span class="fill">Confirm the project region</span></td><td>UK adequacy where the region is in the EEA; otherwise UK Addendum to the EU SCCs</td></tr>
+      <tr><td><strong>Amazon Web Services EMEA SARL</strong> (Amazon Bedrock) &mdash; our AI Provider</td><td>AI model inference &mdash; reading document text and generating analysis and answers, using Anthropic&rsquo;s Claude model hosted and run by AWS. Anthropic does not receive customer data. AWS does not store prompts or outputs and does not use them for training</td><td>United Kingdom, European Economic Area and Switzerland (AWS EU route, called from London). US and Canada only for a customer that has agreed US processing in writing</td><td>UK adequacy regulations. AWS Data Processing Addendum, incorporating the Standard Contractual Clauses and the UK Addendum where a transfer arises</td></tr>
+      <tr><td><strong>Supabase</strong></td><td>Database, authentication, server functions and background job processing</td><td><span class="fill">United Kingdom &mdash; London (AWS eu-west-2). Confirm the project region before publishing</span></td><td>None needed while the project is in London; UK Addendum to the EU SCCs for Supabase's own support access from outside the UK</td></tr>
       <tr><td><strong>IONOS SE</strong> (domain and website hosting) and <strong>GitHub, Inc.</strong> (application front end, via GitHub Pages)</td><td>Hosting the website and application front end, content delivery</td><td>Germany (IONOS); United States (GitHub)</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for GitHub</td></tr>
       <tr><td><strong><span class="fill">Email provider</span></strong></td><td>Transactional and business email</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
       <tr><td><strong>Stripe Payments Europe, Ltd.</strong></td><td>Collecting subscription and credit payments. Card details are entered on Stripe&rsquo;s own hosted checkout page and are never seen or stored by us</td><td>Ireland, with processing in the United States</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for onward transfers</td></tr>
     </tbody>
   </table>
   </div>
-  <p>Optical character recognition of scanned documents is performed in the user's own browser and the image is not sent to a third party for that step.</p>
+  <p>Optical character recognition of scanned documents is performed in the user's own browser and the image is not sent to a third party for that step. Anthropic PBC, the developer of the Claude model, is not a sub-processor: it has no access to the prompts or answers processed through Amazon Bedrock.</p>
   <p>To be notified of changes to this list, email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> asking to be added to the sub-processor notification list.</p>
 </section>
 
@@ -750,7 +944,10 @@ footer a:hover{color:var(--copper)}
     <li>Four access roles, enforced in the database rather than only in the interface, so a user cannot reach another customer's data by manipulating a request.</li>
     <li>Row-level security policies isolating each customer's workspace.</li>
     <li>Audit trail of access and of material changes to records.</li>
-    <li>AI providers engaged on zero-retention terms, contractually prohibited from training on customer content.</li>
+    <li>AI processing through Amazon Bedrock in AWS data centres in the UK, EEA and Switzerland. Amazon Bedrock does not store prompts or outputs, does not use them for training, and does not share them with the model's developer. Our code refuses the worldwide route.</li>
+    <li>Names, email addresses and phone numbers in meeting transcripts replaced with labels in the browser before storage or analysis.</li>
+    <li>The queued copy of document text deleted as soon as a background analysis finishes.</li>
+    <li>Back-office database functions (credits, plans, payments, the job queue) callable only by our server.</li>
     <li>Optical character recognition performed in the browser, so scanned images are not sent to a third-party OCR service.</li>
     <li>Credits for chargeable AI operations are deducted server-side after success, not client-side, so the client cannot be manipulated to obtain free processing.</li>
   </ul>
@@ -758,7 +955,7 @@ footer a:hover{color:var(--copper)}
   <h3>2. What is not in place, stated plainly</h3>
   <div class="box warn">
     <h4>No certification yet</h4>
-    <p>We hold no SOC 2 report, no ISO 27001 certificate and no Cyber Essentials certification at the date of this statement. We have not commissioned an independent penetration test. We do not currently offer single sign-on with SAML, a customer-managed encryption key, or a contractual data residency guarantee.</p>
+    <p>We hold no SOC 2 report, no ISO 27001 certificate and no Cyber Essentials certification at the date of this statement. We have not commissioned an independent penetration test. We do not currently offer single sign-on with SAML or a customer-managed encryption key. We do commit to where data is held and processed &mdash; see clause 6.7 of the Master Subscription Agreement.</p>
     <p>If any of those is a requirement for your organisation, tell us before you buy rather than after. We would rather lose the sale than be found out in a due diligence questionnaire, and we will tell you honestly what is planned and what is not.</p>
   </div>
 
@@ -813,25 +1010,68 @@ footer a:hover{color:var(--copper)}
   <table>
     <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
     <tbody>
-      <tr><td><strong>1.0</strong></td><td>11 September 2026</td><td>First publication</td></tr>
+      <tr><td><strong>1.0</strong> (recorded at sign-up as 2026.1)</td><td>11 September 2026</td><td>First publication</td></tr>
+<tr><td><strong>1.1</strong> (recorded at sign-up as 2026.2)</td><td>19 September 2026</td><td>AI Provider changed from Anthropic PBC to Amazon Web Services (Amazon Bedrock, UK/EEA/Switzerland). New MSA clauses 5.6 (AI Provider terms), 6.6&ndash;6.7 (no retention by the AI Provider; where data is processed) and 15.4 (changing the AI Provider); output-accuracy wording in 10.1. AI-specific restrictions added to the Acceptable Use Policy. Data handling section added to Schedule 1; Evaluation Sandbox allowance changed from 150 to 100 credits for new sign-ups. Privacy Policy, DPA (clause 3.4, Annex B), Sub-processor list and Security Statement updated to match.</td></tr>
     </tbody>
   </table>
   </div>
   <div class="box warn">
     <h4>Before this goes live</h4>
-    <p>Every item marked in orange on this page is a gap that must be filled before publication: the ICO registration reference, VAT position, the hosting, email and payment providers in the sub-processor list, the Supabase project region, and the analytics position in the Cookie Policy.</p>
+    <p>Every item marked in orange on this page is a gap that must be filled before publication: the VAT position, the email provider in the sub-processor list, and confirmation that the Supabase project is in London. If this version is published after any customer has accepted version 1.0, the change of sub-processor needs 30 days' notice under clause 3.2 of the Data Processing Agreement.</p>
     <p>These documents have been drafted to reflect standard market practice for a UK business-to-business software company and current UK law, but they have not been reviewed by a solicitor. They should be before you take a payment or sign a customer. The clauses that most need a professional eye are the liability cap and exclusions, the indemnities, and the data processing terms.</p>
   </div>
 </section>
 
+      <!-- CODEIQ LEGAL URL — confirm exact path before go-live -->
+      <aside class="parent-note at-foot">
+        <span class="pn-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#45D6C6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M10 21v-6h4v6"/><path d="M9 12h.01M15 12h.01"/></svg></span>
+        <div class="pn-body">
+          <div class="pn-k">Parent company</div>
+          <p>ContractIQ Platform is a product of CodeIQ Holdings Ltd. Company-level legal notices are published at codeiqholdings.co.uk.</p>
+        </div>
+        <a class="btn pri" href="https://codeiqholdings.co.uk/" target="_blank" rel="noopener"><span class="sheen"></span>CodeIQ Holdings legal notices</a>
+      </aside>
+
+      <div class="colophon">
+        <strong>CodeIQ Holdings Ltd</strong><br>
+        Registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Northampton NN4 6RX, United Kingdom.<br>
+        <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> &middot; codeiqholdings.co.uk &middot; codeiqholdings.com<br>
+        &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.0.
+      </div>
   </main>
 </div>
 
-<footer>
-  <strong style="color:var(--steel);font-family:var(--disp);font-weight:500">CodeIQ Holdings Ltd</strong><br>
-  Registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Northampton NN4 6RX, United Kingdom.<br>
-  <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> &middot; codeiqholdings.co.uk &middot; codeiqholdings.com<br>
-  &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.0.
+<footer class="footer">
+  <div class="foot-grid">
+    <div>
+      <a class="foot-brand" href="index.html"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42 13.5 V34.5 L24 45 L6 34.5 V13.5 Z" stroke="#45D6C6" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 13 L33 18 V28 L24 33 L15 28 V18 Z M24 13 V23 M24 23 L33 18 M24 23 L15 18" stroke="#7DA3D1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Contract<span class="iq">IQ</span> <span class="pl">Platform</span></span></a>
+      <p>Intelligence for every agreement. AI contract analysis across cost, users, risk,
+         opportunity and legal compliance — before the renewal clock runs out.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="security.html">Security</a>
+      <a href="demo/">Live demo</a>
+      <a href="app/">Open the app</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="legal.html">Legal Centre</a>
+      <a href="legal.html#msa">Terms of Service</a>
+      <a href="legal.html#privacy">Privacy Policy</a>
+      <a href="legal.html#dpa">Data Processing (DPA)</a>
+    </div>
+  </div>
+  <div class="foot-base">
+    © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
+    ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
+    Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
+    ICO registration ICO00015500673.
+  </div>
 </footer>
 
 <script>
@@ -857,5 +1097,7 @@ footer a:hover{color:var(--copper)}
   docs.forEach(function(d){ io.observe(d); });
 })();
 </script>
+
+<script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

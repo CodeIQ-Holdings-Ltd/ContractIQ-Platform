@@ -133,7 +133,7 @@ setTimeout(function(){
   }
   const configureAI = (supabaseUrl, anonKey) => {
     const base = supabaseUrl ? supabaseUrl.replace(/\/$/, "") : "";
-    AI_ENDPOINT = base ? `${base}/functions/v1/anthropic-proxy` : "";
+    AI_ENDPOINT = base ? `${base}/functions/v1/anthropic-proxy?forceFunctionRegion=eu-west-2` : "";
     CHECKOUT_ENDPOINT = base ? `${base}/functions/v1/create-checkout-session` : "";
     AI_APIKEY = anonKey || "";
   };
@@ -752,6 +752,12 @@ setTimeout(function(){
       ]
     }
   ];
+  const activePolicyBlock = (packs) => {
+    const on = (packs || []).filter((p) => p.active);
+    if (!on.length) return "";
+    return "\n\nREGULATORY POLICY PACKS IN FORCE (assess the contract against every rule below; each becomes a compliance data point with its own confidence score):\n" + on.map((p) => `[${p.jurisdiction} · ${p.name} v${p.version}]
+` + p.rules.map((r) => `  - ${r}`).join("\n")).join("\n") + "\n";
+  };
   const HIL_TIERS = {
     deep: {
       key: "deep",
@@ -808,13 +814,14 @@ setTimeout(function(){
     revision: 0
     // re-analysis inside the revision window
   };
+  const AI_RATE_HINT = { analysis: 20, revision: 20, cedric: 120 };
   const EDITIONS = {
     sandbox: {
       key: "sandbox",
       name: "Evaluation Sandbox",
       short: "Sandbox",
       price: "Free",
-      credits: 150,
+      credits: 100,
       windowDays: 90,
       windowLabel: "every 90 days",
       bank: 0,
@@ -828,7 +835,7 @@ setTimeout(function(){
       apiKeys: false,
       sso: false,
       features: [
-        "150 credits every 90 days (about 2 analyses plus 65 questions)",
+        "100 credits every 90 days (for example 5 analyses plus 25 questions)",
         "Standard risk triage dashboard",
         "Baseline metadata parsing",
         "Core clause checking routines"
@@ -1295,9 +1302,11 @@ setTimeout(function(){
     return [...new Uint8Array(buf)].map((x) => x.toString(16).padStart(2, "0")).join("");
   }
   const ADMIN_BYPASS_HASH = "8a331fbee98a1dce4c0db1c9f6838b7d9b8c4d019bd6c2822a778d511b987972";
+  const DEMO_USERNAME = "guest";
+  const DEMO_PASSWORD = "contractiq";
   const seedUsers = [
     { username: "admin", passHash: "8cb0873fee1ffb16d96cbd87344631b617d5a7b1fa248ab9d1111b24b5c18b0a", displayName: "Admin", role: "Admin" },
-    { username: "guest", passHash: "484f69eed0087f49d90fa9e732609d69a56815ab3089b99a1427280457d77c66", displayName: "Guest User", role: "Viewer" }
+    { username: "guest", passHash: "e6d93533d62ba96caf2111423e624fe03111486501b23344b73e2a6be2a59f68", displayName: "Guest User", role: "Admin" }
   ];
   const SAMPLE_PORTFOLIO = [
     {
@@ -1379,7 +1388,8 @@ ${d.text || "(binary file — metadata only)"}`).join("\n\n");
     const n = Math.min(pdf.numPages, 80);
     for (let i = 1; i <= n; i++) {
       const tc = await (await pdf.getPage(i)).getTextContent();
-      pages.push(tc.items.map((it) => it.str).join(" "));
+      pages.push(`[page ${i}]
+` + tc.items.map((it) => it.str).join(" "));
     }
     const text = pages.join("\n\n") + (pdf.numPages > n ? `
 
@@ -1471,6 +1481,79 @@ ${d.text || "(binary file — metadata only)"}`).join("\n\n");
     const speakers = [...new Set(turns.map((t) => t.speaker))];
     return { text: out, speakers };
   }
+  const newPseudoMap = () => ({ toPseudo: {}, toReal: {}, n: 0, counts: {} });
+  const escapeRx = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  function pseudoLabel(i) {
+    const letter = String.fromCharCode(65 + i % 26);
+    return "Participant " + letter + (i >= 26 ? String(Math.floor(i / 26) + 1) : "");
+  }
+  function pseudonymiseTranscript(rawText, speakers, map) {
+    map = map || newPseudoMap();
+    const assign = (name) => {
+      const key = String(name || "").trim();
+      if (!key || /^unattributed$/i.test(key)) return key || "Unattributed";
+      if (!map.toPseudo[key]) {
+        const p = pseudoLabel(map.n++);
+        map.toPseudo[key] = p;
+        map.toReal[p] = key;
+      }
+      return map.toPseudo[key];
+    };
+    map.counts = map.counts || {};
+    const token = (kind, value) => {
+      const key = String(value).trim();
+      if (!map.toPseudo[key]) {
+        map.counts[kind] = (map.counts[kind] || 0) + 1;
+        const p = kind + " " + map.counts[kind];
+        map.toPseudo[key] = p;
+        map.toReal[p] = key;
+      }
+      return map.toPseudo[key];
+    };
+    const outSpeakers = (speakers || []).map(assign);
+    let text = String(rawText || "");
+    const names = Object.keys(map.toPseudo).sort((a, b) => b.length - a.length);
+    for (const n of names) {
+      const p = map.toPseudo[n];
+      if (!/^Participant /.test(p)) continue;
+      try {
+        text = text.replace(new RegExp("\\b" + escapeRx(n) + "\\b", "g"), p);
+      } catch (e) {
+      }
+      for (const part of n.split(/\s+/)) {
+        if (part.replace(/\W/g, "").length < 3) continue;
+        try {
+          text = text.replace(new RegExp("\\b" + escapeRx(part) + "\\b", "g"), p);
+        } catch (e) {
+        }
+      }
+    }
+    text = text.replace(/[\w.+-]+@[\w-]+\.[\w.]{2,}/g, (m) => token("Email", m));
+    text = text.replace(/(?:\+\d{1,3}[\s-]?)?(?:\(?0\d{2,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{3,4}/g, (m) => m.replace(/\D/g, "").length >= 10 ? token("Phone", m) : m);
+    return { text, speakers: outSpeakers, map };
+  }
+  function rehydrate(value, map) {
+    if (!map || !map.toReal) return value;
+    const keys = Object.keys(map.toReal);
+    if (!keys.length) return value;
+    let rx;
+    try {
+      rx = new RegExp(keys.sort((a, b) => b.length - a.length).map(escapeRx).join("|"), "g");
+    } catch (e) {
+      return value;
+    }
+    const walk = (v) => {
+      if (typeof v === "string") return v.replace(rx, (m) => map.toReal[m] || m);
+      if (Array.isArray(v)) return v.map(walk);
+      if (v && typeof v === "object" && v.constructor === Object) {
+        const o = {};
+        for (const k in v) o[k] = walk(v[k]);
+        return o;
+      }
+      return v;
+    };
+    return walk(value);
+  }
   async function extractDocxText(file) {
     if (!window.mammoth) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js");
     const res = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
@@ -1502,18 +1585,15 @@ ${d.text || "(binary file — metadata only)"}`).join("\n\n");
     return best;
   }
   function analysisContextFor(contract, customPlaybook, policyPacks) {
+    const scopeBlock = ED.crossClause ? "\n\nCROSS-DOCUMENT ANALYSIS IS IN SCOPE: compare terms ACROSS the ingested documents and report every conflict between them — a purchase order that contradicts the master agreement, a rate card that does not match the schedule, an SOW that varies the liability position." : "\n\nSCOPE LIMIT — this edition covers single-document review only. Assess each document on its own terms. Do NOT report conflicts BETWEEN documents, and do not reason across a purchase order, rate card or SOW to reach a finding; if the document set appears to conflict, say only that a cross-document review is needed.";
     const playbookBlock = ED.playbook && customPlaybook?.trim() ? `
 
 CUSTOM PLAYBOOK — this organisation's own vetting rules. Grade the contract against THESE positions; every deviation is a finding:
 ${customPlaybook.trim()}` : "";
-    const packs = (policyPacks || []).filter((p) => p.on);
-    const policyBlock = packs.length ? `
-
-REGULATORY POLICY PACKS IN FORCE:
-${packs.map((p) => `${p.name} (v${p.version}):
-${p.rules.map((r) => "  - " + r).join("\n")}`).join("\n\n")}` : "";
+    const policyBlock = activePolicyBlock(policyPacks);
     return `CONTRACT RECORD:
 ${JSON.stringify({ ...contract, documents: void 0, analysis: void 0 }, null, 2)}
+${scopeBlock}
 
 INGESTED DOCUMENTS:
 ${clipContext(docContext(contract)) || "(none ingested yet — analyse from record details alone and flag what documents would improve the analysis)"}${playbookBlock}${policyBlock}
@@ -1534,11 +1614,8 @@ LENGTH DISCIPLINE — this is a hard requirement, not a style note:
  - Prefer the most material findings. Six sharp entries beat twenty thin ones.
  - Keep every "detail", "note" and "reasoning" to ONE sentence unless the schema says otherwise. Never more than two.
  - No preamble, no closing remarks, no markdown, no code fences. JSON only.`;
-  function stage1Prompt(contract, customPlaybook, policyPacks) {
-    return `You are ContractIQ, an expert contract and commercial analyst. Extract the facts of this contract.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+  function stage1Task() {
+    return `YOUR TASK FOR THIS STEP: Extract the facts of this contract.
 
 Return exactly this shape:
 {
@@ -1560,11 +1637,8 @@ Return exactly this shape:
 }
 Use null where the documents do not say. Never take contract values or dates from a transcript alone.`;
   }
-  function stage2Prompt(contract, customPlaybook, policyPacks) {
-    return `You are ContractIQ, an expert contract and commercial analyst. Assess the commercial position only.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+  function stage2Task() {
+    return `YOUR TASK FOR THIS STEP: Assess the commercial position only.
 
 Return exactly this shape:
 {
@@ -1580,11 +1654,8 @@ Return exactly this shape:
 }
 If usage or licence data is present, compare entitlement against actual use and quantify anything dormant.`;
   }
-  function stage3Prompt(contract, customPlaybook, policyPacks) {
-    return `You are ContractIQ, an expert contract and commercial analyst. Identify risks and savings only.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+  function stage3Task() {
+    return `YOUR TASK FOR THIS STEP: Identify risks and savings only.
 
 Return exactly this shape:
 {
@@ -1600,11 +1671,8 @@ Return exactly this shape:
 }
 If documents contradict each other on a figure or a date, raise that as a risk rather than picking one.`;
   }
-  function stage4Prompt(contract, customPlaybook, policyPacks) {
-    return `You are ContractIQ, an expert contract and commercial analyst. Cover compliance and obligations only.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+  function stage4Task() {
+    return `YOUR TASK FOR THIS STEP: Cover compliance and obligations only.
 
 Return exactly this shape:
 {
@@ -1624,11 +1692,8 @@ Return exactly this shape:
 }
 Assess against standard UK enterprise practice (UK GDPR / Data Protection Act 2018, Bribery Act 2010, Modern Slavery Act 2015 where relevant). Mark "unclear" where the documents are insufficient to judge — do not guess.`;
   }
-  function stage5Prompt(contract, customPlaybook, policyPacks) {
-    return `You are ContractIQ, an expert contract and commercial analyst. Cover institutional knowledge and the actions arising.
-
-${analysisContextFor(contract, customPlaybook, policyPacks)}
-${LENGTH_RULES}
+  function stage5Task() {
+    return `YOUR TASK FOR THIS STEP: Cover institutional knowledge and the actions arising.
 
 Return exactly this shape:
 {
@@ -1653,8 +1718,29 @@ Return exactly this shape:
 }
 If no transcripts are present, still return "knowledge" with empty arrays and a summary saying so. reviewStartDate must leave realistic time to benchmark, gather stakeholders and negotiate before the notice deadline falls.`;
   }
+  function analysisShared(contract, customPlaybook, policyPacks) {
+    return `You are ContractIQ, an expert contract and commercial analyst.
+
+${analysisContextFor(contract, customPlaybook, policyPacks)}
+${LENGTH_RULES}`;
+  }
+  const STAGE_PLAN = [
+    { n: 1, label: "Reading the contract and extracting terms", task: stage1Task, tokens: 8e3 },
+    { n: 2, label: "Assessing cost and usage", task: stage2Task, tokens: 8e3 },
+    { n: 3, label: "Identifying risks and savings", task: stage3Task, tokens: 8e3 },
+    { n: 4, label: "Checking compliance and obligations", task: stage4Task, tokens: 8e3 },
+    { n: 5, label: "Capturing knowledge and next steps", task: stage5Task, tokens: 8e3 }
+  ];
+  const stageContent = (shared, task) => [
+    { type: "text", text: shared, cache_control: { type: "ephemeral" } },
+    { type: "text", text: task }
+  ];
   function analysisPromptFor(contract, customPlaybook, policyPacks) {
-    return stage1Prompt(contract, customPlaybook, policyPacks);
+    return {
+      v: 2,
+      context: analysisShared(contract, customPlaybook, policyPacks),
+      stages: STAGE_PLAN.map((st) => ({ n: st.n, label: st.label, task: st.task(), max_tokens: st.tokens }))
+    };
   }
   async function sha256Short(s) {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s || ""));
@@ -1666,6 +1752,7 @@ If no transcripts are present, still return "knowledge" with empty arrays and a 
     if (status === 401) {
       return detail || "Your session has expired. Sign in again and retry — nothing has been charged.";
     }
+    if (status === 403 && (d.includes("bedrock") || d.includes("iam"))) return detail;
     if (status === 403) {
       if (d.includes("origin")) return "Your AI function rejected this site. The ALLOWED_ORIGIN secret in Supabase must exactly match this app's address — https:// and the domain only, no folder and no trailing slash.";
       return detail || "This sign-in is not attached to a workspace yet.";
@@ -1677,15 +1764,15 @@ If no transcripts are present, still return "knowledge" with empty arrays and a 
       return (detail || "This workspace has reached its hourly limit.") + " The limit is per workspace and per hour; change it in the ai_limits table.";
     }
     if (status === 500) {
-      if (d.includes("missing") || d.includes("api_key") || d.includes("anthropic_api_key"))
-        return "Your API key is not reaching the function. In Supabase → Edge Functions → Secrets, check ANTHROPIC_API_KEY is spelled exactly that way and holds the full sk-ant-… key.";
-      if (d.includes("credit") || d.includes("balance"))
-        return "Your Anthropic account is out of credit. Top up at console.anthropic.com.";
+      if (d.includes("aws_access_key_id") || d.includes("aws_secret"))
+        return "The Amazon keys are not reaching the AI function. In Supabase → Edge Functions → Secrets, check AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are both there and spelled exactly that way.";
+      if (d.includes("refusing model"))
+        return "The AI function is set to a model route that could send data outside the UK/EU. Remove the BEDROCK_MODEL_EU secret (the safe default is used) or set it to eu.anthropic.claude-sonnet-5.";
       return "The AI function failed. Check Supabase → Edge Functions → anthropic-proxy → Logs for the reason." + (detail ? ` (${detail})` : "");
     }
-    if (status === 502) return "The AI function could not reach Anthropic. Usually temporary — try again in a moment.";
-    if (status === 529 || d.includes("overloaded")) return "Anthropic is busy right now. Wait a minute and try again — nothing is wrong with your setup.";
-    if (status === 400 && d.includes("credit")) return "Your Anthropic account is out of credit. Top up at console.anthropic.com.";
+    if (status === 404 && d.includes("does not recognise the model")) return detail;
+    if (status === 502 || status === 504) return detail && !/^HTTP/.test(detail) ? detail : "The AI function could not reach Amazon Bedrock in time. Usually temporary — try again in a moment. Nothing has been charged.";
+    if (status === 503 || status === 529 || d.includes("overloaded") || d.includes("throttl")) return "The AI service is busy right now. Wait a minute and try again — nothing is wrong with your setup, and nothing has been charged.";
     return `The AI request failed (HTTP ${status})${detail ? ` — ${detail}` : ""}.`;
   }
   function normaliseAnalysis(a) {
@@ -1865,7 +1952,7 @@ If no transcripts are present, still return "knowledge" with empty arrays and a 
     }
     return null;
   }
-  async function runAnalysis(contract, customPlaybook, policyPacks, onStage) {
+  async function runAnalysis(contract, customPlaybook, policyPacks, onStage, revision = false) {
     if (DEMO_MODE) {
       await new Promise((r) => setTimeout(r, 1600));
       const sample = normaliseAnalysis(JSON.parse(JSON.stringify(SAMPLE_ANALYSIS)));
@@ -1892,13 +1979,8 @@ If no transcripts are present, still return "knowledge" with empty arrays and a 
       return sample;
     }
     if (!AI_ENDPOINT) throw aiUnavailable();
-    const stages = [
-      { n: 1, label: "Reading the contract and extracting terms", build: stage1Prompt, tokens: 8e3 },
-      { n: 2, label: "Assessing cost and usage", build: stage2Prompt, tokens: 8e3 },
-      { n: 3, label: "Identifying risks and savings", build: stage3Prompt, tokens: 8e3 },
-      { n: 4, label: "Checking compliance and obligations", build: stage4Prompt, tokens: 8e3 },
-      { n: 5, label: "Capturing knowledge and next steps", build: stage5Prompt, tokens: 8e3 }
-    ];
+    const stages = STAGE_PLAN;
+    const shared = analysisShared(contract, customPlaybook, policyPacks);
     const merged = {};
     const failed = [];
     const runId = `run_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
@@ -1910,12 +1992,12 @@ If no transcripts are present, still return "knowledge" with empty arrays and a 
           method: "POST",
           headers: aiHeaders(),
           body: JSON.stringify({
-            kind: "analysis",
+            kind: revision ? "revision" : "analysis",
             contract_id: contract?.id,
             run_id: runId,
             final: lastStage,
             max_tokens: st.tokens,
-            messages: [{ role: "user", content: st.build(contract, customPlaybook, policyPacks) }]
+            messages: [{ role: "user", content: stageContent(shared, st.task()) }]
           })
         });
         if (!res.ok) {
@@ -1929,17 +2011,17 @@ If no transcripts are present, still return "knowledge" with empty arrays and a 
         }
         const data = await res.json();
         if (data?.stop_reason === "max_tokens") {
-          const brief = st.build(contract, customPlaybook, policyPacks) + "\n\nIMPORTANT: your previous attempt was too long and was discarded. Return AT MOST HALF the number of items in every array, and keep every string to one short sentence.";
+          const brief = st.task() + "\n\nIMPORTANT: your previous attempt was too long and was discarded. Return AT MOST HALF the number of items in every array, and keep every string to one short sentence.";
           const retry = await fetchWithRetry(AI_ENDPOINT, {
             method: "POST",
             headers: aiHeaders(),
             body: JSON.stringify({
-              kind: "analysis",
+              kind: revision ? "revision" : "analysis",
               contract_id: contract?.id,
               run_id: runId,
               final: lastStage,
               max_tokens: st.tokens,
-              messages: [{ role: "user", content: brief }]
+              messages: [{ role: "user", content: stageContent(shared, brief) }]
             })
           });
           if (!retry.ok) throw new Error(explainAiFailure(retry.status, ""));
@@ -2029,7 +2111,7 @@ ${scope}`,
     const data = await res.json();
     return (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n") || "Sorry — I couldn't process that. Try again.";
   }
-  function buildReportHTML(ct) {
+  function buildReportHTML(ct, trail) {
     const a = ct.analysis;
     const li = (arr, f) => (arr || []).map(f).join("");
     return `
@@ -2067,18 +2149,21 @@ ${scope}`,
   <p><b>Negotiation levers</b></p><ul>${li(a.insights.negotiationLevers, (x) => `<li>${esc(x)}</li>`)}</ul>
   <p><b>Recommendations</b></p><ul>${li(a.insights.recommendations, (x) => `<li>${esc(x)}</li>`)}</ul>
   <p><b>Dates to watch</b></p><ul>${li(a.insights.watchDates, (x) => `<li>${esc(x)}</li>`)}</ul>
+  ${(trail || []).length ? `<h2>Verification audit trail</h2>
+  <p class="sub">Every value a person checked or changed on this record, with what it was before and what it became.</p>
+  <table><tr><th>When</th><th>Who</th><th>Field</th><th>Action</th><th>From</th><th>To</th></tr>${li(trail, (t) => `<tr><td>${new Date(t.ts).toLocaleString("en-GB")}</td><td>${esc(t.user || "—")}</td><td>${esc(t.field)}</td><td>${esc(t.action)}</td><td>${esc(t.from === null || t.from === void 0 || t.from === "" ? "—" : String(t.from))}</td><td>${esc(t.to === null || t.to === void 0 || t.to === "" ? "—" : String(t.to))}</td></tr>`)}</table>` : ""}
   </body></html>`;
   }
-  function exportWord(ct) {
-    const blob = new Blob(["\uFEFF" + buildReportHTML(ct)], { type: "application/msword" });
+  function exportWord(ct, trail) {
+    const blob = new Blob(["\uFEFF" + buildReportHTML(ct, trail)], { type: "application/msword" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `ContractIQ_${ct.ref}_${ct.supplier}.doc`.replace(/\s+/g, "_");
     a.click();
   }
-  function exportPDF(ct) {
+  function exportPDF(ct, trail) {
     const w = window.open("", "_blank");
-    w.document.write(buildReportHTML(ct));
+    w.document.write(buildReportHTML(ct, trail));
     w.document.close();
     setTimeout(() => w.print(), 400);
   }
@@ -2247,39 +2332,34 @@ Raised by ContractIQ.`
     a.download = `ContractIQ_Executive_Digest_${(/* @__PURE__ */ new Date()).toISOString().slice(0, 7)}.doc`;
     a.click();
   }
-  async function supabasePush(cfg, contracts) {
-    const rows = contracts.map((c) => ({
+  function contractToRow(c, accountId) {
+    return {
       id: c.id,
-      ref: c.ref,
-      name: c.name,
-      supplier: c.supplier,
-      category: c.category,
-      annual_value: c.annualValue,
-      currency: c.currency,
+      account_id: accountId,
+      ref: c.ref || null,
+      name: c.name || null,
+      // supplier is NOT NULL in the schema; an un-named record must still save.
+      supplier: c.supplier || "—",
+      category: c.category || null,
+      annual_value: c.annualValue ?? 0,
+      currency: c.currency || "GBP",
       start_date: c.startDate || null,
       end_date: c.endDate || null,
-      notice_period_days: c.noticePeriodDays,
-      auto_renew: c.autoRenew,
-      owner: c.owner,
-      users_count: c.users,
-      notes: c.notes,
-      analysis: c.analysis,
-      documents_meta: c.documents.map(({ text, ...m }) => m)
-    }));
-    const res = await fetch(`${cfg.url}/rest/v1/contracts`, {
-      method: "POST",
-      headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}`, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates" },
-      body: JSON.stringify(rows)
-    });
-    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+      notice_period_days: c.noticePeriodDays ?? null,
+      auto_renew: !!c.autoRenew,
+      owner: c.owner || null,
+      users_count: c.users ?? 0,
+      notes: c.notes || null,
+      analysis: c.analysis ?? null,
+      // Metadata only — the file itself never leaves the browser.
+      documents_meta: (c.documents || []).map(({ text, ...m }) => m),
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    };
   }
-  async function supabasePull(cfg) {
-    const res = await fetch(`${cfg.url}/rest/v1/contracts?select=*`, {
-      headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}` }
-    });
-    if (!res.ok) throw new Error(`Supabase ${res.status}`);
-    const rows = await res.json();
-    return rows.map((r) => ({
+  function rowToContract(r, docsByContract) {
+    const meta = r.documents_meta || [];
+    const stored = docsByContract?.[r.id] || {};
+    return {
       id: r.id,
       ref: r.ref,
       name: r.name,
@@ -2294,46 +2374,106 @@ Raised by ContractIQ.`
       owner: r.owner,
       users: r.users_count,
       notes: r.notes,
-      analysis: r.analysis,
-      documents: r.documents_meta || []
-    }));
+      analysis: r.analysis ? normaliseAnalysis(r.analysis) : null,
+      // Re-attach the extracted text to its metadata so a reloaded contract
+      // can be re-analysed without asking for the file again.
+      documents: meta.map((m) => stored[m.id] != null ? { ...m, text: stored[m.id] } : m)
+    };
+  }
+  function analysisPatchFor(contract, a, zeroRetention) {
+    const ex = a.extracted || {};
+    const patch = { analysis: a };
+    const dpFor = (k) => (a.dataPoints || []).find((d) => d.field === k && d.kind === "extraction");
+    ["name", "category", "annualValue", "currency", "startDate", "endDate", "noticePeriodDays", "autoRenew", "owner", "users"].forEach((k) => {
+      if (ex[k] === null || ex[k] === void 0) return;
+      const dp = dpFor(k);
+      if (!dp || hilTier(dp.confidence).key === "auto") patch[k] = ex[k];
+    });
+    if (zeroRetention) patch.documents = (contract?.documents || []).map(({ text, ...m }) => ({ ...m, purged: true }));
+    return patch;
+  }
+  async function supabasePush(client, accountId, contracts, opts = {}) {
+    if (!client || !accountId || !contracts?.length) return 0;
+    const { error } = await client.from("contracts").upsert(contracts.map((c) => contractToRow(c, accountId)), { onConflict: "id" });
+    if (error) throw new Error(error.message);
+    const docs = [];
+    for (const c of contracts) {
+      for (const d of c.documents || []) {
+        if (!d.id) continue;
+        docs.push({
+          id: d.id,
+          account_id: accountId,
+          contract_id: c.id,
+          name: d.name || "document",
+          doc_type: d.type || null,
+          size_bytes: d.size ?? null,
+          // Zero-Retention: the text is never written. (The database also
+          // refuses it — see MIGRATION_007 — so this is belt and braces.)
+          extracted_text: !opts.zeroRetention && typeof d.text === "string" ? d.text : null
+        });
+      }
+    }
+    if (docs.length) {
+      const { error: dErr } = await client.from("documents").upsert(docs, { onConflict: "id" });
+      if (dErr) throw new Error(dErr.message);
+    }
+    return contracts.length;
+  }
+  async function supabasePull(client) {
+    var _a;
+    if (!client) return [];
+    const { data: rows, error } = await client.from("contracts").select("*");
+    if (error) throw new Error(error.message);
+    const { data: docRows } = await client.from("documents").select("id, contract_id, extracted_text");
+    const docsByContract = {};
+    for (const d of docRows || []) {
+      (docsByContract[_a = d.contract_id] || (docsByContract[_a] = {}))[d.id] = d.extracted_text;
+    }
+    return (rows || []).map((r) => rowToContract(r, docsByContract));
+  }
+  async function supabaseDelete(client, id) {
+    if (!client || !id) return;
+    const { error } = await client.from("contracts").delete().eq("id", id);
+    if (error) throw new Error(error.message);
   }
   const TABS = ["Overview", "Verify", "Cost", "Users", "Risk", "Opportunities", "Compliance", "Knowledge", "Insights", "Documents"];
   const LEGAL = {
     terms: {
       title: "Terms of Use",
-      updated: "Version 3.0 · 25 July 2026",
+      updated: "Summary of the Master Subscription Agreement · Version 1.1 · 19 September 2026",
       body: [
         ["Not legal advice", "ContractIQ is a software tool that produces automated analysis for information and triage only. It is not a law firm and does not provide legal, financial or professional advice. Output is generated by AI, is probabilistic, can be wrong or incomplete, and must be independently verified by you — and, where significant, by a qualified lawyer — before you rely on it. No lawyer–client relationship is created."],
         ["Output is information only", "Output may contain errors, omissions or hallucinations and may vary between runs. You must not rely on it as the sole basis for any decision. Any reliance is at your own risk."],
         ["Your verification responsibility", 'You are solely responsible for checking all Output against the original documents and for obtaining professional advice on anything significant. "The tool said so" is not a defence.'],
         ["Meeting recordings & transcripts", "You must not upload a transcript unless your organisation had a lawful basis to record it and informed all participants in advance (as with Microsoft Teams). By uploading, you warrant you were entitled to, and you indemnify us against claims arising from content you were not entitled to upload."],
         ["Your content", "You keep ownership of everything you upload. We process it only to provide the Services, and we never use it to train AI models."],
-        ["Liability", "We do not exclude liability for death or personal injury from negligence, or for fraud. Otherwise, and to the maximum extent lawful, we are not liable for reliance on Output or for indirect or consequential loss, and our total liability is capped at the greater of the fees you paid in the last 12 months or £100."],
-        ["Governing law", "England and Wales for business users; consumers keep the mandatory protections of their home country."]
+        ["The AI we use", "Analysis and Cedric run on Anthropic's Claude model through Amazon Bedrock, in AWS data centres in the UK, EEA and Switzerland. Amazon does not keep what is sent or answered, does not train on it, and does not pass it to Anthropic. You must follow the use rules our AI provider requires (Acceptable Use Policy, clause 2)."],
+        ["Liability", "We do not exclude liability for death or personal injury from negligence, or for fraud. Otherwise, and to the maximum extent lawful, we are not liable for indirect or consequential loss or for decisions taken in reliance on Output, and each party's total liability in any 12 months is capped at the greater of the fees paid in the previous 12 months or £5,000 (£100 for free, sandbox and beta use)."],
+        ["Business customers only", "ContractIQ is offered to businesses, not consumers. The Master Subscription Agreement is governed by the law of England and Wales."]
       ]
     },
     privacy: {
       title: "Privacy Policy",
-      updated: "Version 2.0 · 25 July 2026",
+      updated: "Summary · Version 1.1 · 19 September 2026",
       body: [
         ["Who controls your data", "For your account data, we are the controller. For the personal data inside documents and transcripts you upload, you are the controller and we are your processor under the DPA."],
         ["What we collect", "Account and billing details, the Customer Content you upload, usage and device data, and support communications."],
         ["How we use it", "To provide, secure, meter and improve the Services. We do not use Customer Content to train AI models, and we do not sell your personal data."],
-        ["Storage & protection", "Encryption in transit, database-enforced separation between accounts, and an optional Zero-Retention mode that expunges document and transcript text right after analysis."],
-        ["International transfers", "Where data leaves the UK/EEA we use approved safeguards (UK IDTA/Addendum, EU Standard Contractual Clauses, and DPF-certified US providers where applicable)."],
-        ["Your rights", "Access, correction, deletion, restriction, objection, portability and consent withdrawal — with regional supplements for the UK, EU, US states, Canada, India and South Africa."],
-        ["Contact", "privacy@yourdomain.com"]
+        ["Storage & protection", "Workspaces are held in London, encrypted, with separation between accounts enforced by the database. Original files never leave your browser; the text read from them is stored unless Zero-Retention mode (Enterprise) is on. Names in meeting transcripts are replaced with labels in your browser first."],
+        ["AI processing", "Through Amazon Bedrock in AWS data centres in the UK, EEA and Switzerland. The AI provider keeps nothing once it has answered and never trains on your content."],
+        ["International transfers", "Where data leaves the UK we rely on UK adequacy regulations, or on the International Data Transfer Agreement or UK Addendum to the EU Standard Contractual Clauses."],
+        ["Your rights", "Access, correction, erasure, restriction, objection, portability and withdrawal of consent, under UK data protection law."],
+        ["Contact", "info@codeiqholdings.co.uk · CodeIQ Holdings Ltd · ICO registration ICO00015500673"]
       ]
     },
     dpa: {
       title: "Data Processing Agreement",
-      updated: "For Business customers · Version 1.0 · 25 July 2026",
+      updated: "Summary · For business customers · Version 1.1 · 19 September 2026",
       body: [
         ["Roles", "You are the controller and ContractIQ is the processor for the personal data in your uploaded content. We process it only on your documented instructions."],
         ["Meeting transcripts", "You warrant that, for every recording uploaded, you had a lawful basis and gave participants the recording notice required by law (equivalent to the Microsoft Teams notice). We are not responsible for your compliance with those obligations."],
-        ["Security & subprocessors", "Appropriate technical and organisational measures; subprocessors (hosting, AI model provider, payments, email) are bound by equivalent obligations and we remain liable for them."],
-        ["Breach notification", "We notify you without undue delay and within 72 hours of becoming aware of a personal-data breach affecting your data."],
+        ["Security & sub-processors", "The measures in Annex B, including London hosting, AI processing in the UK/EEA/Switzerland by a provider that keeps nothing, and deletion of queued document text after analysis. Sub-processors (Supabase, Amazon Web Services, hosting, payments, email) are bound by equivalent obligations, we remain liable for them, and we give 30 days' notice of any change."],
+        ["Breach notification", "We notify you without undue delay and within 48 hours of becoming aware of a personal-data breach affecting your data."],
         ["Return & deletion", "On termination we delete or return your data; you have 30 days to export first."]
       ]
     }
@@ -2420,6 +2560,8 @@ Raised by ContractIQ.`
     const [transcriptConsent, setTranscriptConsent] = useState(null);
     const [consentPrompt, setConsentPrompt] = useState(null);
     const [consentTicked, setConsentTicked] = useState(false);
+    const [pseudonymise, setPseudonymise] = useState(true);
+    const pseudoMaps = useRef({});
     const fileCache = useRef(/* @__PURE__ */ new Map());
     const [ocrBusy, setOcrBusy] = useState(null);
     const [search, setSearch] = useState("");
@@ -2539,6 +2681,47 @@ Raised by ContractIQ.`
     };
     const selected = contracts.find((c) => c.id === selectedId);
     const update = (id, patch) => setContracts((cs) => cs.map((c) => c.id === id ? { ...c, ...patch } : c));
+    const [hydrated, setHydrated] = useState(false);
+    const [saveState, setSaveState] = useState("idle");
+    const saveTimer = useRef(null);
+    useEffect(() => {
+      let cancelled = false;
+      if (DEMO_MODE || !session || !accountId) {
+        setHydrated(false);
+        return;
+      }
+      (async () => {
+        try {
+          const client = await getSb(sb.url, sb.key);
+          const rows = await supabasePull(client);
+          if (cancelled) return;
+          if (rows.length) setContracts(rows);
+          setHydrated(true);
+        } catch (e) {
+          if (!cancelled) notify("Could not load your saved contracts — working offline until the next attempt.");
+          console.error("Initial load failed:", e);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [session, accountId, sb.url, sb.key]);
+    useEffect(() => {
+      if (DEMO_MODE || !session || !accountId || !hydrated) return;
+      clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(async () => {
+        try {
+          setSaveState("saving");
+          const client = await getSb(sb.url, sb.key);
+          await supabasePush(client, accountId, contracts, { zeroRetention: ED.zeroRetention && zeroRetention });
+          setSaveState("saved");
+        } catch (e) {
+          setSaveState("error");
+          console.error("Autosave failed:", e);
+        }
+      }, 1500);
+      return () => clearTimeout(saveTimer.current);
+    }, [contracts, session, accountId, hydrated, sb.url, sb.key]);
     const totals = {
       value: contracts.reduce((s, c) => s + (c.annualValue || 0), 0),
       renewing: contracts.filter((c) => daysTo(c.endDate) != null && daysTo(c.endDate) >= 0 && daysTo(c.endDate) <= 180).length,
@@ -2601,7 +2784,7 @@ Raised by ContractIQ.`
       }
       if (data?.session) {
         applySession(data.session);
-        client.rpc("record_terms_acceptance", { version: "2026.1" }).then(null, () => {
+        client.rpc("record_terms_acceptance", { version: "2026.2" }).then(null, () => {
         });
       }
     };
@@ -2655,7 +2838,7 @@ Raised by ContractIQ.`
       }
       if (data?.session) {
         applySession(data.session);
-        client.rpc("record_terms_acceptance", { version: "2026.1" }).then(null, () => {
+        client.rpc("record_terms_acceptance", { version: "2026.2" }).then(null, () => {
         });
       }
     };
@@ -2721,7 +2904,7 @@ Raised by ContractIQ.`
       setAuthView("signin");
       setAuthForm({ email: "", password: "", fullName: "", company: "" });
     };
-    const canQueue = () => asyncMode && !!session && !!accountId && !!sb.url && !DEMO_MODE;
+    const canQueue = () => asyncMode && !!session && !!accountId && !!sb.url && !DEMO_MODE && !(ED.zeroRetention && zeroRetention);
     const enqueueAnalysis = async (contract, kind) => {
       const client = await getSb(sb.url, sb.key);
       const fingerprint = (contract.documents || []).map((d) => `${d.id}:${String(d.text || "").length}`).sort().join("|");
@@ -2730,7 +2913,7 @@ Raised by ContractIQ.`
         p_account_id: accountId,
         p_contract_id: contract.id,
         p_kind: kind || "analysis",
-        p_payload: { prompt: buildAnalysisPrompt(contract, playbook, policyPacks), max_tokens: 8e3 },
+        p_payload: buildAnalysisPrompt(contract, playbook, policyPacks),
         p_idempotency: idem
       });
       if (error) throw new Error(error.message);
@@ -2859,6 +3042,37 @@ Raised by ContractIQ.`
     useEffect(() => {
       refreshEntitlement();
     }, [refreshEntitlement, accountId]);
+    const zeroRetentionRef = useRef(false);
+    useEffect(() => {
+      zeroRetentionRef.current = ED.zeroRetention && zeroRetention;
+    }, [zeroRetention, entitlement]);
+    useEffect(() => {
+      if (!session || !sb.url || DEMO_MODE) return;
+      (async () => {
+        try {
+          const client = await getSb(sb.url, sb.key);
+          const { data } = await client.rpc("my_workspace_settings");
+          if (data?.ok) setZeroRetention(!!data.zero_retention);
+        } catch (e) {
+        }
+      })();
+    }, [session, sb.url, sb.key, accountId]);
+    const toggleZeroRetention = async () => {
+      const next = !zeroRetention;
+      if (DEMO_MODE || !session || !accountId) {
+        setZeroRetention(next);
+        return notify(next ? "Zero-Retention enabled" : "Zero-Retention disabled");
+      }
+      try {
+        const client = await getSb(sb.url, sb.key);
+        const { error } = await client.rpc("set_zero_retention", { p_account_id: accountId, p_on: next });
+        if (error) throw error;
+        setZeroRetention(next);
+        notify(next ? "Zero-Retention on for this workspace — document text will not be saved, and analysis runs in this tab" : "Zero-Retention off — document text will be saved so contracts can be re-analysed later");
+      } catch (e) {
+        notify(`Could not change Zero-Retention — ${String(e?.message || e).slice(0, 90)}`);
+      }
+    };
     const buyCredits = async (pack = "credits100") => {
       if (!session) return notify("Sign in first.");
       if (!CHECKOUT_ENDPOINT) return notify("Card payments are not configured on this deployment yet.");
@@ -2933,12 +3147,19 @@ Raised by ContractIQ.`
           const { data } = await client.from("my_jobs").select("*").in("status", ["queued", "running", "dead"]).order("enqueued_at", { ascending: false });
           if (stop) return;
           const rows = data || [];
-          const done = prev.filter((j) => j.status === "running" && !rows.find((r) => r.id === j.id));
+          const done = prev.filter((j) => j.status !== "dead" && !rows.find((r) => r.id === j.id));
           for (const j of done) {
             const { data: c } = await client.from("contracts").select("id, analysis").eq("id", j.contract_id).maybeSingle();
-            if (c?.analysis) {
-              update(j.contract_id, { analysis: c.analysis });
-              notify(`Analysis complete — ${j.ref || j.contract_id}`);
+            let raw = c?.analysis;
+            if (!raw) {
+              const { data: jr } = await client.from("my_jobs").select("status, result").eq("id", j.id).maybeSingle();
+              if (jr?.status === "succeeded") raw = jr.result;
+            }
+            if (raw) {
+              const a = normaliseAnalysis(raw);
+              setContracts((cs) => cs.map((ct) => ct.id === j.contract_id ? { ...ct, ...analysisPatchFor(ct, a, zeroRetentionRef.current) } : ct));
+              notify(a.partial?.length ? `Analysis complete — ${j.ref || j.contract_id} (${a.partial.length} section${a.partial.length === 1 ? "" : "s"} could not finish; see the Overview tab)` : `Analysis complete — ${j.ref || j.contract_id}`);
+              refreshEntitlement();
             }
           }
           prev = rows;
@@ -3398,7 +3619,16 @@ Raised by ContractIQ.`
         fontSize: 12.5,
         lineHeight: 1.55,
         marginBottom: 16
-      } }, "Real accounts need Supabase. Add your project URL and anon key in Settings after signing in with the demo account below."), /* @__PURE__ */ React.createElement("div", { className: "fld" }, /* @__PURE__ */ React.createElement("label", null, "Username"), /* @__PURE__ */ React.createElement(
+      } }, "Real accounts need Supabase. Add your project URL and anon key in Settings after signing in with the demo account below."), DEMO_MODE && /* @__PURE__ */ React.createElement("div", { style: {
+        background: "#EAF7F5",
+        border: "1px solid #B7E2DC",
+        color: "#1F5F58",
+        borderRadius: 7,
+        padding: "10px 13px",
+        fontSize: 12.5,
+        lineHeight: 1.55,
+        marginBottom: 16
+      } }, "This is the public demo. Sign in with ", /* @__PURE__ */ React.createElement("b", null, DEMO_USERNAME), " / ", /* @__PURE__ */ React.createElement("b", null, DEMO_PASSWORD), " and load the sample portfolio from Settings to explore. The AI engine is off in the demo."), /* @__PURE__ */ React.createElement("div", { className: "fld" }, /* @__PURE__ */ React.createElement("label", null, "Username"), /* @__PURE__ */ React.createElement(
         "input",
         {
           value: login.username,
@@ -3569,6 +3799,14 @@ Raised by ContractIQ.`
               doc.text = parsed.text;
               doc.speakers = parsed.speakers;
             }
+            if (pseudonymise && doc.text) {
+              const map = pseudoMaps.current[selected.id] || (pseudoMaps.current[selected.id] = newPseudoMap());
+              const safe = pseudonymiseTranscript(doc.text, doc.speakers, map);
+              doc.text = safe.text;
+              doc.speakers = safe.speakers;
+              doc.pseudonymised = true;
+              doc.pseudonymisedCount = Object.keys(map.toReal).length;
+            }
             if (consent) doc.consent = { by: consent.acceptedBy, at: consent.acceptedAt, version: consent.version };
           }
         } catch (e) {
@@ -3633,6 +3871,36 @@ Raised by ContractIQ.`
       const affordable = Math.floor(creditsLeft / CREDIT_COST.analysis);
       if (affordable === 0) return notify(`Not enough credits — an analysis costs ${CREDIT_COST.analysis}.`);
       const run = queue.slice(0, affordable);
+      if (canQueue()) {
+        setBulkRun({ done: 0, total: run.length, current: run[0]?.ref, results: [], queued: true });
+        const queuedResults = [];
+        let limited = false;
+        for (let i = 0; i < run.length; i++) {
+          const c = run[i];
+          setBulkRun({ done: i, total: run.length, current: c.ref, results: [...queuedResults], queued: true });
+          try {
+            await enqueueAnalysis(c, "analysis");
+            queuedResults.push({ ref: c.ref, ok: true, queued: true });
+          } catch (e) {
+            const m = String(e?.message || e);
+            if (/rate|too many|CIQ0?3|429/i.test(m)) {
+              limited = true;
+              break;
+            }
+            queuedResults.push({ ref: c.ref, ok: false, error: m.slice(0, 80) });
+          }
+        }
+        const sent = queuedResults.filter((r) => r.ok).length;
+        const notSent = run.length - queuedResults.length;
+        setBulkRun({ done: queuedResults.length, total: run.length, current: null, results: queuedResults, queued: true });
+        notify(
+          `${sent} of ${run.length} queued — they will finish whether this tab is open or not.` + (limited ? ` ${notSent} held back: this account is allowed ${AI_RATE_HINT.analysis} analyses an hour. Select them again after the hour turns.` : "") + (skipped ? ` · ${skipped} skipped (no text)` : "") + (queue.length > affordable ? ` · ${queue.length - affordable} not run (out of credits)` : "")
+        );
+        setSelectedIds([]);
+        refreshEntitlement();
+        setTimeout(() => setBulkRun(null), 8e3);
+        return;
+      }
       setBulkRun({ done: 0, total: run.length, current: run[0]?.ref, results: [] });
       const results = [];
       for (let i = 0; i < run.length; i++) {
@@ -3770,19 +4038,11 @@ Raised by ContractIQ.`
         setAnalysisStage((p) => p ? { ...p, pct: Math.min(stageTop - 1, Math.round(stageBase + (stageTop - stageBase) * into)) } : p);
       }, 400);
       try {
-        const a = await runAnalysis(selected, playbook, policyPacks, onStage);
+        const a = await runAnalysis(selected, playbook, policyPacks, onStage, revision);
         clearInterval(ticker);
         setAnalysisStage({ pct: 100, label: "Done" });
-        const ex = a.extracted || {};
-        const patch = { analysis: a };
-        const dpFor = (k) => (a.dataPoints || []).find((d) => d.field === k && d.kind === "extraction");
-        ["name", "category", "annualValue", "currency", "startDate", "endDate", "noticePeriodDays", "autoRenew", "owner", "users"].forEach((k) => {
-          if (ex[k] === null || ex[k] === void 0) return;
-          const dp = dpFor(k);
-          if (!dp || hilTier(dp.confidence).key === "auto") patch[k] = ex[k];
-        });
         const zr = ED.zeroRetention && zeroRetention;
-        if (zr) patch.documents = selected.documents.map(({ text, ...m }) => ({ ...m, purged: true }));
+        const patch = analysisPatchFor(selected, a, zr);
         update(selected.id, patch);
         if (!revision) spend("analysis", selected.id);
         setTab("Insights");
@@ -3985,19 +4245,25 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
     const doSync = async (dir) => {
       if (!sb.url || !sb.key) {
         setShowSettings(true);
-        return notify("Add your Supabase URL and anon key first");
+        return notify("Add your Supabase URL and publishable key first");
       }
+      if (!session) return notify("Sign in first — saving is scoped to your own workspace.");
+      if (!accountId) return notify("Still working out which workspace you are in. Try again in a moment.");
       try {
+        const client = await getSb(sb.url, sb.key);
         if (dir === "push") {
-          await supabasePush(sb, contracts);
-          notify("Synced to Supabase");
+          const n = await supabasePush(client, accountId, contracts, { zeroRetention: ED.zeroRetention && zeroRetention });
+          setSaveState("saved");
+          notify(n ? `Saved ${n} contract${n === 1 ? "" : "s"}` : "Nothing to save yet");
         } else {
-          const rows = await supabasePull(sb);
-          if (rows.length) setContracts(rows);
-          notify(`Loaded ${rows.length} contracts`);
+          const rows = await supabasePull(client);
+          setContracts(rows);
+          setHydrated(true);
+          notify(`Loaded ${rows.length} contract${rows.length === 1 ? "" : "s"}`);
         }
       } catch (e) {
-        notify("Supabase sync failed — check settings");
+        setSaveState("error");
+        notify(`Sync failed — ${e.message || e}`);
         console.error(e);
       }
     };
@@ -4009,6 +4275,10 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       setNewUser({ username: "", password: "", displayName: "" });
       notify("User added — only a hash of the password is retained");
     };
+    const deAnon = (v) => rehydrate(v, pseudoMaps.current[selected?.id]);
+    const pseudoActive = !!(selected && pseudoMaps.current[selected.id] && Object.keys(pseudoMaps.current[selected.id].toReal).length);
+    const knowledgeView = selected?.analysis?.knowledge ? deAnon(selected.analysis.knowledge) : null;
+    const contractTrail = selected ? auditTrail.filter((t) => t.contractId === selected.id) : [];
     return /* @__PURE__ */ React.createElement("div", { className: "ciq" }, /* @__PURE__ */ React.createElement("style", null, CSS), /* @__PURE__ */ React.createElement("div", { className: "nav" }, /* @__PURE__ */ React.createElement("div", { className: "nav-left" }, /* @__PURE__ */ React.createElement("div", { className: "nav-brand", onClick: () => {
       setPage("portfolio");
       setSelectedId(null);
@@ -4554,7 +4824,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
         setPage("portfolio");
         setTab("Knowledge");
       } }, c.ref, " · ", c.supplier)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#3D4F66", marginTop: 4 } }, /* @__PURE__ */ React.createElement("b", null, "Action:"), " ", v.action)))), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h3", null, "Key-person exposure"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12.5, color: "#56718A", margin: "2px 0 12px" } }, "Ranked by how much undocumented context each person holds. The top of this list is your succession risk."), people.map((p) => /* @__PURE__ */ React.createElement("div", { key: p.who, style: { border: "1px solid #E1EAF6", borderRadius: 7, padding: "13px 15px", marginBottom: 9 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 15 } }, p.who), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#56718A" } }, /* @__PURE__ */ React.createElement("b", { style: { color: p.total >= 3 ? "#E0493E" : "#2F7BD9" } }, p.total), " item", p.total === 1 ? "" : "s", " across ", p.contracts.length, " contract", p.contracts.length === 1 ? "" : "s", " · ", p.contracts.join(", "))), p.insights.slice(0, 3).map((it, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { fontSize: 12.5, color: "#3D4F66", marginTop: 7, paddingLeft: 12, borderLeft: "2px solid #DDE9F8", lineHeight: 1.5 } }, it.text, /* @__PURE__ */ React.createElement("div", { style: { color: "#7A8DA6", marginTop: 2 } }, it.matters))), p.commitments.slice(0, 2).map((it, i) => /* @__PURE__ */ React.createElement("div", { key: "c" + i, style: { fontSize: 12.5, color: "#3D4F66", marginTop: 7, paddingLeft: 12, borderLeft: "2px solid #F5D9A8", lineHeight: 1.5 } }, "“", it.text, "” ", /* @__PURE__ */ React.createElement("span", { style: { color: "#C98A1E", fontWeight: 700 } }, it.inContract === "no" ? "— not in contract" : ""))))))));
-    })() : page === "trust" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Your contracts.", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "Your data. Full stop.")), /* @__PURE__ */ React.createElement("p", null, "Enterprise legal work demands impeccable data handling. ContractIQ is built on clear data-protection parameters.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Ephemeral processing — Zero-Retention mode"), /* @__PURE__ */ React.createElement("p", null, "For compliance-focused environments, ContractIQ offers a no-storage ephemeral pipeline. When activated, uploaded documents are held only in volatile memory while structural checks run; the moment analysis completes, all source text is permanently expunged — only the extracted schema indicators remain in your ledger. Toggle it per-workspace in Settings.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Total model-training siloing"), /* @__PURE__ */ React.createElement("p", null, "Your commercial documents, playbook rules, revisions and metadata are completely isolated. They are never collected, cached or used to train, refine or evaluate any AI model — public or proprietary.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Cryptographic security controls"), /* @__PURE__ */ React.createElement("p", null, "Documents are protected with AES-256 encryption at rest and TLS 1.3 in transit. The platform undergoes automated vulnerability auditing, and backend operations are designed to run in security-certified datacentre environments.")), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#86868b", lineHeight: 1.5 } }, "Security and certification claims describe the production architecture design; published certifications will be listed here as they are attained. See also the ", /* @__PURE__ */ React.createElement("a", { onClick: () => setPage("terms") }, "Terms & commercial guardrails"), "."))) : page === "terms" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Terms & ", /* @__PURE__ */ React.createElement("em", null, "commercial guardrails")), /* @__PURE__ */ React.createElement("p", null, "Plain-English limits on what ContractIQ is — and isn't.")), /* @__PURE__ */ React.createElement("div", { className: "container", style: { maxWidth: 780 } }, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Automated screening aid — not legal advice"), /* @__PURE__ */ React.createElement("p", null, "ContractIQ is an automated analytical checking utility. Its scoreboards, risk indicators, missing-clause flags and drafting observations are produced by natural-language analysis for preliminary triage purposes only. Nothing the platform generates constitutes legal advice, and no attorney–client or solicitor–client relationship is created by its use.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Verification responsibility"), /* @__PURE__ */ React.createElement("p", null, "Users assume full commercial responsibility for reviewing, validating and verifying all platform outputs against the original contract text. ContractIQ, its creators and technical partners disclaim liability for commercial decisions, negotiation positions or contractual outcomes arising directly or indirectly from use of the platform. Qualified counsel should confirm all positions before signature.")))) : !selected ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Contract intelligence"), /* @__PURE__ */ React.createElement("h1", null, "Know every contract.", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "Win every negotiation.")), /* @__PURE__ */ React.createElement("p", null, "AI-powered analysis across cost, users, risk and opportunity — before the renewal clock runs out.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "stat-row", style: { display: contracts.length ? "grid" : "none" } }, /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v" }, fmtMoney(totals.value)), /* @__PURE__ */ React.createElement("div", { className: "l" }, "Annual portfolio value")), /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v" }, totals.renewing), /* @__PURE__ */ React.createElement("div", { className: "l" }, "Renewals in 180 days")), /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v", style: { color: "#1d7a3a" } }, fmtMoney(totals.savings)), /* @__PURE__ */ React.createElement("div", { className: "l" }, "Savings identified")), /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v", style: { color: totals.risks ? "#c0271d" : "#1d1d1f" } }, totals.risks), /* @__PURE__ */ React.createElement("div", { className: "l" }, "High risks flagged"))), (() => {
+    })() : page === "trust" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Your contracts.", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "Your data. Full stop.")), /* @__PURE__ */ React.createElement("p", null, "Exactly where your documents go, what is kept, and what is not — stated plainly.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Your original files never leave your computer"), /* @__PURE__ */ React.createElement("p", null, "PDFs, Word files, spreadsheets and scans are opened and read inside your browser, including text recognition on scanned pages. What leaves your machine is the text read from them — never the file itself.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "AI in the UK and EU, and the AI provider keeps nothing"), /* @__PURE__ */ React.createElement("p", null, "Analysis and Cedric run on Anthropic's Claude model through Amazon Bedrock, processed in AWS data centres in the UK, the European Economic Area and Switzerland. Amazon Bedrock does not store what is sent to the model or what it answers, and does not pass it to Anthropic. Nothing you upload is used to train any AI model.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Names in meeting transcripts are swapped out first"), /* @__PURE__ */ React.createElement("p", null, "Before a transcript is saved or analysed, the names, email addresses and phone numbers in it are replaced with labels in your browser. The key that puts the real names back stays in your browser tab and is never saved or sent.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "What we store, and Zero-Retention"), /* @__PURE__ */ React.createElement("p", null, "Your workspace keeps the text read from your documents, so contracts can be searched and re-analysed, plus the analysis itself — in a database hosted in London, with separation between workspaces enforced by the database. On the Enterprise plan, Zero-Retention mode means document text is never saved at all: it stays in your browser tab for the analysis, and only the extracted details are kept.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Security controls"), /* @__PURE__ */ React.createElement("p", null, "Encryption in transit and at rest, database-enforced separation between workspaces, and back-office functions that only the server can call. Our providers (Supabase, Amazon Web Services, Stripe) hold independent security certifications; ContractIQ itself does not yet, and we will list any we achieve.")), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#86868b", lineHeight: 1.5 } }, "The full position, including every sub-processor and where it is, is in the ", /* @__PURE__ */ React.createElement("a", { href: "../legal.html#security", target: "_blank", rel: "noopener" }, "Security Statement"), " and ", /* @__PURE__ */ React.createElement("a", { href: "../legal.html#subprocessors", target: "_blank", rel: "noopener" }, "Sub-processor list"), "."))) : page === "terms" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Terms & ", /* @__PURE__ */ React.createElement("em", null, "commercial guardrails")), /* @__PURE__ */ React.createElement("p", null, "Plain-English limits on what ContractIQ is — and isn't.")), /* @__PURE__ */ React.createElement("div", { className: "container", style: { maxWidth: 780 } }, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Automated screening aid — not legal advice"), /* @__PURE__ */ React.createElement("p", null, "ContractIQ is an automated analytical checking utility. Its scoreboards, risk indicators, missing-clause flags and drafting observations are produced by natural-language analysis for preliminary triage purposes only. Nothing the platform generates constitutes legal advice, and no attorney–client or solicitor–client relationship is created by its use.")), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Verification responsibility"), /* @__PURE__ */ React.createElement("p", null, "Users assume full commercial responsibility for reviewing, validating and verifying all platform outputs against the original contract text. ContractIQ, its creators and technical partners disclaim liability for commercial decisions, negotiation positions or contractual outcomes arising directly or indirectly from use of the platform. Qualified counsel should confirm all positions before signature.")))) : !selected ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Contract intelligence"), /* @__PURE__ */ React.createElement("h1", null, "Know every contract.", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "Win every negotiation.")), /* @__PURE__ */ React.createElement("p", null, "AI-powered analysis across cost, users, risk and opportunity — before the renewal clock runs out.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "stat-row", style: { display: contracts.length ? "grid" : "none" } }, /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v" }, fmtMoney(totals.value)), /* @__PURE__ */ React.createElement("div", { className: "l" }, "Annual portfolio value")), /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v" }, totals.renewing), /* @__PURE__ */ React.createElement("div", { className: "l" }, "Renewals in 180 days")), /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v", style: { color: "#1d7a3a" } }, fmtMoney(totals.savings)), /* @__PURE__ */ React.createElement("div", { className: "l" }, "Savings identified")), /* @__PURE__ */ React.createElement("div", { className: "stat" }, /* @__PURE__ */ React.createElement("div", { className: "v", style: { color: totals.risks ? "#c0271d" : "#1d1d1f" } }, totals.risks), /* @__PURE__ */ React.createElement("div", { className: "l" }, "High risks flagged"))), (() => {
       const today = /* @__PURE__ */ new Date();
       const months = Array.from({ length: 12 }, (_, i) => {
         const d = new Date(today.getFullYear(), today.getMonth() + i, 1);
@@ -4730,7 +5000,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       justifyContent: "center",
       fontWeight: 700,
       fontSize: 14
-    } }, n), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14.5, color: "#16283E", marginBottom: 3 } }, h), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#56718A", lineHeight: 1.55 } }, p))))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" } }, /* @__PURE__ */ React.createElement("button", { className: "btn", onClick: () => setShowNew(true) }, "Create your first record"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost", onClick: () => csvRef.current?.click() }, "Import a CSV"), /* @__PURE__ */ React.createElement("div", { style: { marginLeft: "auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12.5, color: "#7A8DA6" } }, "Just looking around?"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: loadSampleData }, "Load a sample portfolio"))), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 22, paddingTop: 18, borderTop: "1px solid #EEF3FA", fontSize: 12.5, color: "#7A8DA6", lineHeight: 1.6 } }, "Sample data is clearly fictional and can be wiped in one click from Settings. Nothing you upload leaves your machine until you run an analysis.")), /* @__PURE__ */ React.createElement("div", { className: "grid" }, contracts.map((c) => /* @__PURE__ */ React.createElement(
+    } }, n), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14.5, color: "#16283E", marginBottom: 3 } }, h), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#56718A", lineHeight: 1.55 } }, p))))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" } }, /* @__PURE__ */ React.createElement("button", { className: "btn", onClick: () => setShowNew(true) }, "Create your first record"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost", onClick: () => csvRef.current?.click() }, "Import a CSV"), /* @__PURE__ */ React.createElement("div", { style: { marginLeft: "auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12.5, color: "#7A8DA6" } }, "Just looking around?"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: loadSampleData }, "Load a sample portfolio"))), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 22, paddingTop: 18, borderTop: "1px solid #EEF3FA", fontSize: 12.5, color: "#7A8DA6", lineHeight: 1.6 } }, "Sample data is clearly fictional and can be wiped in one click from Settings. Your original files never leave your machine; the text read from them is saved to your workspace so it can be analysed.")), /* @__PURE__ */ React.createElement("div", { className: "grid" }, contracts.map((c) => /* @__PURE__ */ React.createElement(
       "div",
       {
         key: c.id,
@@ -4801,9 +5071,20 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       );
     })(), currentUser.role === "Admin" && /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", style: { color: "#c0271d", borderColor: "rgba(192,39,29,0.4)" }, onClick: () => {
       if (window.confirm(`Permanently delete ${selected.ref} (${selected.supplier}) and all its documents and analysis? This cannot be undone.`)) {
-        setContracts((cs) => cs.filter((c) => c.id !== selected.id));
+        const goneId = selected.id;
+        setContracts((cs) => cs.filter((c) => c.id !== goneId));
         setSelectedId(null);
         notify("Contract Record and all associated data deleted");
+        if (!DEMO_MODE && session && accountId) {
+          (async () => {
+            try {
+              await supabaseDelete(await getSb(sb.url, sb.key), goneId);
+            } catch (e) {
+              notify("Deleted here, but the database refused — it may come back on reload.");
+              console.error("Delete failed:", e);
+            }
+          })();
+        }
       }
     } }, "Delete record")), analyzing && analysisStage && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 16, maxWidth: 560 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 7 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#16283E" } }, analysisStage.step ? `Step ${analysisStage.step} of ${analysisStage.of} · ` : "", analysisStage.label, "…"), /* @__PURE__ */ React.createElement("span", { style: {
       fontSize: 13,
@@ -4852,7 +5133,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       ];
       return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h3", null, "Verification posture"), posture && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "grid4", style: { marginTop: 10 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "k" }, "Data points"), /* @__PURE__ */ React.createElement("div", { className: "x" }, posture.total)), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "k" }, "Auto-accepted"), /* @__PURE__ */ React.createElement("div", { className: "x", style: { color: "#2E9E6B" } }, posture.auto)), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "k" }, "Awaiting review"), /* @__PURE__ */ React.createElement("div", { className: "x", style: { color: posture.open ? "#E0493E" : "#2E9E6B" } }, posture.open)), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "k" }, "Mean confidence"), /* @__PURE__ */ React.createElement("div", { className: "x" }, posture.meanConfidence, "%"))), /* @__PURE__ */ React.createElement("div", { style: { height: 9, borderRadius: 5, overflow: "hidden", display: "flex", marginTop: 14, background: "#EEF3FA" } }, /* @__PURE__ */ React.createElement("div", { style: { width: `${posture.auto / posture.total * 100}%`, background: "#2E9E6B" } }), /* @__PURE__ */ React.createElement("div", { style: { width: `${posture.cleared / posture.total * 100}%`, background: "#5FA8F5" } }), /* @__PURE__ */ React.createElement("div", { style: { width: `${posture.open / posture.total * 100}%`, background: "#E0493E" } })), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12.5, color: "#56718A", marginTop: 10, lineHeight: 1.6 } }, "Confidence is the model's own estimate that a value is correct — it routes how much human attention a data point gets. It is ", /* @__PURE__ */ React.createElement("b", null, "not"), " a measured accuracy rate. A published accuracy figure requires benchmarking against a labelled gold-standard set; until that exists, treat these as triage signals rather than guarantees."))), groups.map(({ t, items }) => items.length === 0 ? null : /* @__PURE__ */ React.createElement("div", { className: "panel", key: t.key }, /* @__PURE__ */ React.createElement("h3", { style: { display: "flex", alignItems: "center", gap: 9 } }, /* @__PURE__ */ React.createElement("span", { style: { width: 10, height: 10, borderRadius: 3, background: t.colour, display: "inline-block" } }), t.label, " · ", t.min, "–", t.max, "% confidence", /* @__PURE__ */ React.createElement("span", { className: "pill", style: { marginTop: 0, background: t.bg, color: t.colour } }, items.length)), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12.5, color: "#56718A", margin: "2px 0 12px" } }, t.action), items.map((d, i) => {
         const done = d.status === "accepted" || d.status === "corrected";
-        return /* @__PURE__ */ React.createElement("div", { key: i, style: { border: "1px solid #E1EAF6", borderLeft: `3px solid ${t.colour}`, borderRadius: 7, padding: "13px 15px", marginBottom: 9, background: done ? "#F7FBF9" : "#fff" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "baseline" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14.5 } }, d.field, /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 600, fontSize: 11.5, color: "#8FA3BC", marginLeft: 8, textTransform: "uppercase", letterSpacing: "0.06em" } }, d.kind)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: t.colour } }, d.confidence, "%")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 15, fontWeight: 600, margin: "5px 0 7px" } }, String(d.value)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#56718A", lineHeight: 1.55 } }, d.reasoning), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#7A8DA6", marginTop: 6, fontStyle: "italic", lineHeight: 1.5 } }, /* @__PURE__ */ React.createElement("b", { style: { fontStyle: "normal" } }, "Source:"), " ", d.sourceRef), done ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#2E9E6B", fontWeight: 700, marginTop: 9 } }, "✓ ", d.status === "corrected" ? "Corrected" : "Verified", " by ", d.verifiedBy, d.verifiedAt ? ` · ${new Date(d.verifiedAt).toLocaleString("en-GB")}` : "") : t.key === "auto" ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#2E9E6B", fontWeight: 700, marginTop: 9 } }, "✓ Auto-accepted — logged and reversible") : /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, marginTop: 11, flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("button", { className: "btn sm", onClick: () => verifyPoint(d.field, "accepted") }, "Accept as correct"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => {
+        return /* @__PURE__ */ React.createElement("div", { key: i, style: { border: "1px solid #E1EAF6", borderLeft: `3px solid ${t.colour}`, borderRadius: 7, padding: "13px 15px", marginBottom: 9, background: done ? "#F7FBF9" : "#fff" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "baseline" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14.5 } }, d.field, /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 600, fontSize: 11.5, color: "#8FA3BC", marginLeft: 8, textTransform: "uppercase", letterSpacing: "0.06em" } }, d.kind)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: t.colour } }, d.confidence, "%")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 15, fontWeight: 600, margin: "5px 0 7px" } }, String(d.value)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#56718A", lineHeight: 1.55 } }, d.reasoning), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#7A8DA6", marginTop: 6, fontStyle: "italic", lineHeight: 1.5 } }, /* @__PURE__ */ React.createElement("b", { style: { fontStyle: "normal" } }, "Source:"), " ", deAnon(d.sourceRef)), done ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#2E9E6B", fontWeight: 700, marginTop: 9 } }, "✓ ", d.status === "corrected" ? "Corrected" : "Verified", " by ", d.verifiedBy, d.verifiedAt ? ` · ${new Date(d.verifiedAt).toLocaleString("en-GB")}` : "") : t.key === "auto" ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#2E9E6B", fontWeight: 700, marginTop: 9 } }, "✓ Auto-accepted — logged and reversible") : /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, marginTop: 11, flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("button", { className: "btn sm", onClick: () => verifyPoint(d.field, "accepted") }, "Accept as correct"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => {
           const v = window.prompt(`Correct value for "${d.field}":`, String(d.value ?? ""));
           if (v !== null && v.trim() !== "") verifyPoint(d.field, "corrected", v.trim());
         } }, "Correct value")));
@@ -4860,7 +5141,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
     })() : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to populate the verification queue"), /* @__PURE__ */ React.createElement("p", null, "Every extracted value, clause and risk is scored for confidence and routed for the right level of human review."))), tab === "Cost" && (selected.analysis ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Cost position ", /* @__PURE__ */ React.createElement("span", { className: "save-tag", style: { marginLeft: 10 } }, "Est. saving ", fmtMoney(selected.analysis.cost.estimatedAnnualSaving, selected.currency), "/yr")), /* @__PURE__ */ React.createElement("p", null, selected.analysis.cost.summary)), selected.analysis.cost.breakdown.map((b, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, b.label), /* @__PURE__ */ React.createElement("span", null, b.detail))))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see cost insights"))), tab === "Users" && (selected.analysis ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "User & utilisation view"), /* @__PURE__ */ React.createElement("p", null, selected.analysis.users.summary)), selected.analysis.users.points.map((p, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: "sev low" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", { style: { color: "#1d1d1f" } }, p))))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see user insights"))), tab === "Risk" && (selected.analysis ? selected.analysis.risks.map((r, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: `sev ${r.severity}` }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, r.title), /* @__PURE__ */ React.createElement("span", null, r.detail)), /* @__PURE__ */ React.createElement("span", { className: `pill ${r.severity === "high" ? "risk" : r.severity === "medium" ? "warn" : "ok"}`, style: { marginTop: 0 } }, r.severity))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see risks"))), tab === "Opportunities" && (selected.analysis ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel", style: { padding: "16px 22px" } }, /* @__PURE__ */ React.createElement("p", { style: { fontSize: 14 } }, /* @__PURE__ */ React.createElement("b", null, selected.analysis.opportunities.filter((o) => o.realised).length, " of ", selected.analysis.opportunities.length, " realised."), " Mark opportunities as realised when the saving lands — the executive digest tracks identified vs realised across the portfolio.")), selected.analysis.opportunities.map((o, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: `sev ${o.realised ? "low" : "medium"}` }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, o.title), /* @__PURE__ */ React.createElement("span", null, o.detail)), /* @__PURE__ */ React.createElement("span", { className: "save-tag" }, o.savingEstimate), /* @__PURE__ */ React.createElement("button", { className: `btn sm ${o.realised ? "" : "ghost"}`, onClick: () => {
       const ops = selected.analysis.opportunities.map((x, j) => j === i ? { ...x, realised: !x.realised } : x);
       update(selected.id, { analysis: { ...selected.analysis, opportunities: ops } });
-    } }, o.realised ? "Realised ✓" : "Mark realised")))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see opportunities"))), tab === "Compliance" && (selected.analysis?.compliance ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Legal & compliance position"), /* @__PURE__ */ React.createElement("p", null, selected.analysis.compliance.summary)), /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { marginBottom: 10, fontWeight: 600, color: "#56718a", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em" } }, "Clause checklist"), selected.analysis.compliance.clauses.map((c, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: `sev ${c.status === "present" ? "low" : c.status === "missing" ? "high" : "medium"}` }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, c.clause), /* @__PURE__ */ React.createElement("span", null, c.note)), /* @__PURE__ */ React.createElement("span", { className: `pill ${c.status === "present" ? "ok" : c.status === "missing" ? "risk" : "warn"}`, style: { marginTop: 0 } }, c.status))), selected.analysis.compliance.regulatory?.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "panel", style: { marginTop: 16 } }, /* @__PURE__ */ React.createElement("h4", null, "Regulatory considerations"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.compliance.regulatory.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), selected.analysis.obligations?.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { margin: "16px 0 10px", fontWeight: 600, color: "#56718a", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em" } }, "Obligations register"), selected.analysis.obligations.map((o, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 2 } }, o.owner === "us" ? "Ours" : "Supplier"), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, o.obligation), /* @__PURE__ */ React.createElement("span", null, "Due: ", o.due, " · ", o.note))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#86868b", marginTop: 14, lineHeight: 1.5 } }, "ContractIQ's compliance review is an AI-generated screening aid, not legal advice. Have qualified counsel confirm positions before signature or negotiation.")) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see the compliance review"), /* @__PURE__ */ React.createElement("p", null, "Clause checklist, regulatory flags and the obligations register are generated from ingested documents."))), tab === "Knowledge" && (selected.analysis ? selected.analysis.knowledge ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Institutional knowledge ", selected.documents.some((d) => d.type === "Meeting transcript") ? /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 0, marginLeft: 8 } }, "From ", selected.documents.filter((d) => d.type === "Meeting transcript").length, " transcript(s)") : /* @__PURE__ */ React.createElement("span", { className: "pill warn", style: { marginTop: 0, marginLeft: 8 } }, "No transcripts ingested")), /* @__PURE__ */ React.createElement("p", null, selected.analysis.knowledge.summary)), selected.analysis.knowledge.points?.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { margin: "16px 0 10px", fontWeight: 700, color: "#56718A", fontSize: 12.5, textTransform: "uppercase", letterSpacing: "0.1em" } }, "What the meetings tell us"), selected.analysis.knowledge.points.map((k, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: "sev low" }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, k.insight), /* @__PURE__ */ React.createElement("span", null, k.matters), /* @__PURE__ */ React.createElement("span", { style: { marginTop: 4, fontStyle: "italic", color: "#7B8CA3" } }, "Source: ", k.source))))), selected.analysis.knowledge.verbalCommitments?.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { margin: "18px 0 10px", fontWeight: 700, color: "#56718A", fontSize: 12.5, textTransform: "uppercase", letterSpacing: "0.1em" } }, "Said in a meeting — is it in the contract?"), selected.analysis.knowledge.verbalCommitments.map((v, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: `sev ${v.inContract === "yes" ? "low" : v.inContract === "no" ? "high" : "medium"}` }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, v.commitment), /* @__PURE__ */ React.createElement("span", null, "Said by ", v.saidBy, " · ", v.action)), /* @__PURE__ */ React.createElement("span", { className: `pill ${v.inContract === "yes" ? "ok" : v.inContract === "no" ? "risk" : "warn"}`, style: { marginTop: 0 } }, v.inContract === "yes" ? "In contract" : v.inContract === "no" ? "Not in contract" : "Unclear")))), selected.analysis.knowledge.keyPersonRisk?.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "panel", style: { borderLeftColor: "#E0493E", marginTop: 18 } }, /* @__PURE__ */ React.createElement("h4", null, "Knowledge at risk of walking out of the door"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.knowledge.keyPersonRisk.map((k, i) => /* @__PURE__ */ React.createElement("li", { key: i }, k)))), selected.analysis.knowledge.openQuestions?.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Ask while you still can"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.knowledge.openQuestions.map((q, i) => /* @__PURE__ */ React.createElement("li", { key: i }, q)))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#7B8CA3", marginTop: 14, lineHeight: 1.55 } }, "Meeting content is reported context, not contractual terms. Anything relied upon commercially should be confirmed in writing with the supplier.")) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "No knowledge captured yet"), /* @__PURE__ */ React.createElement("p", null, "Ingest a Teams or Zoom transcript into this record and re-run the analysis.")) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to capture institutional knowledge"), /* @__PURE__ */ React.createElement("p", null, "Add meeting transcripts to this record first — the context they hold is often nowhere in the contract itself."))), tab === "Insights" && (selected.analysis ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Negotiation levers"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.insights.negotiationLevers.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Recommendations"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.insights.recommendations.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Dates to watch"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.insights.watchDates.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), /* @__PURE__ */ React.createElement("div", { className: "export-bar", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, color: "#56718a", fontWeight: 700 } }, "EXPORT INSIGHT PACK"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => exportWord(selected) }, "Word (.doc)"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => exportPDF(selected) }, "PDF"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => exportPPT(selected) }, "PPT outline"))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to unlock insights & exports"))), tab === "Documents" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
+    } }, o.realised ? "Realised ✓" : "Mark realised")))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see opportunities"))), tab === "Compliance" && (selected.analysis?.compliance ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Legal & compliance position"), /* @__PURE__ */ React.createElement("p", null, selected.analysis.compliance.summary)), /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { marginBottom: 10, fontWeight: 600, color: "#56718a", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em" } }, "Clause checklist"), selected.analysis.compliance.clauses.map((c, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: `sev ${c.status === "present" ? "low" : c.status === "missing" ? "high" : "medium"}` }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, c.clause), /* @__PURE__ */ React.createElement("span", null, c.note)), /* @__PURE__ */ React.createElement("span", { className: `pill ${c.status === "present" ? "ok" : c.status === "missing" ? "risk" : "warn"}`, style: { marginTop: 0 } }, c.status))), selected.analysis.compliance.regulatory?.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "panel", style: { marginTop: 16 } }, /* @__PURE__ */ React.createElement("h4", null, "Regulatory considerations"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.compliance.regulatory.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), selected.analysis.obligations?.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { margin: "16px 0 10px", fontWeight: 600, color: "#56718a", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em" } }, "Obligations register"), selected.analysis.obligations.map((o, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 2 } }, o.owner === "us" ? "Ours" : "Supplier"), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, o.obligation), /* @__PURE__ */ React.createElement("span", null, "Due: ", o.due, " · ", o.note))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#86868b", marginTop: 14, lineHeight: 1.5 } }, "ContractIQ's compliance review is an AI-generated screening aid, not legal advice. Have qualified counsel confirm positions before signature or negotiation.")) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to see the compliance review"), /* @__PURE__ */ React.createElement("p", null, "Clause checklist, regulatory flags and the obligations register are generated from ingested documents."))), tab === "Knowledge" && (selected.analysis ? knowledgeView ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Institutional knowledge ", selected.documents.some((d) => d.type === "Meeting transcript") ? /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 0, marginLeft: 8 } }, "From ", selected.documents.filter((d) => d.type === "Meeting transcript").length, " transcript(s)") : /* @__PURE__ */ React.createElement("span", { className: "pill warn", style: { marginTop: 0, marginLeft: 8 } }, "No transcripts ingested")), /* @__PURE__ */ React.createElement("p", null, knowledgeView.summary), selected.documents.some((d) => d.pseudonymised) && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#3F6E68", background: "#EAF7F5", borderRadius: 6, padding: "9px 12px", marginTop: 10, lineHeight: 1.55 } }, pseudoActive ? /* @__PURE__ */ React.createElement(React.Fragment, null, "Participants were pseudonymised in your browser before analysis — the engine only ever saw ", /* @__PURE__ */ React.createElement("i", null, "Participant A"), ". The real names are being put back here, on this machine.") : /* @__PURE__ */ React.createElement(React.Fragment, null, "Participants were pseudonymised in your browser before analysis, and the key that reverses it was held in the tab that uploaded them. That tab has since closed, so the labels below stay as labels. Re-upload the transcript in this session to read the names again."))), knowledgeView.points?.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { margin: "16px 0 10px", fontWeight: 700, color: "#56718A", fontSize: 12.5, textTransform: "uppercase", letterSpacing: "0.1em" } }, "What the meetings tell us"), knowledgeView.points.map((k, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: "sev low" }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, k.insight), /* @__PURE__ */ React.createElement("span", null, k.matters), /* @__PURE__ */ React.createElement("span", { style: { marginTop: 4, fontStyle: "italic", color: "#7B8CA3" } }, "Source: ", k.source))))), knowledgeView.verbalCommitments?.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "section-sub", style: { margin: "18px 0 10px", fontWeight: 700, color: "#56718A", fontSize: 12.5, textTransform: "uppercase", letterSpacing: "0.1em" } }, "Said in a meeting — is it in the contract?"), knowledgeView.verbalCommitments.map((v, i) => /* @__PURE__ */ React.createElement("div", { className: "item-row", key: i }, /* @__PURE__ */ React.createElement("div", { className: `sev ${v.inContract === "yes" ? "low" : v.inContract === "no" ? "high" : "medium"}` }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", null, v.commitment), /* @__PURE__ */ React.createElement("span", null, "Said by ", v.saidBy, " · ", v.action)), /* @__PURE__ */ React.createElement("span", { className: `pill ${v.inContract === "yes" ? "ok" : v.inContract === "no" ? "risk" : "warn"}`, style: { marginTop: 0 } }, v.inContract === "yes" ? "In contract" : v.inContract === "no" ? "Not in contract" : "Unclear")))), knowledgeView.keyPersonRisk?.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "panel", style: { borderLeftColor: "#E0493E", marginTop: 18 } }, /* @__PURE__ */ React.createElement("h4", null, "Knowledge at risk of walking out of the door"), /* @__PURE__ */ React.createElement("ul", null, knowledgeView.keyPersonRisk.map((k, i) => /* @__PURE__ */ React.createElement("li", { key: i }, k)))), knowledgeView.openQuestions?.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Ask while you still can"), /* @__PURE__ */ React.createElement("ul", null, knowledgeView.openQuestions.map((q, i) => /* @__PURE__ */ React.createElement("li", { key: i }, q)))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#7B8CA3", marginTop: 14, lineHeight: 1.55 } }, "Meeting content is reported context, not contractual terms. Anything relied upon commercially should be confirmed in writing with the supplier.")) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "No knowledge captured yet"), /* @__PURE__ */ React.createElement("p", null, "Ingest a Teams or Zoom transcript into this record and re-run the analysis.")) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to capture institutional knowledge"), /* @__PURE__ */ React.createElement("p", null, "Add meeting transcripts to this record first — the context they hold is often nowhere in the contract itself."))), tab === "Insights" && (selected.analysis ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Negotiation levers"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.insights.negotiationLevers.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Recommendations"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.insights.recommendations.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), /* @__PURE__ */ React.createElement("div", { className: "panel" }, /* @__PURE__ */ React.createElement("h4", null, "Dates to watch"), /* @__PURE__ */ React.createElement("ul", null, selected.analysis.insights.watchDates.map((x, i) => /* @__PURE__ */ React.createElement("li", { key: i }, x)))), /* @__PURE__ */ React.createElement("div", { className: "export-bar", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, color: "#56718a", fontWeight: 700 } }, "EXPORT INSIGHT PACK"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => exportWord(deAnon(selected), contractTrail) }, "Word (.doc)"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => exportPDF(deAnon(selected), contractTrail) }, "Print / PDF"), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => exportPPT(deAnon(selected)) }, "PPT outline"))) : /* @__PURE__ */ React.createElement("div", { className: "empty" }, /* @__PURE__ */ React.createElement("h3", null, "Run AI analysis to unlock insights & exports"))), tab === "Documents" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
       "div",
       {
         className: "doc-drop",
@@ -4873,11 +5154,11 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       },
       /* @__PURE__ */ React.createElement("div", { style: { fontSize: 30 } }, "⌥"),
       /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, color: "#0B1D33", marginTop: 6 } }, "Drop this contract's documents and meeting transcripts here, or click to browse"),
-      /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, marginTop: 4 } }, "Contracts · Purchase Orders · SOWs · tracking sheets · user detail · Teams and Zoom meeting transcripts (.vtt, .srt, .txt, .docx). All record details are extracted from what you ingest — PDFs, Excel, CSV and text are read in full in-browser (nothing leaves your machine until you run analysis). Scanned/image-only PDFs are catalogued by metadata.")
+      /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, marginTop: 4 } }, "Contracts · Purchase Orders · SOWs · tracking sheets · user detail · Teams and Zoom meeting transcripts (.vtt, .srt, .txt, .docx). All record details are extracted from what you ingest — PDFs, Excel, CSV and text are read in full in-browser — the original file never leaves your machine; the text read from it is saved to your workspace (not at all under Zero-Retention). Scanned/image-only PDFs are catalogued by metadata.")
     ), /* @__PURE__ */ React.createElement("input", { type: "file", multiple: true, hidden: true, ref: fileRef, onChange: (e) => {
       onFiles([...e.target.files]);
       e.target.value = "";
-    } }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#7B8CA3", marginTop: 10, lineHeight: 1.55 } }, /* @__PURE__ */ React.createElement("b", null, "Transcripts:"), " meeting recordings contain participants' personal data, so only upload transcripts of meetings your organisation had a lawful basis to record, and tell participants the record may be retained against the contract. Zero-Retention mode purges transcript text after analysis, keeping only the extracted knowledge."), selected.documents.map((d) => /* @__PURE__ */ React.createElement("div", { className: "doc-item", key: d.id, style: d.scanned ? { borderLeft: "3px solid #EE9420", background: "#FFFBF4" } : void 0 }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("span", { className: "nm" }, d.name), /* @__PURE__ */ React.createElement("span", { className: "tp" }, d.type, " · ", (d.size / 1024).toFixed(0), " KB", d.pageCount ? ` · ${d.pageCount}pp` : "", " ", d.purged ? "· text purged (Zero-Retention)" : d.scanned ? "· scanned image — no text layer" : d.ocr ? `· text recovered by OCR (${d.ocr.chars.toLocaleString()} chars)` : d.text ? "· content ingested" : "· metadata only", d.uploadedBy ? ` · by ${d.uploadedBy}` : ""), d.consent && /* @__PURE__ */ React.createElement("span", { className: "tp", style: { color: "#2E9E6B" } }, "✓ recording consent accepted by ", d.consent.by, " on ", new Date(d.consent.at).toLocaleDateString("en-GB")), d.scanned && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 8 } }, ocrBusy?.docId === d.id ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#C98A1E", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 } }, /* @__PURE__ */ React.createElement("span", { className: "spin" }), "Reading page ", ocrBusy.page || 1, ocrBusy.total ? ` of ${ocrBusy.total}` : "", "…") : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { className: "btn sm", onClick: () => ocrDocument(d.id) }, "Run OCR to read this document"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11.5, color: "#86868b", marginLeft: 10 } }, "Runs in your browser — the document is not sent anywhere.")))), /* @__PURE__ */ React.createElement("a", { onClick: () => update(selected.id, { documents: selected.documents.filter((x) => x.id !== d.id) }) }, "Remove"))))), !cedricOpen && /* @__PURE__ */ React.createElement("button", { className: "cedric-fab", onClick: () => setCedricOpen(true) }, "✦ Ask Cedric"), activeJobs.length > 0 && /* @__PURE__ */ React.createElement("div", { style: {
+    } }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#7B8CA3", marginTop: 10, lineHeight: 1.55 } }, /* @__PURE__ */ React.createElement("b", null, "Transcripts:"), " meeting recordings contain participants' personal data, so only upload transcripts of meetings your organisation had a lawful basis to record, and tell participants the record may be retained against the contract. ", pseudonymise ? "Names, e-mail addresses and phone numbers are replaced with labels in this browser before the transcript is stored or analysed — you still read the real names on screen, because the key stays on this machine and is never saved." : "Pseudonymisation is currently switched off in Settings, so transcripts are stored and analysed with real names in them.", " Zero-Retention mode purges transcript text after analysis, keeping only the extracted knowledge."), selected.documents.map((d) => /* @__PURE__ */ React.createElement("div", { className: "doc-item", key: d.id, style: d.scanned ? { borderLeft: "3px solid #EE9420", background: "#FFFBF4" } : void 0 }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("span", { className: "nm" }, d.name), /* @__PURE__ */ React.createElement("span", { className: "tp" }, d.type, " · ", (d.size / 1024).toFixed(0), " KB", d.pageCount ? ` · ${d.pageCount}pp` : "", " ", d.purged ? "· text purged (Zero-Retention)" : d.scanned ? "· scanned image — no text layer" : d.ocr ? `· text recovered by OCR (${d.ocr.chars.toLocaleString()} chars)` : d.text ? "· content ingested" : "· metadata only", d.uploadedBy ? ` · by ${d.uploadedBy}` : "", d.pseudonymised ? ` · ${d.pseudonymisedCount} identifier${d.pseudonymisedCount === 1 ? "" : "s"} pseudonymised in-browser` : ""), d.consent && /* @__PURE__ */ React.createElement("span", { className: "tp", style: { color: "#2E9E6B" } }, "✓ recording consent accepted by ", d.consent.by, " on ", new Date(d.consent.at).toLocaleDateString("en-GB")), d.scanned && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 8 } }, ocrBusy?.docId === d.id ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#C98A1E", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 } }, /* @__PURE__ */ React.createElement("span", { className: "spin" }), "Reading page ", ocrBusy.page || 1, ocrBusy.total ? ` of ${ocrBusy.total}` : "", "…") : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { className: "btn sm", onClick: () => ocrDocument(d.id) }, "Run OCR to read this document"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11.5, color: "#86868b", marginLeft: 10 } }, "Runs in your browser — the document is not sent anywhere.")))), /* @__PURE__ */ React.createElement("a", { onClick: () => update(selected.id, { documents: selected.documents.filter((x) => x.id !== d.id) }) }, "Remove"))))), !cedricOpen && /* @__PURE__ */ React.createElement("button", { className: "cedric-fab", onClick: () => setCedricOpen(true) }, "✦ Ask Cedric"), activeJobs.length > 0 && /* @__PURE__ */ React.createElement("div", { style: {
       position: "fixed",
       bottom: 18,
       right: 18,
@@ -4936,7 +5217,16 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       color: "#fff",
       fontWeight: 700,
       fontSize: 20
-    } }, "!"), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { margin: 0, fontSize: 21 } }, "Before you upload this transcript"), /* @__PURE__ */ React.createElement("div", { className: "mh", style: { marginTop: 4 } }, "Meeting recordings contain other people's personal data."))), /* @__PURE__ */ React.createElement("div", { style: { background: "#FDF3E3", borderLeft: "4px solid #C98A1E", borderRadius: 6, padding: "14px 16px", margin: "16px 0" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: "#6B4E1C", lineHeight: 1.65 } }, "By continuing you confirm that, for ", consentPrompt.transcriptNames.length === 1 ? "this recording" : "these recordings", ", your organisation:", /* @__PURE__ */ React.createElement("ul", { style: { margin: "8px 0 0 18px", padding: 0 } }, /* @__PURE__ */ React.createElement("li", null, "had a ", /* @__PURE__ */ React.createElement("b", null, "lawful basis"), " to make and retain it;"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "informed all participants in advance"), " that the meeting was being recorded or transcribed, and that the record may be retained and processed against this contract;"), /* @__PURE__ */ React.createElement("li", null, "obtained ", /* @__PURE__ */ React.createElement("b", null, "any consent required"), " under applicable data-protection law.")))), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718A", marginBottom: 12 } }, /* @__PURE__ */ React.createElement("b", null, "File", consentPrompt.transcriptNames.length > 1 ? "s" : "", ":"), " ", consentPrompt.transcriptNames.join(", ")), /* @__PURE__ */ React.createElement("label", { style: {
+    } }, "!"), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { margin: 0, fontSize: 21 } }, "Before you upload this transcript"), /* @__PURE__ */ React.createElement("div", { className: "mh", style: { marginTop: 4 } }, "Meeting recordings contain other people's personal data."))), /* @__PURE__ */ React.createElement("div", { style: { background: "#FDF3E3", borderLeft: "4px solid #C98A1E", borderRadius: 6, padding: "14px 16px", margin: "16px 0" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: "#6B4E1C", lineHeight: 1.65 } }, "By continuing you confirm that, for ", consentPrompt.transcriptNames.length === 1 ? "this recording" : "these recordings", ", your organisation:", /* @__PURE__ */ React.createElement("ul", { style: { margin: "8px 0 0 18px", padding: 0 } }, /* @__PURE__ */ React.createElement("li", null, "had a ", /* @__PURE__ */ React.createElement("b", null, "lawful basis"), " to make and retain it;"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "informed all participants in advance"), " that the meeting was being recorded or transcribed, and that the record may be retained and processed against this contract;"), /* @__PURE__ */ React.createElement("li", null, "obtained ", /* @__PURE__ */ React.createElement("b", null, "any consent required"), " under applicable data-protection law.")))), /* @__PURE__ */ React.createElement("div", { style: {
+      background: pseudonymise ? "#EAF7F5" : "#FDF3E3",
+      borderLeft: "4px solid " + (pseudonymise ? "#17A398" : "#C98A1E"),
+      borderRadius: 6,
+      padding: "12px 14px",
+      marginBottom: 14,
+      fontSize: 12.5,
+      lineHeight: 1.6,
+      color: "#25404F"
+    } }, pseudonymise ? /* @__PURE__ */ React.createElement(React.Fragment, null, "And what we do: every name, e-mail address and phone number is replaced with a label — Participant A, Participant B — ", /* @__PURE__ */ React.createElement("b", null, "in this browser, before the transcript is stored, synced or sent for analysis"), ". You still read the real names on screen; the key that reverses it stays on this machine and is never saved. Switch it off in Settings → Data handling.") : /* @__PURE__ */ React.createElement(React.Fragment, null, "Pseudonymisation is ", /* @__PURE__ */ React.createElement("b", null, "switched off"), " in Settings → Data handling, so this transcript will be stored and analysed with the participants' real names in it. Turn it on to have names replaced in this browser first.")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718A", marginBottom: 12 } }, /* @__PURE__ */ React.createElement("b", null, "File", consentPrompt.transcriptNames.length > 1 ? "s" : "", ":"), " ", consentPrompt.transcriptNames.join(", ")), /* @__PURE__ */ React.createElement("label", { style: {
       display: "flex",
       gap: 10,
       alignItems: "flex-start",
@@ -4987,7 +5277,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
         style: { opacity: consentTicked ? 1 : 0.45, cursor: consentTicked ? "pointer" : "not-allowed" }
       },
       "Accept and upload"
-    )))), cedricOpen && /* @__PURE__ */ React.createElement("div", { className: "cedric" }, /* @__PURE__ */ React.createElement("div", { className: "cedric-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, "✦ Cedric"), /* @__PURE__ */ React.createElement("div", { className: "sc" }, selected ? `Scope: ${selected.ref} · ${selected.supplier}` : "Name a contract (ref, name or supplier) to begin")), /* @__PURE__ */ React.createElement("button", { onClick: () => setCedricOpen(false) }, "✕")), /* @__PURE__ */ React.createElement("div", { className: "cedric-msgs" }, cedricMsgs.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "cmsg bot" }, "Hello ", currentUser.displayName.split(" ")[0], " — I'm Cedric. To keep answers accurate, I only recall a contract you name: include its ref, name or supplier in your question", selected ? " (this open record counts, so ask away)" : "", ". Costs, renewal dates, risks, missing clauses, what to push for in negotiation — I answer only from what's been ingested and analysed."), cedricMsgs.map((m, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: `cmsg ${m.role === "user" ? "user" : "bot"}` }, m.text)), cedricBusy && /* @__PURE__ */ React.createElement("div", { className: "cmsg bot" }, /* @__PURE__ */ React.createElement("span", { className: "spin b", style: { marginRight: 8 } }), "Thinking…"), /* @__PURE__ */ React.createElement("div", { ref: cedricEnd })), pendingAction && !selected && /* @__PURE__ */ React.createElement("div", { style: { padding: "12px 14px", borderTop: "1px solid #E1EAF6", background: "#F7FAFE" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#3D4F66", marginBottom: 4 } }, "Which contract should I look at for"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: "#0B1D33", marginBottom: 10 } }, "“", pendingAction.title, "”?"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 6, maxHeight: 190, overflowY: "auto" } }, contracts.slice(0, 12).map((c) => /* @__PURE__ */ React.createElement(
+    )))), cedricOpen && /* @__PURE__ */ React.createElement("div", { className: "cedric" }, /* @__PURE__ */ React.createElement("div", { className: "cedric-head" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, "✦ Cedric"), /* @__PURE__ */ React.createElement("div", { className: "sc" }, selected ? `Scope: ${selected.ref} · ${selected.supplier}` : "Name a contract (ref, name or supplier) to begin")), /* @__PURE__ */ React.createElement("button", { onClick: () => setCedricOpen(false) }, "✕")), /* @__PURE__ */ React.createElement("div", { className: "cedric-msgs" }, cedricMsgs.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "cmsg bot" }, "Hello ", currentUser.displayName.split(" ")[0], " — I'm Cedric. To keep answers accurate, I only recall a contract you name: include its ref, name or supplier in your question", selected ? " (this open record counts, so ask away)" : "", ". Costs, renewal dates, risks, missing clauses, what to push for in negotiation — I answer only from what's been ingested and analysed."), cedricMsgs.map((m, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: `cmsg ${m.role === "user" ? "user" : "bot"}` }, deAnon(m.text))), cedricBusy && /* @__PURE__ */ React.createElement("div", { className: "cmsg bot" }, /* @__PURE__ */ React.createElement("span", { className: "spin b", style: { marginRight: 8 } }), "Thinking…"), /* @__PURE__ */ React.createElement("div", { ref: cedricEnd })), pendingAction && !selected && /* @__PURE__ */ React.createElement("div", { style: { padding: "12px 14px", borderTop: "1px solid #E1EAF6", background: "#F7FAFE" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: "#3D4F66", marginBottom: 4 } }, "Which contract should I look at for"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: "#0B1D33", marginBottom: 10 } }, "“", pendingAction.title, "”?"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 6, maxHeight: 190, overflowY: "auto" } }, contracts.slice(0, 12).map((c) => /* @__PURE__ */ React.createElement(
       "button",
       {
         key: c.id,
@@ -5072,7 +5362,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
       border: "1px solid #F0C4BF",
       borderRadius: 6,
       padding: "9px 12px"
-    } }, entitlementError), /* @__PURE__ */ React.createElement("ul", { style: { margin: "14px 0 0", paddingLeft: 18, fontSize: 13.5, color: "#3D4F66", lineHeight: 1.7 } }, ED.features.map((f, i) => /* @__PURE__ */ React.createElement("li", { key: i }, f))), EDITION !== "enterprise" && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12.5, color: "#56718A", marginTop: 12 } }, "Need more? ", EDITION === "sandbox" ? "Growth adds 15 audits a month, custom playbooks and advanced cross-clause logic." : "Enterprise adds custom volume, Zero-Retention, dedicated API keys and corporate SSO.")), SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY ? /* @__PURE__ */ React.createElement("div", { style: {
+    } }, entitlementError), /* @__PURE__ */ React.createElement("ul", { style: { margin: "14px 0 0", paddingLeft: 18, fontSize: 13.5, color: "#3D4F66", lineHeight: 1.7 } }, ED.features.map((f, i) => /* @__PURE__ */ React.createElement("li", { key: i }, f))), EDITION !== "enterprise" && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12.5, color: "#56718A", marginTop: 12 } }, "Need more? ", EDITION === "sandbox" ? "Growth adds 500 credits a month — about 50 analyses — plus custom playbooks and advanced cross-clause logic." : "Enterprise adds custom volume, Zero-Retention, dedicated API keys and corporate SSO.")), SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY ? /* @__PURE__ */ React.createElement("div", { style: {
       background: "#EFF8F3",
       border: "1px solid #BFE3D0",
       borderRadius: 8,
@@ -5137,10 +5427,17 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
         onChange: (e) => setPlaybook(e.target.value),
         placeholder: "One rule per line, e.g.\nLiability cap must be at least 12 months' fees\nNo auto-renewal without 120-day notice\nPayment terms 60 days minimum\nUplifts capped at CPI or 3%"
       }
-    ))) : /* @__PURE__ */ React.createElement("div", { className: "locked" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, "Custom playbook configuration"), /* @__PURE__ */ React.createElement("span", null, "Grade every contract against your own standard positions, so non-standard liability caps or payment terms are flagged automatically.")), /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 0 } }, "Growth")), /* @__PURE__ */ React.createElement("h2", { style: { fontSize: 18, marginTop: 18 } }, "Data handling"), ED.zeroRetention ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", background: "#F5F9FE", borderRadius: 6, padding: "14px 16px", marginBottom: 16, borderLeft: "4px solid #2F7BD9" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", { style: { fontSize: 14 } }, "Zero-Retention mode"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718a", marginTop: 2 } }, "Purge document text immediately after each analysis — only extracted details and metadata are kept.")), /* @__PURE__ */ React.createElement("button", { className: `btn sm ${zeroRetention ? "" : "ghost"}`, onClick: () => {
-      setZeroRetention(!zeroRetention);
-      notify(!zeroRetention ? "Zero-Retention enabled" : "Zero-Retention disabled");
-    } }, zeroRetention ? "On" : "Off")) : /* @__PURE__ */ React.createElement("div", { className: "locked" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, "Zero-Retention processing"), /* @__PURE__ */ React.createElement("span", null, "Hold documents in memory only — source text is expunged the moment analysis completes, leaving just the extracted schema.")), /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 0 } }, "Enterprise")), ED.apiKeys && /* @__PURE__ */ React.createElement("div", { style: { background: "#F5F9FE", borderRadius: 6, padding: "16px 18px", marginBottom: 14, borderLeft: "4px solid #2F7BD9" } }, /* @__PURE__ */ React.createElement("b", { style: { fontSize: 14 } }, "Dedicated API access key"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718a", margin: "3px 0 10px" } }, "Programmatic access for your own pipelines. Treat it like a password — it carries your account's full permissions."), apiKey ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("code", { style: { fontFamily: "monospace", fontSize: 12.5, background: "#0B1D33", color: "#A9CFF6", padding: "8px 12px", borderRadius: 6, wordBreak: "break-all" } }, apiKey), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => {
+    ))) : /* @__PURE__ */ React.createElement("div", { className: "locked" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, "Custom playbook configuration"), /* @__PURE__ */ React.createElement("span", null, "Grade every contract against your own standard positions, so non-standard liability caps or payment terms are flagged automatically.")), /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 0 } }, "Growth")), /* @__PURE__ */ React.createElement("h2", { style: { fontSize: 18, marginTop: 18 } }, "Data handling"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, background: "#F5F9FE", borderRadius: 6, padding: "14px 16px", marginBottom: 16, borderLeft: "4px solid #17A398" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", { style: { fontSize: 14 } }, "Pseudonymise transcripts in this browser"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718a", marginTop: 2, lineHeight: 1.5 } }, "Names, e-mail addresses and phone numbers in a meeting transcript are replaced with labels — Participant A, Participant B — before the transcript is stored, synced or sent for analysis. You still read the real names on screen: the key that reverses it is held in this tab's memory and is never written to your database, never synced and never sent with a request. Close the tab and it is gone, which is the point.")), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        className: `btn sm ${pseudonymise ? "" : "ghost"}`,
+        onClick: () => {
+          setPseudonymise(!pseudonymise);
+          notify(!pseudonymise ? "Pseudonymisation on — applies to transcripts uploaded from now" : "Pseudonymisation off — transcripts will be stored with real names");
+        }
+      },
+      pseudonymise ? "On" : "Off"
+    )), ED.zeroRetention ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", background: "#F5F9FE", borderRadius: 6, padding: "14px 16px", marginBottom: 16, borderLeft: "4px solid #2F7BD9" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", { style: { fontSize: 14 } }, "Zero-Retention mode"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718a", marginTop: 2, lineHeight: 1.5 } }, "Document text is never saved to our database for this workspace — it stays in this browser tab while the analysis runs, then is dropped. Only the extracted details, the analysis and file names are kept. Analysis runs in this tab, so keep it open; to re-analyse later you upload the document again. Applies to the whole workspace.")), /* @__PURE__ */ React.createElement("button", { className: `btn sm ${zeroRetention ? "" : "ghost"}`, onClick: toggleZeroRetention }, zeroRetention ? "On" : "Off")) : /* @__PURE__ */ React.createElement("div", { className: "locked" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, "Zero-Retention processing"), /* @__PURE__ */ React.createElement("span", null, "Document text is never saved to our database — it stays in the browser tab for the analysis, then is dropped, leaving just the extracted details.")), /* @__PURE__ */ React.createElement("span", { className: "pill blue", style: { marginTop: 0 } }, "Enterprise")), ED.apiKeys && /* @__PURE__ */ React.createElement("div", { style: { background: "#F5F9FE", borderRadius: 6, padding: "16px 18px", marginBottom: 14, borderLeft: "4px solid #2F7BD9" } }, /* @__PURE__ */ React.createElement("b", { style: { fontSize: 14 } }, "Dedicated API access key"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "#56718a", margin: "3px 0 10px" } }, "Programmatic access for your own pipelines. Treat it like a password — it carries your account's full permissions."), apiKey ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("code", { style: { fontFamily: "monospace", fontSize: 12.5, background: "#0B1D33", color: "#A9CFF6", padding: "8px 12px", borderRadius: 6, wordBreak: "break-all" } }, apiKey), /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => {
       setApiKey(null);
       notify("Key revoked");
     } }, "Revoke")) : /* @__PURE__ */ React.createElement("button", { className: "btn ghost sm", onClick: () => {

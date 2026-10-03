@@ -42,13 +42,24 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
+// Projects created in 2026 use sb_publishable_/sb_secret_ keys, injected as
+// JSON dictionaries. Prefer those; fall back to the legacy single keys.
+function firstKey(jsonDict: string | undefined): string {
+  if (!jsonDict) return "";
+  try {
+    const d = JSON.parse(jsonDict);
+    if (typeof d === "string") return d;
+    return String(d.default ?? Object.values(d)[0] ?? "");
+  } catch { return ""; }
+}
+
 const STRIPE_KEY     = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
 const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "";
 const ALLOW_LIVE     = Deno.env.get("STRIPE_ALLOW_LIVE") === "true";
 const TEST_MODE      = /^(sk|rk)_test_/.test(STRIPE_KEY);
 const SUPABASE_URL   = Deno.env.get("SUPABASE_URL") ?? "";
-const ANON_KEY       = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const ANON_KEY       = firstKey(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS")) || (Deno.env.get("SUPABASE_ANON_KEY") ?? "");
+const SERVICE_KEY    = firstKey(Deno.env.get("SUPABASE_SECRET_KEYS")) || (Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
 
 const db = createClient(SUPABASE_URL, SERVICE_KEY || ANON_KEY, { auth: { persistSession: false } });
 
@@ -245,13 +256,33 @@ serve(async (req) => {
       cancel_url: cancelUrl,
       billing_address_collection: "required",
       allow_promotion_codes: true,
+      // VAT. The pricing page tells the customer that any tax due is shown
+      // before they confirm, so Stripe has to actually calculate it — and
+      // it has to be able to collect a VAT number, otherwise a UK-registered
+      // business cannot reverse-charge and every EU B2B sale is wrong.
+      //
+      // Requires Stripe Tax to be enabled and an origin address set under
+      // Settings → Tax in the dashboard. If it is not, Stripe returns a
+      // clear error rather than silently charging net — which is why the
+      // failure is surfaced below instead of swallowed.
+      "automatic_tax[enabled]": true,
+      "tax_id_collection[enabled]": true,
+      "customer_update[address]": "auto",
+      "customer_update[name]": "auto",
       ...metadata,
     }),
   });
 
   const data = await upstream.json();
   if (!upstream.ok) {
-    console.error("Stripe error:", data?.error?.message ?? upstream.status);
+    const detail = data?.error?.message ?? String(upstream.status);
+    console.error("Stripe error:", detail);
+    // Stripe Tax not switched on is the one failure an operator can fix in
+    // thirty seconds, so say which it is rather than hiding it behind the
+    // generic message.
+    if (/automatic_tax|Stripe Tax|origin address/i.test(detail)) {
+      return json(502, { error: "Checkout is not configured for tax yet. Enable Stripe Tax and set your origin address under Settings \u2192 Tax in the Stripe dashboard." });
+    }
     return json(502, { error: "We could not start checkout. Please try again or contact support." });
   }
 
