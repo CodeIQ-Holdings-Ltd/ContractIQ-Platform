@@ -240,50 +240,8 @@
     }, { passive: true });
   } catch (e) {}
 
-  /* ── Showcase Carousel ───────────────────────────────────── */
-  try {
-    var carousel = document.querySelector('.carousel-container');
-    if (carousel) {
-      var slides = carousel.querySelectorAll('.carousel-slide');
-      var dots = document.querySelectorAll('.slide-dots .dot');
-      var nextBtn = document.querySelector('.carousel-nav.next');
-      var prevBtn = document.querySelector('.carousel-nav.prev');
-      var currentSlide = 0;
-
-      function goToSlide(n) {
-        if (n < 0) n = slides.length - 1;
-        if (n >= slides.length) n = 0;
-
-        slides.forEach(function (s, i) {
-          s.classList.remove('active', 'prev');
-          if (i < n) s.classList.add('prev');
-        });
-        slides[n].classList.add('active');
-
-        dots.forEach(function (d, i) {
-          d.classList.toggle('active', i === n);
-        });
-
-        currentSlide = n;
-      }
-
-      function nextSlide() { goToSlide(currentSlide + 1); }
-      function prevSlide() { goToSlide(currentSlide - 1); }
-
-      if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-      if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-
-      dots.forEach(function (dot) {
-        dot.addEventListener('click', function () {
-          var idx = parseInt(dot.getAttribute('data-slide'), 10);
-          goToSlide(idx);
-        });
-      });
-
-      // Auto-advance every 8 seconds
-      setInterval(nextSlide, 8000);
-    }
-  } catch (e) {}
+  /* The showcase carousel's driver lived here. The homepage now shows all
+     four steps at once, so there is nothing to advance. */
 
 /* ── ROI calculator, where present ───────────────────────── */
   try {

@@ -322,76 +322,89 @@ section{position:relative}
 @media (max-width:1000px){.bento{grid-template-columns:repeat(4,1fr)}.cell.wide{grid-column:span 4}}
 @media (max-width:680px){.bento{grid-template-columns:1fr;gap:14px}.cell,.cell.wide{grid-column:span 1}}
 
-/* ── Showcase Carousel ───────────────────────────────────────── */
-.carousel-showcase{position:relative;padding:clamp(60px,8vw,100px) 0;background:var(--ink);
-  overflow:hidden;isolation:isolate}
-.carousel-wrapper{position:relative;max-width:1440px;margin:0 auto;padding:0 16px}
-.carousel-container{position:relative;display:grid;grid-template-columns:1fr;min-height:clamp(400px,60vh,600px);
-  border-radius:20px;overflow:hidden;background:linear-gradient(135deg,rgba(69,214,198,.06),rgba(93,150,226,.04));
-  border:1px solid rgba(125,163,209,.2);box-shadow:0 20px 60px -20px rgba(3,10,26,.6)}
-/* Inactive slides are hidden deliberately. opacity:0 alone left their
-   buttons and dots in the tab order and in the accessibility tree, so a
-   keyboard user tabbed into a slide they could not see. visibility is
-   transitioned with a delay so the slide stays paintable for the length
-   of the animation and only then goes properly away. */
-.carousel-slide{position:absolute;inset:0;opacity:0;transform:translateX(100%);
-  visibility:hidden;
-  transition:opacity .8s var(--ease),transform .8s var(--ease),visibility 0s linear .8s;
-  pointer-events:none;
-  display:flex;align-items:center;padding:clamp(40px,6vw,60px)}
-.carousel-slide.active{opacity:1;transform:translateX(0);pointer-events:auto;position:relative;
-  visibility:visible;transition-delay:0s}
-.carousel-slide.prev{transform:translateX(-100%)}
-.slide-content{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,60px);align-items:center;
-  width:100%;height:100%}
-.slide-text{display:flex;flex-direction:column;justify-content:center;z-index:2}
-.slide-text h2{font-family:var(--display);font-size:clamp(28px,5vw,42px);font-weight:700;
-  letter-spacing:-.02em;line-height:1.15;color:var(--white);margin:0 0 16px;animation:fadeUp .6s var(--ease-out) forwards}
-.slide-text p{font-size:clamp(15px,2vw,16.5px);line-height:1.7;color:var(--tx-2);margin:0 0 32px;
-  animation:fadeUp .7s var(--ease-out) .1s forwards;opacity:0}
-.slide-meta{display:flex;align-items:center;justify-content:space-between;animation:fadeUp .8s var(--ease-out) .2s forwards;opacity:0}
-.meta-tag{font-size:13px;font-weight:600;color:var(--teal);letter-spacing:.05em}
-.slide-dots{display:flex;gap:8px}
-.dot{width:8px;height:8px;border-radius:50%;border:2px solid rgba(125,163,209,.4);background:transparent;
-  cursor:pointer;transition:all .4s var(--ease)}
-.dot.active{background:var(--teal);border-color:var(--teal)}
-.dot:hover{border-color:var(--teal)}
-.slide-visual{position:relative;display:flex;align-items:center;justify-content:center;
-  min-height:300px;animation:slideIn .7s var(--ease-out) .15s forwards;opacity:0;transform:translateX(20px)}
-.visual-card{position:relative;width:100%;height:280px;border-radius:16px;
-  background:linear-gradient(135deg,rgba(69,214,198,.1),rgba(93,150,226,.06));
-  border:1px solid rgba(125,163,209,.3);padding:30px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:16px}
-.demo-icon{width:140px;height:100px;opacity:.8}
-.visual-label{margin-top:12px;font-size:13px;font-weight:600;color:var(--tx-2);text-align:center}
-.upload-demo{}.extraction-demo{}.chat-demo{overflow:auto}.chat-bubble{padding:12px 14px;border-radius:11px;
-  font-size:13.5px;line-height:1.5;margin-bottom:8px;animation:slideUp .4s var(--ease-out);
-  max-width:85%;word-wrap:break-word}
-.chat-bubble.user{background:var(--teal);color:#03221F;align-self:flex-end;margin-left:auto}
-.chat-bubble.assistant{background:rgba(125,163,209,.15);color:var(--tx-on-dark);align-self:flex-start}
-.export-demo{}
-.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;
-  border-radius:999px;border:1px solid rgba(125,163,209,.3);background:rgba(255,255,255,.07);
-  color:var(--tx-on-dark);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .35s var(--ease)}
-.carousel-nav:hover{background:rgba(69,214,198,.2);border-color:var(--teal);color:var(--teal)}
-.carousel-nav svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.5;fill:none}
-.carousel-nav.prev{left:16px}
-.carousel-nav.next{right:16px}
-@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
-@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@media (max-width:960px){
-  .slide-content{grid-template-columns:1fr;gap:40px}
-  .slide-visual{min-height:240px}
-  .visual-card{height:240px}
-  .carousel-nav{width:40px;height:40px}
+/* ── Flow showcase ───────────────────────────────────────────
+   Replaces the four-slide carousel.
+
+   The carousel hid three of its four steps at any moment, advanced
+   itself every eight seconds, and its "demo screens" were
+   near-transparent placeholder boxes carrying 6px type — at a glance
+   the page read as broken rather than designed. These are screenshots
+   of the actual application, and all four steps are on the page at
+   once with nothing to click to reach them.
+
+   The `fshow-` prefix is deliberate. `.step` already belongs to the
+   process rail further down this page, and `.panel` once meant a nav
+   dropdown to the theme and the payment form to checkout.html, which
+   hid the payment form outright. Unique names, every time. */
+.fshow{background:linear-gradient(180deg,var(--ink),var(--navy) 42%,var(--ink));
+  padding:clamp(66px,9vw,118px) 0 clamp(40px,6vw,72px);display:flow-root}
+.fshow-head{max-width:900px;margin:0 auto clamp(26px,4.5vw,52px);text-align:center;
+  padding-inline:var(--gut)}
+.fshow-head .kick{color:var(--teal)}
+/* The ch unit here resolves against this element's own font size, not the
+   heading's, so a ch limit on the wrapper squeezed the title into a column
+   six lines deep. The limit belongs on the heading. */
+.fshow-head h2{font-family:var(--display);font-weight:700;color:var(--white);
+  font-size:clamp(27px,4.1vw,44px);line-height:1.14;letter-spacing:-.025em;
+  margin:10px auto 0;max-width:22ch;overflow-wrap:break-word}
+
+/* Wider than the usual shell, and the screenshot takes the larger share. The
+   application's own type has to survive being scaled down into this column;
+   at the normal 1220px shell and an even split it did not. */
+.fshow-row{max-width:1340px;margin-inline:auto;
+  padding:clamp(44px,6.5vw,86px) var(--gut);
+  display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:clamp(32px,4.4vw,66px);align-items:center}
+.fshow-row + .fshow-row{border-top:1px solid rgba(125,163,209,.14)}
+
+.fshow-copy{min-width:0}
+.fshow-num{display:block;font-family:var(--display);font-weight:700;font-size:13px;
+  letter-spacing:.24em;color:var(--teal);font-variant-numeric:tabular-nums;
+  margin-bottom:14px}
+/* The heading the brief asked for: roughly 72px on a desktop, falling to a
+   size that still fits a 390px phone without the page scrolling sideways. */
+.fshow-copy h3{font-family:var(--display);font-weight:700;color:var(--white);
+  font-size:clamp(34px,7vw,72px);line-height:1.03;letter-spacing:-.032em;
+  margin:0 0 18px;max-width:14ch;overflow-wrap:break-word}
+.fshow-copy p{font-size:clamp(15.5px,1.5vw,17.5px);line-height:1.68;
+  color:var(--on-dark-2);margin:0;max-width:46ch;overflow-wrap:break-word}
+.fshow-list{list-style:none;margin:22px 0 0;padding:0;max-width:46ch}
+.fshow-list li{position:relative;padding-left:24px;margin-bottom:10px;
+  font-size:14.8px;line-height:1.6;color:var(--on-dark);overflow-wrap:break-word}
+.fshow-list li:last-child{margin-bottom:0}
+.fshow-list li::before{content:"";position:absolute;left:0;top:10px;
+  width:12px;height:2px;border-radius:2px;background:var(--teal)}
+
+/* The application's interface is light, so each screenshot gets a frame to
+   sit in rather than floating on the dark ground. */
+.fshow-figure{margin:0;min-width:0}
+.fshow-shot{border-radius:14px;overflow:hidden;
+  border:1px solid rgba(125,163,209,.26);background:#0D1B33;
+  box-shadow:0 26px 70px -28px rgba(2,8,20,.92)}
+/* Cedric is a tall, narrow panel rather than a full page, so it is held to a
+   width that keeps it in proportion with the landscape captures. */
+.fshow-figure.narrow .fshow-shot{max-width:430px;margin-inline:auto}
+.fshow-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;
+  background:rgba(125,163,209,.09);border-bottom:1px solid rgba(125,163,209,.16)}
+.fshow-bar i{width:9px;height:9px;border-radius:50%;
+  background:rgba(125,163,209,.34);flex:0 0 auto}
+.fshow-shot img{display:block;width:100%;height:auto}
+.fshow-cap{margin:12px 0 0;font-size:12.6px;line-height:1.5;color:var(--on-dark-3);
+  text-align:center;overflow-wrap:break-word}
+
+@media (max-width:900px){
+  .fshow-row{grid-template-columns:1fr;gap:28px}
+  /* On a narrow screen the words lead, whichever side they take when wide. */
+  .fshow-copy{order:1}
+  .fshow-figure{order:2}
 }
-@media (max-width:640px){
-  .carousel-slide{padding:30px 16px}
-  .slide-text h2{font-size:24px}
-  .slide-text p{font-size:14.5px;margin-bottom:24px}
-  .carousel-nav{width:36px;height:36px;opacity:.7}
-  .carousel-nav:hover{opacity:1}
+@media (min-width:901px){
+  /* `order` moves the children but not the track sizes, so a flipped row put
+     the screenshot in the narrower column and rendered it ~100px smaller than
+     its neighbours. Mirror the tracks as well as the order. */
+  .fshow-row.flip{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}
+  .fshow-row.flip .fshow-copy{order:2}
+  .fshow-row.flip .fshow-figure{order:1}
 }
 
 /* ── Process rail ──────────────────────────────────────────── */
@@ -622,157 +635,105 @@ footer{background:var(--ink);border-top:1px solid rgba(125,163,209,.14);padding:
   </div>
 </header>
 
-<!-- ══ SHOWCASE CAROUSEL ════════════════════════════════════ -->
-<section class="carousel-showcase" id="showcase">
-  <div class="carousel-wrapper">
-    <div class="carousel-container">
-      <div class="carousel-slide active" data-slide="0">
-        <div class="slide-content">
-          <div class="slide-text">
-            <h2>Ingest Everything</h2>
-            <p>Upload contracts, POs, emails, transcripts—any format. ContractIQ reads PDFs, Word docs, spreadsheets, even handwritten scans.</p>
-            <div class="slide-meta">
-              <span class="meta-tag">01/04</span>
-              <div class="slide-dots">
-                <button class="dot active" data-slide="0"></button>
-                <button class="dot" data-slide="1"></button>
-                <button class="dot" data-slide="2"></button>
-                <button class="dot" data-slide="3"></button>
-              </div>
-            </div>
-          </div>
-          <div class="slide-visual">
-            <div class="visual-card upload-demo">
-              <svg viewBox="0 0 300 200" class="demo-icon">
-                <rect x="20" y="30" width="260" height="140" rx="8" fill="none" stroke="var(--teal)" stroke-width="2"/>
-                <path d="M150 80 L150 130 M130 110 L150 130 L170 110" stroke="var(--teal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                <text x="150" y="155" text-anchor="middle" font-size="12" fill="var(--tx-on-dark)" opacity="0.6">Drop files here or click to upload</text>
-              </svg>
-              <p class="visual-label">Multi-format ingestion</p>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- ══ HOW IT WORKS ═════════════════════════════════════════
+     Was a four-slide carousel. Every step is now on the page at
+     once, and the screens are captures of the real application
+     rather than drawn placeholders. -->
+<section class="fshow" id="showcase">
+  <div class="fshow-head" data-rise>
+    <span class="kick">How it works</span>
+    <h2>From a folder of PDFs to a decision you can defend.</h2>
+  </div>
 
-      <div class="carousel-slide" data-slide="1">
-        <div class="slide-content">
-          <div class="slide-text">
-            <h2>Extract with Confidence</h2>
-            <p>AI pulls out every data point: value, term, dates, users, risk factors. Each extraction carries confidence scoring and source attribution.</p>
-            <div class="slide-meta">
-              <span class="meta-tag">02/04</span>
-              <div class="slide-dots">
-                <button class="dot" data-slide="0"></button>
-                <button class="dot active" data-slide="1"></button>
-                <button class="dot" data-slide="2"></button>
-                <button class="dot" data-slide="3"></button>
-              </div>
-            </div>
-          </div>
-          <div class="slide-visual">
-            <div class="visual-card extraction-demo">
-              <svg viewBox="0 0 300 200" class="demo-icon">
-                <rect x="30" y="20" width="240" height="160" rx="6" fill="rgba(69,214,198,.08)" stroke="rgba(69,214,198,.3)" stroke-width="1.5"/>
-                <g opacity="0.7">
-                  <rect x="40" y="30" width="220" height="12" rx="2" fill="var(--teal)" opacity="0.3"/>
-                  <rect x="40" y="50" width="180" height="10" rx="2" fill="var(--teal)" opacity="0.2"/>
-                  <rect x="40" y="68" width="200" height="10" rx="2" fill="var(--teal)" opacity="0.2"/>
-                  <circle cx="250" cy="69" r="8" fill="var(--teal)" opacity="0.6"/>
-                  <text x="260" y="73" font-size="11" fill="var(--teal)">98%</text>
-                </g>
-                <g opacity="0.5">
-                  <rect x="40" y="90" width="220" height="10" rx="2" fill="var(--tx-on-dark)" opacity="0.15"/>
-                  <rect x="40" y="110" width="160" height="10" rx="2" fill="var(--tx-on-dark)" opacity="0.15"/>
-                  <rect x="40" y="130" width="190" height="10" rx="2" fill="var(--tx-on-dark)" opacity="0.15"/>
-                </g>
-              </svg>
-              <p class="visual-label">Confidence-scored extraction</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="carousel-slide" data-slide="2">
-        <div class="slide-content">
-          <div class="slide-text">
-            <h2>Ask Cedric Anything</h2>
-            <p>Conversational AI analyst that answers only from your ingested documents. "When does this renew?" "What's missing?" "Where can we negotiate?"</p>
-            <div class="slide-meta">
-              <span class="meta-tag">03/04</span>
-              <div class="slide-dots">
-                <button class="dot" data-slide="0"></button>
-                <button class="dot" data-slide="1"></button>
-                <button class="dot active" data-slide="2"></button>
-                <button class="dot" data-slide="3"></button>
-              </div>
-            </div>
-          </div>
-          <div class="slide-visual">
-            <div class="visual-card chat-demo">
-              <div class="chat-bubble user">
-                <span>When does this contract renew?</span>
-              </div>
-              <div class="chat-bubble assistant">
-                <span>March 31, 2025. You have 90 days' notice.</span>
-              </div>
-              <div class="chat-bubble user">
-                <span>What leverage do we have?</span>
-              </div>
-              <div class="chat-bubble assistant">
-                <span>Three options in the documents...</span>
-              </div>
-              <p class="visual-label">Cedric conversational analysis</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="carousel-slide" data-slide="3">
-        <div class="slide-content">
-          <div class="slide-text">
-            <h2>Export for the Boardroom</h2>
-            <p>Rich reports with negotiation levers, risk scores, renewal dates, and full audit trails. Everything a stakeholder needs to act.</p>
-            <div class="slide-meta">
-              <span class="meta-tag">04/04</span>
-              <div class="slide-dots">
-                <button class="dot" data-slide="0"></button>
-                <button class="dot" data-slide="1"></button>
-                <button class="dot" data-slide="2"></button>
-                <button class="dot active" data-slide="3"></button>
-              </div>
-            </div>
-          </div>
-          <div class="slide-visual">
-            <div class="visual-card export-demo">
-              <svg viewBox="0 0 300 200" class="demo-icon">
-                <rect x="40" y="30" width="220" height="140" rx="8" fill="rgba(69,214,198,.06)" stroke="rgba(69,214,198,.25)" stroke-width="2"/>
-                <rect x="50" y="40" width="200" height="20" rx="4" fill="var(--teal)" opacity="0.2"/>
-                <g opacity="0.7">
-                  <circle cx="80" cy="75" r="18" fill="none" stroke="var(--teal)" stroke-width="2"/>
-                  <text x="80" y="80" text-anchor="middle" font-size="14" fill="var(--teal)" font-weight="bold">85</text>
-                  <text x="80" y="100" text-anchor="middle" font-size="10" fill="var(--tx-on-dark)" opacity="0.6">Risk</text>
-                </g>
-                <line x1="120" y1="60" x2="120" y2="150" stroke="rgba(69,214,198,.2)" stroke-width="1"/>
-                <rect x="150" y="90" width="60" height="30" rx="4" fill="var(--teal)" opacity="0.15"/>
-                <text x="180" y="110" text-anchor="middle" font-size="11" fill="var(--tx-on-dark)">Export</text>
-              </svg>
-              <p class="visual-label">Ready for decisions</p>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="fshow-row" data-rise>
+    <div class="fshow-copy">
+      <span class="fshow-num">01 / 04</span>
+      <h3>Ingest everything</h3>
+      <p>Drop in contracts, purchase orders, statements of work, tracking
+         spreadsheets and meeting transcripts. PDFs, Excel, CSV and text are
+         read in full in your browser — nothing leaves your machine until you
+         run an analysis.</p>
+      <ul class="fshow-list">
+        <li>Record details are extracted from what you ingest, not typed in by hand</li>
+        <li>Teams and Zoom transcripts in .vtt, .srt, .txt and .docx</li>
+        <li>Names and contact details in a transcript are replaced before it is stored</li>
+      </ul>
     </div>
+    <figure class="fshow-figure">
+      <div class="fshow-shot">
+        <div class="fshow-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <img src="assets/shots/ingest.webp" width="1100" height="1186" decoding="async"
+             alt="The Documents tab of a contract record in ContractIQ, showing the drop area for contracts and meeting transcripts and one ingested agreement PDF." />
+      </div>
+    </figure>
+  </div>
 
-    <button class="carousel-nav prev" aria-label="Previous slide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M15 18l-6-6 6-6"/>
-      </svg>
-    </button>
-    <button class="carousel-nav next" aria-label="Next slide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 18l6-6-6-6"/>
-      </svg>
-    </button>
+  <div class="fshow-row flip" data-rise>
+    <div class="fshow-copy">
+      <span class="fshow-num">02 / 04</span>
+      <h3>Extract with confidence</h3>
+      <p>Annual value, term dates, notice periods, uplift schedules, liability
+         caps, auto-renewal traps. Each one is scored for confidence and shown
+         with the line of the contract it came from, so you can check it rather
+         than take it on trust.</p>
+      <ul class="fshow-list">
+        <li>Cost, users, risk, opportunities, compliance and obligations, each on its own tab</li>
+        <li>Anything below 60% confidence is flagged for a human to look at</li>
+        <li>An empty field means "not found", never "not present"</li>
+      </ul>
+    </div>
+    <figure class="fshow-figure">
+      <div class="fshow-shot">
+        <div class="fshow-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <img src="assets/shots/extract.webp" width="1100" height="1304" loading="lazy" decoding="async"
+             alt="The Cost tab of a Microsoft Enterprise Agreement in ContractIQ, showing an estimated annual saving of £217,000 and findings on licence over-provisioning, uplift exposure and premium-tier allocation." />
+      </div>
+    </figure>
+  </div>
+
+  <div class="fshow-row" data-rise>
+    <div class="fshow-copy">
+      <span class="fshow-num">03 / 04</span>
+      <h3>Ask Cedric anything</h3>
+      <p>A conversational analyst that answers only from the documents you have
+         ingested and the analysis run over them. When does this renew, what is
+         missing, where is there room to negotiate — named to a contract, so the
+         answer can be traced back to a source.</p>
+      <ul class="fshow-list">
+        <li>Scoped to one contract at a time, by reference, name or supplier</li>
+        <li>No general knowledge and no guessing beyond what you have given it</li>
+        <li>Two credits a question, metered the same way as everything else</li>
+      </ul>
+    </div>
+    <figure class="fshow-figure narrow">
+      <div class="fshow-shot">
+        <div class="fshow-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <img src="assets/shots/cedric.webp" width="800" height="905" loading="lazy" decoding="async"
+             alt="The Cedric panel in ContractIQ, scoped to contract CTR-0001, explaining that it answers only from what has been ingested and analysed, with suggested questions about renewal, savings and risks." />
+      </div>
+    </figure>
+  </div>
+
+  <div class="fshow-row flip" data-rise>
+    <div class="fshow-copy">
+      <span class="fshow-num">04 / 04</span>
+      <h3>Export for the boardroom</h3>
+      <p>Negotiation levers, recommendations and the dates you cannot afford to
+         miss, written as something you can put in front of a stakeholder. Out
+         as Word, as a PDF, or as an outline to build a deck from.</p>
+      <ul class="fshow-list">
+        <li>Renewal alerts export as calendar files that fire from your own diary</li>
+        <li>Every report carries the audit trail behind the figures</li>
+        <li>A screening aid for a commercial decision — not legal advice</li>
+      </ul>
+    </div>
+    <figure class="fshow-figure">
+      <div class="fshow-shot">
+        <div class="fshow-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <img src="assets/shots/export.webp" width="1100" height="1512" loading="lazy" decoding="async"
+             alt="The Insights tab in ContractIQ, listing negotiation levers, recommendations and dates to watch, with buttons to export the insight pack as Word, PDF or a presentation outline." />
+      </div>
+    </figure>
   </div>
 </section>
 

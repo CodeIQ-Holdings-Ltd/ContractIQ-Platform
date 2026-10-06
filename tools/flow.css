@@ -1,0 +1,84 @@
+/* ── Flow showcase ───────────────────────────────────────────
+   Replaces the four-slide carousel.
+
+   The carousel hid three of its four steps at any moment, advanced
+   itself every eight seconds, and its "demo screens" were
+   near-transparent placeholder boxes carrying 6px type — at a glance
+   the page read as broken rather than designed. These are screenshots
+   of the actual application, and all four steps are on the page at
+   once with nothing to click to reach them.
+
+   The `fshow-` prefix is deliberate. `.step` already belongs to the
+   process rail further down this page, and `.panel` once meant a nav
+   dropdown to the theme and the payment form to checkout.html, which
+   hid the payment form outright. Unique names, every time. */
+.fshow{background:linear-gradient(180deg,var(--ink),var(--navy) 42%,var(--ink));
+  padding:clamp(66px,9vw,118px) 0 clamp(40px,6vw,72px);display:flow-root}
+.fshow-head{max-width:900px;margin:0 auto clamp(26px,4.5vw,52px);text-align:center;
+  padding-inline:var(--gut)}
+.fshow-head .kick{color:var(--teal)}
+/* The ch unit here resolves against this element's own font size, not the
+   heading's, so a ch limit on the wrapper squeezed the title into a column
+   six lines deep. The limit belongs on the heading. */
+.fshow-head h2{font-family:var(--display);font-weight:700;color:var(--white);
+  font-size:clamp(27px,4.1vw,44px);line-height:1.14;letter-spacing:-.025em;
+  margin:10px auto 0;max-width:22ch;overflow-wrap:break-word}
+
+/* Wider than the usual shell, and the screenshot takes the larger share. The
+   application's own type has to survive being scaled down into this column;
+   at the normal 1220px shell and an even split it did not. */
+.fshow-row{max-width:1340px;margin-inline:auto;
+  padding:clamp(44px,6.5vw,86px) var(--gut);
+  display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:clamp(32px,4.4vw,66px);align-items:center}
+.fshow-row + .fshow-row{border-top:1px solid rgba(125,163,209,.14)}
+
+.fshow-copy{min-width:0}
+.fshow-num{display:block;font-family:var(--display);font-weight:700;font-size:13px;
+  letter-spacing:.24em;color:var(--teal);font-variant-numeric:tabular-nums;
+  margin-bottom:14px}
+/* The heading the brief asked for: roughly 72px on a desktop, falling to a
+   size that still fits a 390px phone without the page scrolling sideways. */
+.fshow-copy h3{font-family:var(--display);font-weight:700;color:var(--white);
+  font-size:clamp(34px,7vw,72px);line-height:1.03;letter-spacing:-.032em;
+  margin:0 0 18px;max-width:14ch;overflow-wrap:break-word}
+.fshow-copy p{font-size:clamp(15.5px,1.5vw,17.5px);line-height:1.68;
+  color:var(--on-dark-2);margin:0;max-width:46ch;overflow-wrap:break-word}
+.fshow-list{list-style:none;margin:22px 0 0;padding:0;max-width:46ch}
+.fshow-list li{position:relative;padding-left:24px;margin-bottom:10px;
+  font-size:14.8px;line-height:1.6;color:var(--on-dark);overflow-wrap:break-word}
+.fshow-list li:last-child{margin-bottom:0}
+.fshow-list li::before{content:"";position:absolute;left:0;top:10px;
+  width:12px;height:2px;border-radius:2px;background:var(--teal)}
+
+/* The application's interface is light, so each screenshot gets a frame to
+   sit in rather than floating on the dark ground. */
+.fshow-figure{margin:0;min-width:0}
+.fshow-shot{border-radius:14px;overflow:hidden;
+  border:1px solid rgba(125,163,209,.26);background:#0D1B33;
+  box-shadow:0 26px 70px -28px rgba(2,8,20,.92)}
+/* Cedric is a tall, narrow panel rather than a full page, so it is held to a
+   width that keeps it in proportion with the landscape captures. */
+.fshow-figure.narrow .fshow-shot{max-width:430px;margin-inline:auto}
+.fshow-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;
+  background:rgba(125,163,209,.09);border-bottom:1px solid rgba(125,163,209,.16)}
+.fshow-bar i{width:9px;height:9px;border-radius:50%;
+  background:rgba(125,163,209,.34);flex:0 0 auto}
+.fshow-shot img{display:block;width:100%;height:auto}
+.fshow-cap{margin:12px 0 0;font-size:12.6px;line-height:1.5;color:var(--on-dark-3);
+  text-align:center;overflow-wrap:break-word}
+
+@media (max-width:900px){
+  .fshow-row{grid-template-columns:1fr;gap:28px}
+  /* On a narrow screen the words lead, whichever side they take when wide. */
+  .fshow-copy{order:1}
+  .fshow-figure{order:2}
+}
+@media (min-width:901px){
+  /* `order` moves the children but not the track sizes, so a flipped row put
+     the screenshot in the narrower column and rendered it ~100px smaller than
+     its neighbours. Mirror the tracks as well as the order. */
+  .fshow-row.flip{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}
+  .fshow-row.flip .fshow-copy{order:2}
+  .fshow-row.flip .fshow-figure{order:1}
+}

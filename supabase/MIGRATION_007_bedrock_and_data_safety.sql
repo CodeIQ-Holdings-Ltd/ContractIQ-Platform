@@ -42,7 +42,7 @@ begin
 end $$;
 
 comment on column accounts.data_region is
-  'Where AI processing runs for this workspace. eu = Amazon Bedrock EU route (UK/EEA/Switzerland), the default. us = Bedrock US route (US and Canada). Changed by CodeIQ only, never by the customer.';
+  'Where AI processing runs for this workspace. eu = Amazon Bedrock EU route (UK/EEA), the default. us = Bedrock US route (US and Canada). Changed by CodeIQ only, never by the customer.';
 comment on column accounts.zero_retention is
   'Enterprise only. When true, document text is never stored in the database and is removed from any contract once it has been analysed.';
 

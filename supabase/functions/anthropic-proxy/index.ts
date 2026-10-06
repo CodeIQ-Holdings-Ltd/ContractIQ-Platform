@@ -7,9 +7,9 @@
 // own API. That is a data-protection decision, not a cost one:
 //
 //   · Bedrock does not pass prompts or answers to Anthropic.
-//   · Bedrock does not store prompts or answers for this model.
+//   · Bedrock does not train on prompts or answers. Zero data retention is a per-region account setting: on in 5 of the 7 regions this route can use (see CHANGES_v14.md).
 //   · The EU route (eu.anthropic.claude-sonnet-5, called from London)
-//     keeps processing inside AWS regions in the UK, EEA and Switzerland.
+//     keeps processing inside AWS regions in the UK and EEA.
 //
 // The "global" route is refused outright: it is cheaper, but it may run
 // anywhere in the world, and no promise on the website would survive it.

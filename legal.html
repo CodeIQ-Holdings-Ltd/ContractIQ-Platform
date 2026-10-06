@@ -294,8 +294,8 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     <div><div class="k">Registered office</div><div class="v">103 Battalion Drive<br>Northampton NN4 6RX<br>United Kingdom</div></div>
     <div><div class="k">Contact</div><div class="v">info@codeiqholdings.co.uk</div></div>
     <div><div class="k">Websites</div><div class="v">codeiqholdings.co.uk<br>codeiqholdings.com</div></div>
-    <div><div class="k">ICO registration</div><div class="v">ICO00015500673</div></div>
-    <div><div class="k">VAT number</div><div class="v"><span class="fill">If and when registered</span></div></div>
+    <div><div class="k">ICO registration</div><div class="v">ICO:00015500673</div></div>
+    <div><div class="k">VAT number</div><div class="v">Not VAT-registered at the date of this version</div></div>
   </div>
   <p>CodeIQ Holdings Ltd is the contracting entity for all products described on this page. Where a product is operated by a subsidiary of CodeIQ Holdings Ltd, the relevant Product Schedule will name that entity and these terms apply to it as though it were named throughout.</p>
 </section>
@@ -374,8 +374,8 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     <li><strong>Output.</strong> Subject to payment and to clause 6.1, the Customer may use Output for its own internal business purposes. Output is generated in response to the Customer's data and instructions and may not be unique; substantially similar Output may be generated for other customers, and nothing in this Agreement grants the Customer exclusivity in Output.</li>
     <li><strong>Feedback.</strong> If the Customer or any Authorised User gives us suggestions, feature requests, bug reports, ideas or other feedback about the Services, the Customer assigns to us with full title guarantee all Intellectual Property Rights in that feedback, free of charge, and we may use it without restriction or obligation. This clause does not give us any right in Customer Data.</li>
     <li><strong>Usage Data.</strong> We may collect and use Usage Data to operate, secure, support, analyse and improve the Services and to produce statistics about our business. Usage Data as defined does not include Customer Data or Output, and we will not publish anything that identifies the Customer without its written consent.</li>
-    <li><strong>No model training, and nothing kept by the AI Provider.</strong> We do not use Customer Data or Output to train, fine-tune or otherwise improve any machine learning model, whether our own or a third party's. Under the terms on which we use it, the AI Provider processes Customer Data only to return an answer to us: it does not store the text sent to it or the Output it returns, does not use either to train any model, and does not share either with the developer of the model.</li>
-    <li><strong>Where Customer Data is processed.</strong> Unless the Order Form records a different arrangement: (i) Customer Data stored by the Services is held in the United Kingdom; and (ii) AI processing of Customer Data takes place in data centres in the United Kingdom, the European Economic Area and Switzerland. We will not move either outside those locations without giving the notice required for a new sub-processor under clause 3.2 of the Data Processing Agreement. The Customer's original files are not uploaded to us at all: they are read in the Authorised User's browser, and only the text read from them is stored and processed.</li>
+    <li><strong>No model training, and no sharing with the model developer.</strong> We do not use Customer Data or Output to train, fine-tune or otherwise improve any machine learning model, whether our own or a third party's. Under the terms on which we use it, the AI Provider processes Customer Data only to return an answer to us: it does not use either to train any model and does not share either with the developer of the model. We have switched on the AI Provider&rsquo;s zero-data-retention setting on our account in each of the AWS regions in which it is currently available to us: eu-west-1, eu-west-2, eu-west-3, eu-north-1 and eu-central-1. Where a request is processed in any other region used by the AI Provider&rsquo;s EU route, that region&rsquo;s default retention terms apply to it, as set out in the Sub-processor list.</li>
+    <li><strong>Where Customer Data is processed.</strong> Unless the Order Form records a different arrangement: (i) Customer Data stored by the Services is held in the United Kingdom; and (ii) AI processing of Customer Data takes place in data centres in the United Kingdom and the European Economic Area. We will not move either outside those locations without giving the notice required for a new sub-processor under clause 3.2 of the Data Processing Agreement. The Customer's original files are not uploaded to us at all: they are read in the Authorised User's browser, and only the text read from them is stored and processed.</li>
   </ol>
 
   <h3>7. Confidentiality</h3>
@@ -390,7 +390,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
   <ol class="cl">
     <li>Fees are as stated on the Order Form. Unless the Order Form says otherwise, fees are payable annually in advance, and subscriptions are for a minimum of the initial Subscription Term.</li>
     <li>Invoices are payable within 30 days of the date of invoice. Time for payment is of the essence.</li>
-    <li>All fees are exclusive of VAT and any other applicable tax, which the Customer shall pay in addition at the prevailing rate.</li>
+    <li>All fees are exclusive of VAT and any other applicable tax, which the Customer shall pay in addition at the prevailing rate. At the date of this version we are not registered for VAT and the prices shown are the prices payable. If we register, we will tell the Customer in writing at least 30 days beforehand, and VAT will be added at the prevailing rate to fees invoiced from the date of registration.</li>
     <li>If any undisputed sum is not paid when due we may, without limiting our other rights: (i) charge interest on the overdue amount at 4% per annum above the Bank of England base rate from time to time, accruing daily, or claim interest and compensation under the Late Payment of Commercial Debts (Interest) Act 1998; and (ii) on 14 days' written notice, suspend the Services until payment is received.</li>
     <li>The Customer shall pay all sums due without set-off, counterclaim, deduction or withholding except as required by law.</li>
     <li>Fees are non-refundable except where this Agreement expressly says otherwise. Downgrading a subscription mid-term does not generate a refund or credit.</li>
@@ -580,11 +580,11 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
 
   <h3>1. How the AI is used</h3>
   <ul class="pl">
-    <li>The text read from your documents is sent to the AI Provider named in our Sub-processor list &mdash; at present Amazon Web Services, running Anthropic&rsquo;s Claude model through Amazon Bedrock &mdash; to be read and interpreted. That processing takes place in AWS data centres in the United Kingdom, the European Economic Area and Switzerland.</li>
+    <li>The text read from your documents is sent to the AI Provider named in our Sub-processor list &mdash; at present Amazon Web Services, running Anthropic&rsquo;s Claude model through Amazon Bedrock &mdash; to be read and interpreted. That processing takes place in AWS data centres in the United Kingdom and the European Economic Area.</li>
 <li>Your original files never leave your browser. Scanned pages are read in your browser too. In meeting transcripts, names, email addresses and phone numbers are replaced with labels in your browser before anything is stored or sent.</li>
     <li>The models return structured information, summaries, classifications, drafts and answers. That is the Output.</li>
     <li>Output is generated probabilistically. The same input may not produce identical output every time.</li>
-    <li>Your content is not used to train, fine-tune or improve any model. The AI Provider does not store what is sent to it or what it returns, and does not share either with the model's developer.</li>
+    <li>Your content is not used to train, fine-tune or improve any model. The AI Provider does not share either with the model's developer, and we have switched on its zero-data-retention setting in the AWS regions where it is available to us (the Sub-processor list names them, and the regions where it is not yet switched on).</li>
   </ul>
 
   <h4>What the analysis extracts</h4>
@@ -724,7 +724,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
   <p class="stamp">Controller: CodeIQ Holdings Ltd &middot; UK GDPR, Data Protection Act 2018 and the Data (Use and Access) Act 2025</p>
 
   <h3>1. Who we are</h3>
-  <p>CodeIQ Holdings Ltd, company number 17454743, registered office 103 Battalion Drive, Northampton NN4 6RX, is the controller of the personal data described in this policy. Our ICO registration reference is ICO00015500673. Contact us about anything in this policy at <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>.</p>
+  <p>CodeIQ Holdings Ltd, company number 17454743, registered office 103 Battalion Drive, Northampton NN4 6RX, is the controller of the personal data described in this policy. Our ICO registration reference is ICO:00015500673. Contact us about anything in this policy at <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a>.</p>
   <p>Where our customers upload documents containing personal data into our Services, we act as a <strong>processor</strong> on their behalf and not as a controller. The Data Processing Agreement below governs that relationship. This Privacy Policy concerns the personal data for which we are the controller: website visitors, enquirers, account holders and suppliers.</p>
 
   <h3>2. What we collect and why</h3>
@@ -754,7 +754,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
   <p>We share personal data with the service providers listed in our Sub-processor list, each of which processes it only on our instructions and under a written contract. We may also disclose personal data to our professional advisers, to a purchaser in connection with a sale of our business, and where we are required to by law, a court or a regulator.</p>
 
   <h3>5. International transfers</h3>
-  <p>Customer workspaces are held in London. The AI processing behind analysis and Cedric takes place in AWS data centres in the United Kingdom, the European Economic Area and Switzerland, each covered by UK adequacy regulations. Some of our other providers &mdash; website hosting, payments and email &mdash; are located in, or make onward transfers to, the United States. Where personal data leaves the UK we rely on UK adequacy regulations where they apply, and otherwise on the International Data Transfer Agreement or the UK Addendum to the EU Standard Contractual Clauses, together with a transfer risk assessment. Details for each provider are in the Sub-processor list.</p>
+  <p>Customer workspaces are held in London. The AI processing behind analysis and Cedric takes place in AWS data centres in the United Kingdom and the European Economic Area, each covered by UK adequacy regulations. Some of our other providers &mdash; website hosting, payments and email &mdash; are located in, or make onward transfers to, the United States. Where personal data leaves the UK we rely on UK adequacy regulations where they apply, and otherwise on the International Data Transfer Agreement or the UK Addendum to the EU Standard Contractual Clauses, together with a transfer risk assessment. Details for each provider are in the Sub-processor list.</p>
 
   <h3>6. How long we keep it</h3>
   <div class="tblwrap">
@@ -765,7 +765,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
       <tr><td>Enquiries that do not become customers</td><td>24 months from last contact</td></tr>
       <tr><td>Account and user records</td><td>Duration of the account, then 12 months</td></tr>
       <tr><td>Customer content held on behalf of a customer</td><td>As set out in the Data Processing Agreement &mdash; 30 days after termination, then deleted</td></tr>
-<tr><td>Text sent to our AI Provider for analysis</td><td>Not kept by the AI Provider once it has answered</td></tr>
+<tr><td>Text sent to our AI Provider for analysis</td><td>Zero data retention is switched on with the AI Provider in five of the seven AWS regions its EU route can use; in the other two the AI Provider&rsquo;s default retention terms apply (see the Sub-processor list)</td></tr>
 <tr><td>The queued copy of a document sent for background analysis</td><td>Deleted as soon as that analysis finishes or fails</td></tr>
       <tr><td>Contracts, invoices and accounting records</td><td>7 years, to meet statutory requirements</td></tr>
       <tr><td>Marketing preferences and opt-outs</td><td>Indefinitely, so we can honour the opt-out</td></tr>
@@ -807,7 +807,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
 
   <h4>Where the data is held</h4>
   <p>ContractIQ runs on Supabase, a managed PostgreSQL service. Customer Data is held in an encrypted PostgreSQL database in London (AWS eu-west-2) with automated daily backups, and is not replicated to another region except as part of that backup regime. Of the material a customer uploads, the extracted text and the analysis derived from it are stored; the original file is never uploaded to us. Where Zero-Retention mode is on, extracted text is not stored either.</p>
-<p>AI processing is carried out by the AI Provider in AWS data centres in the United Kingdom, the European Economic Area and Switzerland. The AI Provider does not store the text sent to it or the answers it returns, does not use them to train any model, and does not share them with the developer of the model. A different location applies only where the Customer has agreed it in writing on the Order Form.</p>
+<p>AI processing is carried out by the AI Provider in AWS data centres in the United Kingdom and the European Economic Area. The AI Provider does not use them to train any model and does not share them with the developer of the model. Zero data retention is switched on in the AWS regions named in the Sub-processor list; in any other region to which a request may be routed, that region&rsquo;s default retention terms apply. A different location applies only where the Customer has agreed it in writing on the Order Form.</p>
 
   <h3>2. Our obligations</h3>
   <ol class="cl">
@@ -826,7 +826,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     <li>The Customer gives general written authorisation for us to appoint sub-processors. The current list is published in this Legal Centre.</li>
     <li>We will give at least <strong>30 days' notice</strong> before adding or replacing a sub-processor, by updating the list and, where the Customer has subscribed to notifications, by email. The Customer may object on reasonable data protection grounds within that period. If we cannot resolve the objection, the Customer may terminate the affected Product on notice with a pro-rata refund of prepaid fees, and that is the Customer's sole remedy.</li>
     <li>We shall impose on each sub-processor obligations equivalent to those in this DPA and remain fully liable to the Customer for their performance.</li>
-    <li>We will engage an AI Provider only on terms under which it does not keep Customer Data after processing it, does not use Customer Data to train any model, and does not share it with the developer of the model. Clause 3.2 applies to any change of AI Provider.</li>
+    <li>We will engage an AI Provider only on terms under which it does not use Customer Data to train any model, does not share it with the developer of the model, and offers a zero-data-retention setting. We will switch that setting on in every region in which the AI Provider processes Customer Data and in which it is available to us, and will name in the Sub-processor list any region where it is not switched on. Clause 3.2 applies to any change of AI Provider.</li>
   </ol>
 
   <h3>4. International transfers</h3>
@@ -844,7 +844,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     <li>Audit logging of access and of material changes to records.</li>
     <li>Regular application of security patches to dependencies and infrastructure.</li>
     <li>Documented procedures for incident detection, escalation and notification.</li>
-    <li>AI processing only through an AI Provider that does not store the text sent to it or the answers it returns, does not use either to train models, and does not share either with the model's developer; processing confined to AWS data centres in the UK, EEA and Switzerland, with worldwide routing refused by our own code.</li>
+    <li>AI processing only through an AI Provider that does not use the text sent to it or the answers it returns to train models and does not share either with the model's developer, with zero data retention switched on in five of the seven regions its EU route can use; processing confined to AWS data centres in the UK and EEA, with worldwide routing refused by our own code.</li>
     <li>Pseudonymisation in the user's browser of names, email addresses and phone numbers in meeting transcripts, before storage or analysis; the key that reverses it is never stored or transmitted.</li>
     <li>Deletion of the queued copy of document text as soon as a background analysis finishes or fails.</li>
     <li>Back-office database functions that add credits, change plans, settle charges or run the job queue can be called only by our server, never from a browser.</li>
@@ -854,12 +854,12 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
   <p>The measures in Annex B may change as the Services develop. We will not make a change that materially reduces the overall level of security.</p>
 
   <h4>Access control and tenant isolation</h4>
-  <p>Multi-tenant isolation is enforced through PostgreSQL row-level security. Every query is scoped to the authenticated user's account by the database itself, not by the application, so no fault in the application code can widen it. In practice:</p>
+  <p>Separation between customer accounts is enforced in the database by PostgreSQL row-level security policies, in addition to checks in the application, so that a query run for one account is scoped to that account's data by the database itself. We test these policies, but no system is free of defects and we do not warrant that a fault could never allow one account to see another's data. The design is intended to ensure that:</p>
   <ol class="cl">
-    <li>Data belonging to one account is invisible to all other accounts</li>
-    <li>API keys, JWT tokens, and session cookies can only access their own account's data</li>
+    <li>Data belonging to one account is not visible to other accounts</li>
+    <li>Credentials and session tokens give access only to the account they were issued for</li>
     <li>Team members invited to a workspace can see only the shared workspace data, not other team members' personal folders</li>
-    <li>If a compromise occurs, the blast radius is limited to that one account</li>
+    <li>The effect of a compromised credential is limited to the account it belongs to</li>
   </ol>
 
   <h3>7. Liability</h3>
@@ -869,20 +869,19 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
 <!-- ================================================================ -->
 <section class="doc" id="subprocessors">
   <div class="doc-head"><span class="doc-num">11</span><h2>Sub-processors</h2></div>
-  <p class="stamp">Current as at the date shown below &middot; 30 days' notice given before any addition or change</p>
+  <p class="stamp">Current as at 6 October 2026 &middot; 30 days' notice given before any addition or change</p>
   <div class="tblwrap">
   <table>
     <thead><tr><th>Provider</th><th>Purpose</th><th>Location</th><th>Transfer mechanism</th></tr></thead>
     <tbody>
-      <tr><td><strong>Amazon Web Services EMEA SARL</strong> (Amazon Bedrock) &mdash; our AI Provider</td><td>AI model inference &mdash; reading document text and generating analysis and answers, using Anthropic&rsquo;s Claude model hosted and run by AWS. Anthropic does not receive customer data. AWS does not store prompts or outputs and does not use them for training</td><td>United Kingdom, European Economic Area and Switzerland (AWS EU route, called from London). US and Canada only for a customer that has agreed US processing in writing</td><td>UK adequacy regulations. AWS Data Processing Addendum, incorporating the Standard Contractual Clauses and the UK Addendum where a transfer arises</td></tr>
-      <tr><td><strong>Supabase</strong></td><td>Database, authentication, server functions and background job processing</td><td><span class="fill">United Kingdom &mdash; London (AWS eu-west-2). Confirm the project region before publishing</span></td><td>None needed while the project is in London; UK Addendum to the EU SCCs for Supabase's own support access from outside the UK</td></tr>
-      <tr><td><strong>IONOS SE</strong> (domain and website hosting) and <strong>GitHub, Inc.</strong> (application front end, via GitHub Pages)</td><td>Hosting the website and application front end, content delivery</td><td>Germany (IONOS); United States (GitHub)</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for GitHub</td></tr>
-      <tr><td><strong><span class="fill">Email provider</span></strong></td><td>Transactional and business email</td><td><span class="fill">To confirm</span></td><td><span class="fill">To confirm</span></td></tr>
+      <tr><td><strong>Amazon Web Services EMEA SARL</strong> (Amazon Bedrock) &mdash; our AI Provider</td><td>AI model inference &mdash; reading document text and generating analysis and answers, using Anthropic&rsquo;s Claude model hosted and run by AWS. Under the AWS terms that apply to our account, Anthropic does not receive customer data, and AWS does not use prompts or outputs for training and does not pass them to Anthropic. Zero data retention is switched on in eu-west-1 (Ireland), eu-west-2 (London), eu-west-3 (Paris), eu-north-1 (Stockholm) and eu-central-1 (Frankfurt). The EU route can also use eu-south-1 (Milan) and eu-south-2 (Spain), where it is not currently switched on and AWS&rsquo;s default retention terms apply</td><td>United Kingdom and European Economic Area (AWS EU route, called from London; it can run in London, Ireland, Paris, Stockholm, Frankfurt, Milan and Spain). US and Canada only for a customer that has agreed US processing in writing</td><td>UK adequacy regulations. AWS Data Processing Addendum, incorporating the Standard Contractual Clauses and the UK Addendum where a transfer arises</td></tr>
+      <tr><td><strong>Supabase</strong></td><td>Database, authentication, server functions and background job processing</td><td>United Kingdom &mdash; London (AWS eu-west-2)</td><td>None needed while the project is in London; UK Addendum to the EU SCCs for Supabase's own support access from outside the UK</td></tr>
+      <tr><td><strong>IONOS SE</strong> (domain, website hosting and business email) and <strong>GitHub, Inc.</strong> (application front end, via GitHub Pages)</td><td>Hosting the website and application front end, content delivery; business email (receiving and replying to enquiries, support and account correspondence sent to our codeiqholdings.co.uk addresses)</td><td>Germany (IONOS); United States (GitHub)</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for GitHub</td></tr>
       <tr><td><strong>Stripe Payments Europe, Ltd.</strong></td><td>Collecting subscription and credit payments. Card details are entered on Stripe&rsquo;s own hosted checkout page and are never seen or stored by us</td><td>Ireland, with processing in the United States</td><td>UK adequacy for the EEA leg; UK Addendum to the EU SCCs for onward transfers</td></tr>
     </tbody>
   </table>
   </div>
-  <p>Optical character recognition of scanned documents is performed in the user's own browser and the image is not sent to a third party for that step. Anthropic PBC, the developer of the Claude model, is not a sub-processor: it has no access to the prompts or answers processed through Amazon Bedrock.</p>
+  <p>Optical character recognition of scanned documents is performed in the user's own browser and the image is not sent to a third party for that step. Anthropic PBC, the developer of the Claude model, is not a sub-processor: under the AWS terms that apply to our account it has no access to the prompts or answers processed through Amazon Bedrock.</p>
   <p>To be notified of changes to this list, email <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> asking to be added to the sub-processor notification list.</p>
 </section>
 
@@ -944,7 +943,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     <li>Four access roles, enforced in the database rather than only in the interface, so a user cannot reach another customer's data by manipulating a request.</li>
     <li>Row-level security policies isolating each customer's workspace.</li>
     <li>Audit trail of access and of material changes to records.</li>
-    <li>AI processing through Amazon Bedrock in AWS data centres in the UK, EEA and Switzerland. Amazon Bedrock does not store prompts or outputs, does not use them for training, and does not share them with the model's developer. Our code refuses the worldwide route.</li>
+    <li>AI processing through Amazon Bedrock in AWS data centres in the UK and EEA. Amazon Bedrock does not use prompts or outputs for training and does not share them with the model's developer; zero data retention is switched on in five of the seven AWS regions the EU route can use (see the Sub-processor list). Our code refuses the worldwide route.</li>
     <li>Names, email addresses and phone numbers in meeting transcripts replaced with labels in the browser before storage or analysis.</li>
     <li>The queued copy of document text deleted as soon as a background analysis finishes.</li>
     <li>Back-office database functions (credits, plans, payments, the job queue) callable only by our server.</li>
@@ -1011,14 +1010,9 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
     <tbody>
       <tr><td><strong>1.0</strong> (recorded at sign-up as 2026.1)</td><td>11 September 2026</td><td>First publication</td></tr>
-<tr><td><strong>1.1</strong> (recorded at sign-up as 2026.2)</td><td>19 September 2026</td><td>AI Provider changed from Anthropic PBC to Amazon Web Services (Amazon Bedrock, UK/EEA/Switzerland). New MSA clauses 5.6 (AI Provider terms), 6.6&ndash;6.7 (no retention by the AI Provider; where data is processed) and 15.4 (changing the AI Provider); output-accuracy wording in 10.1. AI-specific restrictions added to the Acceptable Use Policy. Data handling section added to Schedule 1; Evaluation Sandbox allowance changed from 150 to 100 credits for new sign-ups. Privacy Policy, DPA (clause 3.4, Annex B), Sub-processor list and Security Statement updated to match.</td></tr>
+<tr><td><strong>1.1</strong> (recorded at sign-up as 2026.2)</td><td>19 September 2026</td><td>AI Provider changed from Anthropic PBC to Amazon Web Services (Amazon Bedrock, UK/EEA). New MSA clauses 5.6 (AI Provider terms), 6.6&ndash;6.7 (no training or sharing by the AI Provider; retention setting; where data is processed) and 15.4 (changing the AI Provider); output-accuracy wording in 10.1. AI-specific restrictions added to the Acceptable Use Policy. Data handling section added to Schedule 1; Evaluation Sandbox allowance changed from 150 to 100 credits for new sign-ups. Privacy Policy, DPA (clause 3.4, Annex B), Sub-processor list and Security Statement updated to match. VAT position stated (not registered; no VAT charged) in clause 8.3 and the key facts; email provider (IONOS SE, mail server for our codeiqholdings.co.uk addresses) added to the Sub-processor list. Retention wording corrected to match the AWS account settings (zero data retention switched on in five of the seven regions the EU route can use), including the retention covenant in DPA clause 3.4 and the Privacy Policy retention table; Switzerland removed from the processing locations; Supabase region confirmed as London; tenant-isolation wording tightened; ICO reference format aligned.</td></tr>
     </tbody>
   </table>
-  </div>
-  <div class="box warn">
-    <h4>Before this goes live</h4>
-    <p>Every item marked in orange on this page is a gap that must be filled before publication: the VAT position, the email provider in the sub-processor list, and confirmation that the Supabase project is in London. If this version is published after any customer has accepted version 1.0, the change of sub-processor needs 30 days' notice under clause 3.2 of the Data Processing Agreement.</p>
-    <p>These documents have been drafted to reflect standard market practice for a UK business-to-business software company and current UK law, but they have not been reviewed by a solicitor. They should be before you take a payment or sign a customer. The clauses that most need a professional eye are the liability cap and exclusions, the indemnities, and the data processing terms.</p>
   </div>
 </section>
 
@@ -1036,7 +1030,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
         <strong>CodeIQ Holdings Ltd</strong><br>
         Registered in England and Wales, company number 17454743. Registered office: 103 Battalion Drive, Northampton NN4 6RX, United Kingdom.<br>
         <a href="mailto:info@codeiqholdings.co.uk">info@codeiqholdings.co.uk</a> &middot; codeiqholdings.co.uk &middot; codeiqholdings.com<br>
-        &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.0.
+        &copy; 2026 CodeIQ Holdings Ltd. Legal Centre version 1.1.
       </div>
   </main>
 </div>
@@ -1070,7 +1064,7 @@ ul.pl li::before{content:"";position:absolute;left:0;top:12px;
     © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
     ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
     Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
-    ICO registration ICO00015500673.
+    ICO registration ICO:00015500673.
   </div>
 </footer>
 
