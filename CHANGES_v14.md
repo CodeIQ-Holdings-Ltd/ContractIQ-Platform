@@ -1,4 +1,4 @@
-# ContractIQ v14.2 — what changed
+# ContractIQ v14.1 — what changed
 
 5 October 2026 · built on v13 (19 September) · CodeIQ Holdings Ltd
 
@@ -19,25 +19,6 @@ below; a comment in the proxy and one in MIGRATION_007 changed.
    - Footer said "version 1.0"; now 1.1.
    - Change log and the launch notice updated. One orange placeholder remains: Supabase region.
 3. `GO_LIVE_TESTS.html`: placeholder step reworded to match.
-
-## v14.2 (6 October 2026): legal fixes found on a second read
-- DPA clause 3.4 still promised an AI Provider that "does not keep Customer Data after processing
-  it". Now: no training, no sharing with the model developer, and zero data retention switched on in
-  every region where it is available, with exceptions named in the Sub-processor list.
-- Privacy Policy retention table said text is "not kept by the AI Provider once it has answered".
-  Now states the five-of-seven position.
-- Tenant-isolation paragraph in the DPA (Annex B) promised that "no fault in the application code can
-  widen" access and that "the blast radius is limited". Rewritten as a design intent, without a
-  guarantee. (v13's own MIGRATION_007 fixed back-office functions that were callable by anyone, so an
-  absolute claim was not safe.)
-- "AWS does not..." and "Anthropic has no access" now say "under the AWS terms that apply to our
-  account", because they are AWS's commitments, not ours.
-- The Sub-processor list said "current as at the date shown below" with no date. It now says 6 Oct 2026.
-- The public "Before this goes live" box (solicitor-review and placeholder notes) is removed from the
-  page: it was a build-time note to you, not something customers should read. The solicitor review
-  is still outstanding; it is now listed in README/CHANGES instead.
-- ICO reference written as ICO:00015500673 everywhere, matching the CodeIQ site.
-The CodeIQ site's Legal Centre (separate zip) carries the same documents and is in step with this.
 
 ## v14.1 (5 October 2026, later the same day): wording made true to the AWS settings
 Amazon Bedrock Zero Data Retention was set to `none` on 5 Oct 2026 in eu-west-1, eu-west-2,
