@@ -97,6 +97,24 @@ async function verifyStripeSignature(
     : { ok: false, reason: "signature mismatch" };
 }
 
+// Which subscription an invoice belongs to.
+//
+// Stripe's "Basil" API version (2025-03-31) moved this: `invoice.subscription`
+// was removed and the same id now sits under `invoice.parent`. A Stripe
+// account created after that date defaults to Basil or later, so reading only
+// the old field meant every renewal and every failed payment was silently
+// ignored — the customer paid month two and never got their credits back.
+// Both shapes are read here, and the invoice lines as a last resort, so this
+// works whatever API version the webhook endpoint is pinned to.
+function invoiceSubscriptionId(inv: any): string | null {
+  const pick = (v: any): string | null =>
+    typeof v === "string" ? v : (typeof v?.id === "string" ? v.id : null);
+  return pick(inv?.subscription)
+      ?? pick(inv?.parent?.subscription_details?.subscription)
+      ?? pick(inv?.lines?.data?.[0]?.parent?.subscription_item_details?.subscription)
+      ?? null;
+}
+
 // Stripe puts only ids in most payloads. Fetch the full object when the
 // detail matters.
 async function stripeGet(path: string): Promise<Record<string, unknown> | null> {
@@ -194,8 +212,8 @@ serve(async (req) => {
       // ── The monthly renewal went through: roll the allowance ──
       case "invoice.payment_succeeded": {
         const inv = event.data.object;
-        const subId = inv.subscription;
-        if (!subId) break;
+        const subId = invoiceSubscriptionId(inv);
+        if (!subId) { console.log(`invoice ${inv.id} has no subscription — ignoring`); break; }
 
         // The very first invoice arrives alongside checkout.session.completed,
         // which has already set the plan and started the period. Rolling it
@@ -223,14 +241,15 @@ serve(async (req) => {
       // ── The card failed ─────────────────────────────────────
       case "invoice.payment_failed": {
         const inv = event.data.object;
-        if (!inv.subscription) break;
+        const failedSub = invoiceSubscriptionId(inv);
+        if (!failedSub) { console.log(`failed invoice ${inv.id} has no subscription — ignoring`); break; }
         // Flagged, not cut off. Stripe retries for days, and cutting
         // access on the first failure loses customers over expired cards.
         const { error } = await db.rpc("billing_payment_failed", {
-          p_subscription: inv.subscription, p_invoice: inv.id,
+          p_subscription: failedSub, p_invoice: inv.id,
         });
         if (error) throw new Error(error.message);
-        console.log(`payment failed on ${inv.subscription} — marked past_due`);
+        console.log(`payment failed on ${failedSub} — marked past_due`);
         break;
       }
 

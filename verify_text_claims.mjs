@@ -45,7 +45,7 @@ check("Scale plan is £270/month, and the catalogue agrees",
   pricing.includes("£270") && /'scale',[^\n]*27000/.test(sql),
   "pricing.html and plan_catalogue must both say £270 / 27000p");
 check("Enterprise plan is £700/month", pricing.includes("£700") && src.includes("enterprise"));
-check("Sandbox is free", pricing.includes("free") && pricing.includes("sandbox"));
+check("Sandbox is free", /free/i.test(pricing) && /sandbox/i.test(pricing));
 
 // === FEATURE CLAIMS ===
 console.log("\nFeatures");

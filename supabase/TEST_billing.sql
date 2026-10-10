@@ -33,7 +33,7 @@ begin
 
   -- ── 1 · The catalogue matches what the website advertises ──
   select count(*) into n from plan_catalogue
-   where (plan='sandbox'    and credits_included=100  and period_days=90 and price_pence=0     and bank_cap=0    and revision_days=0)
+   where (plan='sandbox'    and credits_included=100  and period_days=10 and price_pence=0     and bank_cap=0    and revision_days=0)
       or (plan='growth'     and credits_included=500  and period_days=30 and price_pence=7900  and bank_cap=500  and revision_days=30)
       or (plan='scale'      and credits_included=1800 and period_days=30 and price_pence=27000 and bank_cap=1800 and revision_days=30)
       or (plan='enterprise' and credits_included=5000 and period_days=30 and price_pence=70000 and bank_cap=5000 and revision_days=30);

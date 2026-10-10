@@ -80,8 +80,8 @@ window.__sb = {
     },
   },
   rpc: {
-    my_entitlement: () => ({ data: { ok: true, account_id: "acct-1", plan: "${plan}", plan_name: "${plan}", period_days: 30,
-      credits: { included: 5000, plan_left: 5000, bolton_left: 0, held: 0, total_left: 5000, used: 0 } }, error: null }),
+    my_entitlement: () => ({ data: Object.assign({ ok: true, account_id: "acct-1", plan: "${plan}", plan_name: "${plan}", period_days: 30,
+      credits: { included: 5000, plan_left: 5000, bolton_left: 0, held: 0, total_left: 5000, used: 0 } }, window.__entExtra || {}), error: null }),
     my_workspace_settings: () => ({ data: { ok: true, zero_retention: ${zr}, data_region: "eu" }, error: null }),
     enqueue_job: (a) => { window.__sb.jobsRows = [{ id: "job-1", contract_id: a.p_contract_id, status: "running", kind: a.p_kind, ref: "REF" }];
                           return { data: { id: "job-1", status: "queued" }, error: null }; },
@@ -118,9 +118,10 @@ const check = (n, ok, d = "") => { ok ? pass++ : fail++; out.push(`  ${ok ? "✓
 await new Promise((r) => server.listen(PORT, r));
 const browser = await chromium.launch(fs.existsSync("/opt/pw-browsers/chromium") ? { executablePath: "/opt/pw-browsers/chromium" } : {});
 
-async function openApp(plan, zr) {
+async function openApp(plan, zr, extra = "") {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   await ctx.addInitScript(initScript(plan, zr));
+  if (extra) await ctx.addInitScript(`window.__entExtra = ${extra};`);
   const page = await ctx.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -217,6 +218,65 @@ try {
       texts.length > 0 && texts.every((t) => t === null), `upserts=${texts.length} nonNull=${texts.filter((t) => t !== null).length}`);
     check("no page errors on the Zero-Retention path", errors.length === 0, errors.slice(0, 2).join(" | "));
     await ctx.close();
+  }
+
+  // ── D · "Start free" lands on the sign-up form, not the sign-in box ─
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await page.goto(`http://localhost:${PORT}/app/index.html?signup=1`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(600);
+    check("app/?signup=1 opens the create-account form",
+      await page.locator('button:has-text("Create account")').first().isVisible().catch(() => false));
+    await ctx.close();
+  }
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await page.goto(`http://localhost:${PORT}/app/index.html`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(600);
+    check("without it, the app still opens on sign in",
+      (await page.locator('button:has-text("Create account")').count()) === 0);
+    await ctx.close();
+  }
+
+  // ── C · The Sandbox is a one-off: ended, ending soon, and fine ───
+  {
+    const sbx = (ended, daysLeft, left) => JSON.stringify({ plan: "sandbox", plan_name: "Evaluation Sandbox", period_days: 10,
+      sandbox: { ended, one_off: true, ends_at: new Date(Date.now() + daysLeft * 864e5).toISOString() },
+      credits: { included: ended ? 0 : 100, plan_left: left, bolton_left: 0, held: 0, total_left: left, used: ended ? 0 : 100 - left } });
+    {
+      const { ctx, page, errors } = await openApp("sandbox", false, sbx(true, -3, 0));
+      const t = await page.locator('[role="status"]').first().textContent().catch(() => "");
+      check("an ended Sandbox shows the upgrade banner (10 days up)", /Evaluation Sandbox has ended/.test(t) && /10 days are up/.test(t) && /view and export/.test(t), t.slice(0, 160));
+      await page.locator('[role="status"] button:has-text("Choose a plan")').click().catch(() => {});
+      await page.waitForTimeout(400);
+      check("Choose a plan opens the in-app pricing page", await page.locator("text=Simple tiers").first().isVisible().catch(() => false));
+      check("no page errors with an ended Sandbox", errors.length === 0, errors.slice(0, 2).join(" | "));
+      await ctx.close();
+    }
+    {
+      const { ctx, page } = await openApp("sandbox", false, sbx(false, 7, 0));
+      const t = await page.locator('[role="status"]').first().textContent().catch(() => "");
+      check("a Sandbox with every credit used shows the banner before day 90", /has ended/.test(t) && /all 100 credits are used/.test(t), t.slice(0, 160));
+      await ctx.close();
+    }
+    {
+      const { ctx, page } = await openApp("sandbox", false, sbx(false, 3, 60));
+      const t = await page.locator('[role="status"]').first().textContent().catch(() => "");
+      check("a Sandbox ending in 3 days says so", /ends in 3 days/.test(t) && /60 left/.test(t), t.slice(0, 160));
+      await ctx.close();
+    }
+    {
+      const { ctx, page } = await openApp("sandbox", false, sbx(false, 7, 90));
+      check("a healthy Sandbox shows no banner", (await page.locator('[role="status"]').count()) === 0);
+      await ctx.close();
+    }
+    {
+      const { ctx, page } = await openApp("growth", false);
+      check("a paid plan shows no Sandbox banner", (await page.locator('[role="status"]').count()) === 0);
+      await ctx.close();
+    }
   }
 } catch (e) {
   check("the flow ran to completion", false, e.message);

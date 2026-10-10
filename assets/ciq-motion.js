@@ -243,6 +243,126 @@
   /* The showcase carousel's driver lived here. The homepage now shows all
      four steps at once, so there is nothing to advance. */
 
+/* ── Hero mesh ───────────────────────────────────────────
+     Points drift across the hero and join up where they are close; the
+     cursor pushes the nearby ones aside. The same idea as the mesh on
+     codeiqholdings.co.uk, in ContractIQ's colours: pale blue threads over
+     the photograph, teal on the few "live" points.
+
+     Three things keep it honest. It is skipped entirely under
+     prefers-reduced-motion. It stops drawing when the hero scrolls out of
+     view, so it costs nothing on the rest of the page. And it is purely
+     decorative — aria-hidden, pointer-events:none, injected by script —
+     so with JavaScript off the hero is exactly as it was.
+     Kept inside its own function so its names cannot reach the rest of
+     this file: `mx` and `my` already belong to the hero parallax, and
+     sharing them threw the background photograph several thousand
+     pixels off screen. */
+  (function () {
+    try {
+      var heroEl = document.querySelector('.hero, .page-hero');
+      if (heroEl && !reduce && typeof requestAnimationFrame === 'function') {
+        var cv = document.createElement('canvas');
+        cv.className = 'ciq-mesh';
+        cv.setAttribute('aria-hidden', 'true');
+        var ctx = cv.getContext && cv.getContext('2d');
+        if (ctx) {
+          heroEl.insertBefore(cv, heroEl.firstChild);
+  
+          var LINE = '194,215,238';   /* --mist, the pale blue of the range */
+          var HOT  = '69,214,198';    /* --teal, the accent                 */
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          var pts = [], W = 0, H = 0, raf = null, mx = -9999, my = -9999, running = false;
+  
+          var resize = function () {
+            var r = heroEl.getBoundingClientRect();
+            W = r.width; H = r.height;
+            if (!W || !H) return;
+            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            /* Fewer points on a phone: this runs every frame, and a hero that
+               drains a battery is worse than a hero that sits still. */
+            var cap = W < 760 ? 34 : 78;
+            var n = Math.max(20, Math.min(cap, Math.round((W * H) / 19000)));
+            pts = [];
+            for (var i = 0; i < n; i++) {
+              pts.push({ x: Math.random() * W, y: Math.random() * H,
+                         vx: (Math.random() - 0.5) * 0.18, vy: (Math.random() - 0.5) * 0.18,
+                         r: Math.random() * 1.4 + 0.6, hot: Math.random() < 0.16 });
+            }
+          };
+  
+          var draw = function () {
+            raf = null;
+            if (W && H) {
+              ctx.clearRect(0, 0, W, H);
+              var link = Math.min(190, W * 0.17), i, p;
+              for (i = 0; i < pts.length; i++) {
+                p = pts[i];
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+                if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+                var dx = p.x - mx, dy = p.y - my, d = Math.sqrt(dx * dx + dy * dy);
+                p.px = p.x; p.py = p.y;
+                if (d < 170 && d > 0) {
+                  var f = (170 - d) / 170 * 24;
+                  p.px += (dx / d) * f; p.py += (dy / d) * f;
+                }
+              }
+              for (var a = 0; a < pts.length; a++) {
+                for (var b = a + 1; b < pts.length; b++) {
+                  var ex = pts[a].px - pts[b].px, ey = pts[a].py - pts[b].py;
+                  var ed = Math.sqrt(ex * ex + ey * ey);
+                  if (ed < link) {
+                    var o = (1 - ed / link) * 0.30;
+                    ctx.strokeStyle = (pts[a].hot || pts[b].hot)
+                      ? 'rgba(' + HOT + ',' + (o * 0.9).toFixed(3) + ')'
+                      : 'rgba(' + LINE + ',' + (o * 0.5).toFixed(3) + ')';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(pts[a].px, pts[a].py);
+                    ctx.lineTo(pts[b].px, pts[b].py);
+                    ctx.stroke();
+                  }
+                }
+              }
+              for (i = 0; i < pts.length; i++) {
+                p = pts[i];
+                ctx.beginPath();
+                ctx.arc(p.px, p.py, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.hot ? 'rgba(' + HOT + ',.85)' : 'rgba(' + LINE + ',.42)';
+                ctx.fill();
+              }
+            }
+            if (running) raf = requestAnimationFrame(draw);
+          };
+  
+          var start = function () { if (!running) { running = true; if (!raf) raf = requestAnimationFrame(draw); } };
+          var stop  = function () { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+  
+          resize();
+          var meshRT;
+          window.addEventListener('resize', function () {
+            clearTimeout(meshRT);
+            meshRT = setTimeout(function () { resize(); if (running && !raf) raf = requestAnimationFrame(draw); }, 180);
+          }, { passive: true });
+          window.addEventListener('mousemove', function (e) {
+            var r = cv.getBoundingClientRect();
+            mx = e.clientX - r.left; my = e.clientY - r.top;
+          }, { passive: true });
+          window.addEventListener('mouseout', function () { mx = -9999; my = -9999; }, { passive: true });
+  
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (es) {
+              for (var k = 0; k < es.length; k++) { if (es[k].isIntersecting) { start(); } else { stop(); } }
+            }, { threshold: 0.01 }).observe(cv);
+          }
+          start();
+        }
+      }
+    } catch (e) {}
+  })();
+
 /* ── ROI calculator, where present ───────────────────────── */
   try {
     var spend = document.getElementById('spend');

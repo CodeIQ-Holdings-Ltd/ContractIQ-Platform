@@ -3,7 +3,7 @@
 > Every figure in this document is produced by `model_profit.py`. Nothing is typed by hand, because the previous version of this document was, and its summary, tables and conclusion ended up describing three different models at a price that had been retired. To change an assumption, change the script and regenerate.
 
 ## The short answer
-The business covers its costs at **20 users** on the adoption mix below, and every additional customer after that is close to pure contribution. At 20 users it makes £542 a month; at 60 it makes £4,829 a month on £10,470 of billings, a margin of 46%.
+The business covers its costs at **20 users** on the adoption mix below, and every additional customer after that is close to pure contribution. At 20 users it makes £521 a month; at 60 it makes £4,756 a month on £10,470 of billings, a margin of 45%.
 
 That breakeven point is not a fact about hosting. Hosting and compliance together come to £145 a month, which two Growth customers would cover. Breakeven sits at 20 because the model pays for the support and maintenance the product actually needs — £1,400 a month at this size. **20 users is the point at which ContractIQ stops depending on unpaid evenings.** If you are content to keep absorbing that yourself, the business is cash-positive from roughly the third customer; the honest number is the one below.
 
@@ -33,7 +33,7 @@ Support, bug fixes, onboarding and the small unglamorous maintenance that keeps 
 | 56+ | £3,400 | Support becomes most of a role |
 
 ### Costs that move with revenue
-- **Card processing** — 1.76% plus 20p a transaction. Stripe's UK rate is 1.5% + 20p on domestic cards and 3.25% + 20p on international ones; the blend assumes 85% domestic.
+- **Card processing and Stripe Billing** — 2.46% plus 20p a transaction. Stripe's UK rate is 1.5% + 20p on domestic cards and 3.25% + 20p on international ones, plus 0.7% for Stripe Billing on recurring volume; the blend assumes 85% domestic.
 - **Refunds and failed payments** — 1% of billings, as a working buffer.
 - **AI inference** — £0.026 per credit, costed at **full utilisation**: every customer is assumed to spend their entire allowance every month. Real usage is lower, so the margins below are a floor rather than a midpoint.
 
@@ -42,21 +42,35 @@ Support, bug fixes, onboarding and the small unglamorous maintenance that keeps 
 ## The scenarios
 | Users | Growth | Scale | Gross | Card fees | Refunds | AI | Net | Cash costs | People | Profit | Margin |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **10** | 8 | 2 | £1,172 | £23 | £12 | £198 | £940 | £145 | £1,400 | -£605 | -52% |
-| **12** | 8 | 4 | £1,712 | £33 | £17 | £291 | £1,371 | £145 | £1,400 | -£174 | -10% |
-| **20** | 12 | 8 | £3,108 | £59 | £31 | £530 | £2,488 | £145 | £1,800 | **£542** | 17% |
-| **30** | 17 | 13 | £4,853 | £92 | £49 | £829 | £3,884 | £145 | £1,800 | **£1,938** | 40% |
-| **40** | 22 | 18 | £6,598 | £124 | £66 | £1,128 | £5,279 | £145 | £2,600 | **£2,534** | 38% |
-| **50** | 26 | 24 | £8,534 | £160 | £85 | £1,461 | £6,827 | £145 | £2,600 | **£4,082** | 48% |
-| **60** | 30 | 30 | £10,470 | £197 | £105 | £1,794 | £8,375 | £145 | £3,400 | **£4,829** | 46% |
+| **10** | 8 | 2 | £1,172 | £31 | £12 | £198 | £932 | £145 | £1,400 | -£614 | -52% |
+| **12** | 8 | 4 | £1,712 | £45 | £17 | £291 | £1,359 | £145 | £1,400 | -£186 | -11% |
+| **20** | 12 | 8 | £3,108 | £81 | £31 | £530 | £2,466 | £145 | £1,800 | **£521** | 17% |
+| **30** | 17 | 13 | £4,853 | £126 | £49 | £829 | £3,850 | £145 | £1,800 | **£1,904** | 39% |
+| **40** | 22 | 18 | £6,598 | £170 | £66 | £1,128 | £5,233 | £145 | £2,600 | **£2,488** | 38% |
+| **50** | 26 | 24 | £8,534 | £220 | £85 | £1,461 | £6,767 | £145 | £2,600 | **£4,022** | 47% |
+| **60** | 30 | 30 | £10,470 | £270 | £105 | £1,794 | £8,301 | £145 | £3,400 | **£4,756** | 45% |
 
 ### Reading the turn
-- **10 users** — -£605 a month. This is the founding cohort converting to paid plans. It is a loss, and a small enough one to be worth carrying for the reference customers and the first real accuracy measurements.
-- **12 users** — -£174. Close, but at full utilisation still short of paying for the person running it. (At the old, too-cheap AI figure this was the breakeven point.)
-- **20 users** — £542. The first modelled month the business pays for itself, including the person running it.
-- **30 users** — £1,938 a month at a 40% margin.
-- **40 users** — £2,534 a month at a 38% margin.
-- **60 users** — £4,829 a month at a 46% margin.
+- **10 users** — -£614 a month. These are the first paying customers. It is a loss, and a small enough one to be worth carrying for the reference customers and the first real accuracy measurements.
+
+### What the free Sandbox costs
+The Evaluation Sandbox is a **one-off** 100 credits per sign-up, ending when used or after 90 days, then read-only. It never refills. The most it can cost is every credit used, at the AI figures above.
+
+| Sign-ups | Typical AI cost | Worst case | Growth plans (£79) that cover the worst case for one month |
+|---:|---:|---:|---:|
+| 10 | £26 | £46 | 1 |
+| 50 | £130 | £230 | 3 |
+| 100 | £260 | £460 | 6 |
+| 500 | £1,300 | £2,300 | 30 |
+| 1,000 | £2,600 | £4,600 | 59 |
+
+The exposure is unlimited sign-ups, not ten friendly customers: each throwaway account can cost up to £4.60. Work-email-only sign-up and one Sandbox per company cap it.
+
+- **12 users** — -£186. Close, but at full utilisation still short of paying for the person running it. (At the old, too-cheap AI figure this was the breakeven point.)
+- **20 users** — £521. The first modelled month the business pays for itself, including the person running it.
+- **30 users** — £1,904 a month at a 39% margin.
+- **40 users** — £2,488 a month at a 38% margin.
+- **60 users** — £4,756 a month at a 45% margin.
 
 The steps down in margin at 40 and 60 users are the support cost stepping up, not the product getting worse. Each step is a decision to make before the load arrives, not after.
 
@@ -65,32 +79,32 @@ A Scale customer bills 3.4× a Growth customer and costs very little more to ser
 
 | If 12 customers were… | Gross | Profit |
 |---|---:|---:|
-| 12 Growth, 0 Scale | £948 | -£782 |
-| 8 Growth, 4 Scale | £1,712 | -£174 |
-| 6 Growth, 6 Scale | £2,094 | £130 |
-| 0 Growth, 12 Scale | £3,240 | £1,041 |
+| 12 Growth, 0 Scale | £948 | -£789 |
+| 8 Growth, 4 Scale | £1,712 | -£186 |
+| 6 Growth, 6 Scale | £2,094 | £115 |
+| 0 Growth, 12 Scale | £3,240 | £1,018 |
 
-Twelve Growth customers lose £782 a month. Twelve Scale customers make £1,041. **Moving one customer from Growth to Scale is worth roughly as much as winning two more Growth customers**, which is an argument for where the selling effort goes.
+Twelve Growth customers lose £789 a month. Twelve Scale customers make £1,018. **Moving one customer from Growth to Scale is worth roughly as much as winning two more Growth customers**, which is an argument for where the selling effort goes.
 
 ## Sensitivity
-**If every analysis hit the worst case** (£0.046 per credit — every stage at its output ceiling, every credit spent): breakeven moves to **20 users**, and 60 users yields £3,449 rather than £4,829. The model survives it. That is the useful finding: the business is not sensitive to being wrong about inference cost.
+**If every analysis hit the worst case** (£0.046 per credit — every stage at its output ceiling, every credit spent): breakeven moves to **20 users**, and 60 users yields £3,376 rather than £4,756. The model survives it. That is the useful finding: the business is not sensitive to being wrong about inference cost.
 
 **If nobody upgrades and every customer stays on Growth:** see the mix table above — breakeven moves out beyond 20 users. This is the risk that actually matters.
 
-**If card fees were the US rate** (2.9% + £0.30 rather than the UK 1.5% + 20p): about £125 a month more at 60 users. Worth knowing, not worth planning around.
+**If card fees were the US rate** (2.9% + £0.30 rather than the UK 1.5% + 20p): about £52 a month more at 60 users. Worth knowing, not worth planning around.
 
 ## Unit economics at 60 users
 | Measure | Value |
 |---|---:|
 | Average revenue per user | £174 a month |
-| Variable cost per user | £35 a month |
-| Contribution per user | £140 a month |
-| Contribution margin | 80% |
-| Net margin after all costs | 46% |
+| Variable cost per user | £36 a month |
+| Contribution per user | £138 a month |
+| Contribution margin | 79% |
+| Net margin after all costs | 45% |
 | Annualised billings | £125,640 |
-| Annualised profit | £57,953 |
+| Annualised profit | £57,074 |
 
-A customer retained two years is worth roughly £3,350 in contribution, so acquisition can be expensive and still pay back inside a quarter. That figure assumes the retention; nothing is yet known about churn, because nothing has yet been sold.
+A customer retained two years is worth roughly £3,321 in contribution, so acquisition can be expensive and still pay back inside a quarter. That figure assumes the retention; nothing is yet known about churn, because nothing has yet been sold.
 
 ## What this model does not know
 - **Churn.** Assumed zero. It will not be. Every point of monthly churn pushes each milestone further out, and at 5% a month the 60-user scenario never arrives without roughly three new customers a month just to stand still.

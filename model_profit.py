@@ -34,7 +34,9 @@ CREDITS = {"growth": 500, "scale": 1800}
 # dearer (3.25% + 20p), so the blend assumes 85% UK / 15% international.
 STRIPE_UK_PCT, STRIPE_INTL_PCT, STRIPE_FIXED = 0.015, 0.0325, 0.20
 UK_SHARE = 0.85
-STRIPE_PCT = UK_SHARE * STRIPE_UK_PCT + (1 - UK_SHARE) * STRIPE_INTL_PCT
+# Stripe Billing is charged on top of card processing, on recurring volume.
+STRIPE_BILLING_PCT = 0.007
+STRIPE_PCT = UK_SHARE * STRIPE_UK_PCT + (1 - UK_SHARE) * STRIPE_INTL_PCT + STRIPE_BILLING_PCT
 
 # AI cost per credit, on Amazon Bedrock's EU route (Claude Sonnet 5 at
 # $2.20 in / $11 out per million tokens — list price plus the 10% regional
@@ -237,9 +239,10 @@ def document() -> str:
     w(f"| 56+ | {money(people_cost(60))} | Support becomes most of a role |\n")
 
     w("\n### Costs that move with revenue\n")
-    w(f"- **Card processing** — {STRIPE_PCT * 100:.2f}% plus {pence(STRIPE_FIXED)} a transaction. ")
+    w(f"- **Card processing and Stripe Billing** — {STRIPE_PCT * 100:.2f}% plus {pence(STRIPE_FIXED)} a transaction. ")
     w(f"Stripe's UK rate is {STRIPE_UK_PCT * 100:.1f}% + {pence(STRIPE_FIXED)} on domestic cards and ")
-    w(f"{STRIPE_INTL_PCT * 100:.2f}% + {pence(STRIPE_FIXED)} on international ones; the blend assumes ")
+    w(f"{STRIPE_INTL_PCT * 100:.2f}% + {pence(STRIPE_FIXED)} on international ones, plus ")
+    w(f"{STRIPE_BILLING_PCT * 100:.1f}% for Stripe Billing on recurring volume; the blend assumes ")
     w(f"{UK_SHARE:.0%} domestic.\n")
     w(f"- **Refunds and failed payments** — {REFUND_RATE:.0%} of billings, as a working buffer.\n")
     w(f"- **AI inference** — £{AI_PER_CREDIT:.3f} per credit, costed at **full utilisation**: every ")
@@ -266,9 +269,20 @@ def document() -> str:
 
     w("\n### Reading the turn\n")
     s10 = scenario(10)
-    w(f"- **10 users** — {money(s10['profit'])} a month. This is the founding cohort converting to ")
-    w("paid plans. It is a loss, and a small enough one to be worth carrying for the reference ")
-    w("customers and the first real accuracy measurements.\n")
+    w(f"- **10 users** — {money(s10['profit'])} a month. These are the first paying customers. It is a ")
+    w("loss, and a small enough one to be worth carrying for the reference customers and the first ")
+    w("real accuracy measurements.\n")
+    w("\n### What the free Sandbox costs\n")
+    w("The Evaluation Sandbox is a **one-off** 100 credits per sign-up, ending when used or after 90 days, ")
+    w("then read-only. It never refills. The most it can cost is every credit used, at the AI figures above.\n\n")
+    w("| Sign-ups | Typical AI cost | Worst case | Growth plans (\u00a379) that cover the worst case for one month |\n|---:|---:|---:|---:|\n")
+    import math
+    for n_ in (10, 50, 100, 500, 1000):
+        typ = n_ * 100 * AI_PER_CREDIT
+        wor = n_ * 100 * AI_PER_CREDIT_HIGH
+        w(f"| {n_:,} | {money(typ)} | {money(wor)} | {math.ceil(wor / GROWTH)} |\n")
+    w("\nThe exposure is unlimited sign-ups, not ten friendly customers: each throwaway account can cost ")
+    w("up to \u00a34.60. Work-email-only sign-up and one Sandbox per company cap it.\n\n")
     w(f"- **12 users** — {money(s12['profit'])}. Close, but at full utilisation still short of paying ")
     w("for the person running it. (At the old, too-cheap AI figure this was the breakeven point.)\n")
     w(f"- **{be} users** — {money(sbe['profit'])}. The first modelled month the business pays for itself, ")

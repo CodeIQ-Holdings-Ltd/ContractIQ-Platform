@@ -288,7 +288,6 @@
           <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
           <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
           <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
-          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
         </div>
       </li>
       <li><a href="about.html">About</a></li>
@@ -297,7 +296,7 @@
     </ul>
     <div class="nav-cta">
       <a class="btn ghost" href="demo/">Live demo</a>
-      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <a class="btn pri" href="app/?signup=1"><span class="sheen"></span>Start free</a>
       <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
     </div>
   </div>
@@ -316,16 +315,13 @@
 </svg>
 <section>
   <div class="wrap">
-    <div id="founding-banner" style="background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;padding:20px 26px;text-align:center;font-weight:600;font-size:15px;margin-bottom:34px;border-radius:10px;">
-      <span id="fo-text"><b>Founding customer offer</b> &mdash; the first <b>10 sign-ups</b> get <b>200 free credits a month for six months</b>, then continue on Growth / Professional at &pound;79 a month.</span><div style="font-weight:500;font-size:13px;opacity:.9;margin-top:8px;">Minimum term six months. Cancel any time from the six-month anniversary onwards &mdash; we'll remind you before it converts.</div>
-    </div>
     <div class="plans">
       <div class="plan">
         <div class="tier">Evaluation Sandbox</div>
         <div class="amt">£0</div>
-        <div class="per">Permanently free · no card required</div>
-        <ul><li><b>100 credits</b> every 90 days</li><li>For example 5 analyses plus 25 questions</li><li>Standard risk triage dashboard</li><li>Core clause checking routines</li><li>Renewal alerts and exports included</li><li>AI runs in the UK and EU and never trains on your documents</li></ul>
-        <a class="btn ghost" href="checkout.html?plan=sandbox" style="text-align:center">Start free</a>
+        <div class="per">Free to start · no card required</div>
+        <ul><li><b>100 credits</b>, one-off, valid for 10 days</li><li>For example 5 analyses plus 25 questions</li><li>Standard risk triage dashboard</li><li>Core clause checking routines</li><li>Renewal alerts and exports included</li><li>AI runs in the UK and EU and never trains on your documents</li></ul>
+        <a class="btn ghost" href="app/?signup=1" style="text-align:center">Create your free account</a>
       </div>
       <div class="plan pop">
         <div class="badge-pop">Most popular</div>
@@ -392,7 +388,7 @@
       <details><summary><span class="num">05</span>Which AI do you use, and does it keep my documents?</summary><p class="fp">Anthropic's Claude model, run for us by Amazon Web Services through Amazon Bedrock, in AWS data centres in the UK and the EEA. Amazon Bedrock does not pass what is sent to Anthropic. We have switched on Amazon&rsquo;s zero-data-retention setting in five of the seven regions its EU route can use; the Legal Centre names them. Nothing you upload is used to train any AI model. Names, email addresses and phone numbers in meeting transcripts are replaced with labels in your browser before anything is sent.</p></details>
       <details><summary><span class="num">06</span>Can multiple people use one account?</summary><p class="fp">Yes — ContractIQ runs on a business account with individual usernames, roles and an admin-managed team list.</p></details>
       <details><summary><span class="num">07</span>What platforms does it run on?</summary><p class="fp">ContractIQ runs worldwide, in any modern browser on Windows, macOS and Linux. There is nothing to install and nothing to keep updated — sign in and your workspace is there.</p></details>
-      <details><summary><span class="num">08</span>Can I cancel at any time?</summary><p class="fp">Yes. Growth bought directly is a monthly subscription with no minimum term — cancel and you keep access until the end of the paid period. A founding place is the one exception: it carries a six-month minimum term, and cancels from the six-month anniversary onwards. Banked roll-over audits expire when the subscription ends.</p></details>
+      <details><summary><span class="num">08</span>Can I cancel at any time?</summary><p class="fp">Yes. Growth bought directly is a monthly subscription with no minimum term — cancel and you keep access until the end of the paid period. Banked roll-over audits expire when the subscription ends.</p></details>
     </div>
   </div>
 </section>
@@ -428,51 +424,11 @@
     © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
     ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
     Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
-    ICO registration ICO00015500673.
+    ICO registration ICO:00015500673.
   </div>
 </footer>
 
 
-<script>
-/* Founding banner — same live count as the homepage. Hidden entirely
-   when the places have gone, so the pricing page never advertises an
-   offer that no longer exists. Hidden too if the count cannot be read,
-   because a wrong claim here is worse than no claim. */
-(function () {
-  var SUPABASE_URL = 'https://aremuhzsgmqginhmpfno.supabase.co';                  // https://xxxx.supabase.co
-  var SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_5XMn3xiA5ueSGDfjvOxgew_0Cp0TWwr';      // sb_publishable_…
-
-  var banner = document.getElementById('founding-banner');
-  var text   = document.getElementById('fo-text');
-  if (!banner) return;
-  banner.style.display = 'none';          // stays hidden until confirmed open
-
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) return;
-
-  fetch(SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/rpc/founding_places_remaining', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_PUBLISHABLE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_PUBLISHABLE_KEY
-    },
-    body: '{}'
-  })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function (n) {
-      n = Number(n);
-      if (isFinite(n) && n > 0) {
-        if (text) {
-          text.innerHTML = '<b>Founding customer offer</b> &mdash; <b>' + n +
-            (n === 1 ? ' place' : ' places') + ' left</b> of ten. 200 free credits a month for six ' +
-            'months, then Growth / Professional at \u00a379 a month.';
-        }
-        banner.style.display = '';
-      }
-    })
-    .catch(function () { /* stays hidden */ });
-})();
-</script>
 <script src="assets/ciq-motion.js" defer></script>
 </body>
 </html>

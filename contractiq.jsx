@@ -793,8 +793,8 @@ const EDITIONS = {
     short: "Sandbox",
     price: "Free",
     credits: 100,
-    windowDays: 90,
-    windowLabel: "every 90 days",
+    windowDays: 10,
+    windowLabel: "in your one-off Sandbox",
     bank: 0,
     revisionDays: 0,      // every re-run consumes an audit
     playbook: false,      // custom playbook configuration
@@ -803,7 +803,7 @@ const EDITIONS = {
     apiKeys: false,
     sso: false,
     features: [
-      "100 credits every 90 days (for example 5 analyses plus 25 questions)",
+      "100 credits, one-off, valid for 10 days (for example 5 analyses plus 25 questions)",
       "Standard risk triage dashboard",
       "Baseline metadata parsing",
       "Core clause checking routines",
@@ -902,8 +902,9 @@ function applyEntitlement(ent) {
     ...base,
     credits:    ent?.credits?.included ?? base.credits,
     windowDays: ent?.period_days ?? base.windowDays,
-    windowLabel: (ent?.period_days ?? base.windowDays) === 30
-      ? "per month" : `every ${ent?.period_days ?? base.windowDays} days`,
+    windowLabel: key === "sandbox" ? "in your one-off Sandbox"
+      : (ent?.period_days ?? base.windowDays) === 30
+        ? "per month" : `every ${ent?.period_days ?? base.windowDays} days`,
   };
   return ED;
 }
@@ -2740,7 +2741,16 @@ export default function ContractIQ() {
   // ── Real authentication ──
   // authView drives the screen: signin | signup | verify | forgot.
   // "verify" is where people spend longest, so it gets the most care.
-  const [authView, setAuthView] = useState("signin");
+  // "Start free" on the website links to app/?signup=1, so the first thing
+  // a new visitor sees is the form that makes them an account rather than a
+  // sign-in box they have no credentials for. The demo build ignores it —
+  // there is nothing to sign up to there.
+  const [authView, setAuthView] = useState(() => {
+    try {
+      return !DEMO_MODE && new URLSearchParams(window.location.search).get("signup")
+        ? "signup" : "signin";
+    } catch { return "signin"; }
+  });
   const [authBusy, setAuthBusy] = useState(false);
   const [authMsg, setAuthMsg] = useState(null);
   const [authForm, setAuthForm] = useState({ email: "", password: "", fullName: "", company: "" });
@@ -4515,6 +4525,41 @@ export default function ContractIQ() {
           </div>
         </div>
 
+      {/* The Evaluation Sandbox is a one-off: 100 credits, used up or 10 days,
+          whichever comes first. The server enforces it; this only explains it
+          and points at the way forward. Nothing is hidden or locked in the
+          browser: contracts and analyses stay readable and exportable. */}
+      {(() => {
+        const sbx = entitlement?.sandbox;
+        if (DEMO_MODE || !session || entitlement?.plan !== "sandbox" || !sbx) return null;
+        const daysLeft = Math.max(0, Math.ceil((new Date(sbx.ends_at).getTime() - Date.now()) / 864e5));
+        const spent = creditsLeft < CREDIT_COST.cedric;
+        const ended = !!sbx.ended || spent;
+        const soon = !ended && (daysLeft <= 3 || creditsLeft <= 20);
+        if (!ended && !soon) return null;
+        return (
+          <div role="status" style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap",
+            padding: "11px 20px", fontSize: 13.5, lineHeight: 1.5,
+            background: ended ? "#FDECEA" : "#FFF6E5",
+            borderBottom: "1px solid " + (ended ? "#E8A8A2" : "#F0CD8A"),
+            color: ended ? "#7A2620" : "#6E4A0B" }}>
+            <span style={{ flex: "1 1 360px" }}>
+              {ended ? (
+                <>
+                  <b>Your Evaluation Sandbox has ended</b> — {sbx.ended ? "its 10 days are up" : "all 100 credits are used"}.
+                  Your contracts and analyses are still here to view and export. To run new analyses or ask Cedric, choose a plan.
+                </>
+              ) : (
+                <>
+                  <b>Your Evaluation Sandbox ends in {daysLeft} {daysLeft === 1 ? "day" : "days"}</b> or when its credits run out
+                  ({creditsLeft.toLocaleString()} left). Choose a plan to keep running analyses.
+                </>
+              )}
+            </span>
+            <button className="btn sm" onClick={() => setPage("pricing")}>{ended ? "Choose a plan" : "See plans"}</button>
+          </div>
+        );
+      })()}
       {page === "capabilities" ? (
         <>
           <div className="hero">
@@ -4574,7 +4619,7 @@ export default function ContractIQ() {
                     <div className="cat">{e.name}</div>
                     <h3 style={{ fontSize: 30, margin: "10px 0 2px" }}>{e.price}</h3>
                     <div className="sup">
-                      {k === "sandbox" ? "Permanently free · no card required"
+                      {k === "sandbox" ? "Free to start · no card required"
                         : k === "growth" ? "Most popular · cancel any time"
                         : k === "scale" ? "For heavier contract estates"
                         : "Tailored corporate pricing · invoiced annually"}

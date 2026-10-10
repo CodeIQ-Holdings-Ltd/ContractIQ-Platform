@@ -24,7 +24,7 @@
 import { readFileSync, existsSync } from "node:fs";
 
 const PLANS = [
-  { key: "sandbox",    price: null, pounds: null, credits: 100,  cap: 0,    days: 90 },
+  { key: "sandbox",    price: null, pounds: null, credits: 100,  cap: 0,    days: 10 },
   { key: "growth",     price: 7900, pounds: 79,   credits: 500,  cap: 500,  days: 30 },
   { key: "scale",      price: 27000, pounds: 270, credits: 1800, cap: 1800, days: 30 },
   { key: "enterprise", price: 70000, pounds: 700, credits: 5000, cap: 5000, days: 30 },
@@ -49,17 +49,26 @@ const m004 = read("supabase/MIGRATION_004_credits_and_billing.sql") || "";
 const m005 = read("supabase/MIGRATION_005_rollover_and_naming.sql") || "";
 const m006 = read("supabase/MIGRATION_006_revision_window.sql") || "";
 const m007 = read("supabase/MIGRATION_007_bedrock_and_data_safety.sql") || "";
-// A later migration can change an allowance; the effective figure is the last one.
-const laterCredits = (key) => {
-  const m = new RegExp(`update plan_catalogue set credits_included = (\\d+)[^;]*plan = '${key}'`).exec(m007);
-  return m ? Number(m[1]) : null;
+// A later migration can change an allowance or a period; the effective figure
+// is the last one written. 007 cut the Sandbox to 100 credits and 009 cut its
+// window to 10 days, so reading only the original insert in 004 would check
+// the wrong numbers — which is exactly the kind of drift this file exists for.
+const m008 = read("supabase/MIGRATION_008_one_off_sandbox.sql") || "";
+const m009 = read("supabase/MIGRATION_009_sandbox_10_days.sql") || "";
+const later = [m007, m008, m009].join("\n");
+const laterValue = (field, key) => {
+  const re = new RegExp(`update plan_catalogue\\s+set [^;]*\\b${field} = (\\d+)[^;]*plan = '${key}'`, "gi");
+  let m, last = null;
+  while ((m = re.exec(later)) !== null) last = Number(m[1]);
+  return last;
 };
 
 for (const p of PLANS) {
   const row = new RegExp(`'${p.key}',[^\\n]*?(\\d+),\\s*(\\d+),\\s*(\\d+)`, "m").exec(m004);
   if (!row) { bad(`plan_catalogue has no insert row for ${p.key}`); continue; }
-  const [, credits004, days, price] = row.map(Number);
-  const credits = laterCredits(p.key) ?? credits004;
+  const [, credits004, days004, price] = row.map(Number);
+  const credits = laterValue("credits_included", p.key) ?? credits004;
+  const days = laterValue("period_days", p.key) ?? days004;
   if (credits === p.credits && days === p.days && price === (p.price ?? 0)) {
     ok(`plan_catalogue ${p.key}: ${credits} credits / ${days} days / ${price}p`);
   } else {

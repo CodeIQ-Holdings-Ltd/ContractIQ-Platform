@@ -87,3 +87,19 @@ Three things in there are deliberate and worth keeping:
    catalogued by metadata, and the Legal Centre says recognition of handwriting
    is unreliable. The new copy follows the product and the Legal Centre rather
    than the old slide.
+
+## The four screenshots on codeiqholdings.co.uk
+
+`shoot_codeiq_gallery.mjs` takes the gallery images for the CodeIQ Holdings
+site: portfolio, renewal runway, the Verify tab and supplier risk, at
+1600×1000. It drives the **demo** build, so every figure and name in them is
+invented.
+
+```
+node tools/shoot_codeiq_gallery.mjs     # writes shots-codeiq/
+```
+
+Then copy the four files into `codeiqholdings-website/assets/screenshots/`.
+It hides `#mode-banner`, the demo build's own "Demo mode" badge, which is a
+label on the build rather than part of the product and sits over the credit
+line. Nothing else on screen is touched.

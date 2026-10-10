@@ -217,6 +217,12 @@ a.brand:hover,a.foot-brand:hover{color:var(--white)!important}
     linear-gradient(180deg,rgba(5,12,30,0) 60%,rgba(5,12,30,.58) 84%,var(--ink) 100%)}
 
 .ciq-orb{position:absolute;border-radius:50%;filter:blur(90px);z-index:-2;pointer-events:none;opacity:.5}
+/* The hero mesh: drifting points joined where they are close, nudged aside
+   by the cursor. Drawn by ciq-motion.js, which does nothing at all under
+   prefers-reduced-motion — so the hero is never worse than the photograph
+   alone. It must never intercept a click on the buttons sitting over it. */
+.ciq-mesh{position:absolute;inset:0;width:100%;height:100%;z-index:-2;
+  pointer-events:none;opacity:.9}
 .ciq-orb.a{width:min(620px,72vw);aspect-ratio:1;left:-12%;top:12%;
   background:radial-gradient(circle,rgba(69,214,198,.32),transparent 68%);animation:ciqDrift 22s ease-in-out infinite}
 .ciq-orb.b{width:min(700px,80vw);aspect-ratio:1;right:-16%;top:30%;

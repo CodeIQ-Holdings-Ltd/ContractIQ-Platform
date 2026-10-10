@@ -822,8 +822,8 @@ setTimeout(function(){
       short: "Sandbox",
       price: "Free",
       credits: 100,
-      windowDays: 90,
-      windowLabel: "every 90 days",
+      windowDays: 10,
+      windowLabel: "in your one-off Sandbox",
       bank: 0,
       revisionDays: 0,
       // every re-run consumes an audit
@@ -835,7 +835,7 @@ setTimeout(function(){
       apiKeys: false,
       sso: false,
       features: [
-        "100 credits every 90 days (for example 5 analyses plus 25 questions)",
+        "100 credits, one-off, valid for 10 days (for example 5 analyses plus 25 questions)",
         "Standard risk triage dashboard",
         "Baseline metadata parsing",
         "Core clause checking routines"
@@ -923,7 +923,7 @@ setTimeout(function(){
       ...base,
       credits: ent?.credits?.included ?? base.credits,
       windowDays: ent?.period_days ?? base.windowDays,
-      windowLabel: (ent?.period_days ?? base.windowDays) === 30 ? "per month" : `every ${ent?.period_days ?? base.windowDays} days`
+      windowLabel: key === "sandbox" ? "in your one-off Sandbox" : (ent?.period_days ?? base.windowDays) === 30 ? "per month" : `every ${ent?.period_days ?? base.windowDays} days`
     };
     return ED;
   }
@@ -2574,7 +2574,13 @@ Raised by ContractIQ.`
     const [login, setLogin] = useState({ username: "", password: "" });
     const [loginErr, setLoginErr] = useState(null);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
-    const [authView, setAuthView] = useState("signin");
+    const [authView, setAuthView] = useState(() => {
+      try {
+        return !DEMO_MODE && new URLSearchParams(window.location.search).get("signup") ? "signup" : "signin";
+      } catch {
+        return "signin";
+      }
+    });
     const [authBusy, setAuthBusy] = useState(false);
     const [authMsg, setAuthMsg] = useState(null);
     const [authForm, setAuthForm] = useState({ email: "", password: "", fullName: "", company: "" });
@@ -4461,7 +4467,27 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
         }
       },
       /* @__PURE__ */ React.createElement("div", { className: "t", style: { color: "#B23A31" } }, "Sign out")
-    ))))), page === "capabilities" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Protect cash flow", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "before execution.")), /* @__PURE__ */ React.createElement("p", null, "ContractIQ scans commercial documents in seconds — surfacing drafting mistakes, mismatched timelines and unbalanced liabilities that human eyes routinely overlook.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "grid", style: { gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" } }, /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Pre-counsel audit"), /* @__PURE__ */ React.createElement("p", null, "Run inbound drafts through the automated parser to neutralise common structural issues before professional review. Deliver pre-vetted, clean documents to counsel — and cut outside legal bills dramatically.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Playbook customisation"), /* @__PURE__ */ React.createElement("p", null, "Calibrate the checking rules to your organisation's risk appetite. The engine cross-examines every clause against your standard positions, so commercial teams never sign off unlimited liability or non-standard payment terms by accident.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Structural cross-referencing"), /* @__PURE__ */ React.createElement("p", null, "An active shield against drafting traps: cross-indemnity expansions that quietly pierce your liability caps, or notice windows that contradict each other across schedules — caught instantly.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Ask Cedric"), /* @__PURE__ */ React.createElement("p", null, "A conversational analyst on every contract. Ask about renewal dates, missing clauses, obligations due this quarter or the strongest negotiation lever — answered only from your ingested data, never invented.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "A–F risk grading"), /* @__PURE__ */ React.createElement("p", null, "Every analysed contract gets an instant risk grade so stakeholders can wave low-risk agreements through and focus attention where it's needed.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Boardroom-ready exports"), /* @__PURE__ */ React.createElement("p", null, "One click turns any analysis into a formatted Word report, PDF or presentation outline — cost position, compliance checklist, obligations register and negotiation plan included."))), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 36 } }, /* @__PURE__ */ React.createElement("button", { className: "btn", onClick: () => setPage("portfolio") }, "Open your portfolio")))) : page === "pricing" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Simple tiers.", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "Serious analysis.")), /* @__PURE__ */ React.createElement("p", null, "Start free, scale as your contract estate grows. Unused audits roll over on paid plans.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "grid", style: { gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" } }, ["sandbox", "growth", "scale", "enterprise"].map((k) => {
+    ))))), (() => {
+      const sbx = entitlement?.sandbox;
+      if (DEMO_MODE || !session || entitlement?.plan !== "sandbox" || !sbx) return null;
+      const daysLeft = Math.max(0, Math.ceil((new Date(sbx.ends_at).getTime() - Date.now()) / 864e5));
+      const spent = creditsLeft < CREDIT_COST.cedric;
+      const ended = !!sbx.ended || spent;
+      const soon = !ended && (daysLeft <= 3 || creditsLeft <= 20);
+      if (!ended && !soon) return null;
+      return /* @__PURE__ */ React.createElement("div", { role: "status", style: {
+        display: "flex",
+        gap: 14,
+        alignItems: "center",
+        flexWrap: "wrap",
+        padding: "11px 20px",
+        fontSize: 13.5,
+        lineHeight: 1.5,
+        background: ended ? "#FDECEA" : "#FFF6E5",
+        borderBottom: "1px solid " + (ended ? "#E8A8A2" : "#F0CD8A"),
+        color: ended ? "#7A2620" : "#6E4A0B"
+      } }, /* @__PURE__ */ React.createElement("span", { style: { flex: "1 1 360px" } }, ended ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("b", null, "Your Evaluation Sandbox has ended"), " — ", sbx.ended ? "its 10 days are up" : "all 100 credits are used", ". Your contracts and analyses are still here to view and export. To run new analyses or ask Cedric, choose a plan.") : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("b", null, "Your Evaluation Sandbox ends in ", daysLeft, " ", daysLeft === 1 ? "day" : "days"), " or when its credits run out (", creditsLeft.toLocaleString(), " left). Choose a plan to keep running analyses.")), /* @__PURE__ */ React.createElement("button", { className: "btn sm", onClick: () => setPage("pricing") }, ended ? "Choose a plan" : "See plans"));
+    })(), page === "capabilities" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Protect cash flow", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "before execution.")), /* @__PURE__ */ React.createElement("p", null, "ContractIQ scans commercial documents in seconds — surfacing drafting mistakes, mismatched timelines and unbalanced liabilities that human eyes routinely overlook.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "grid", style: { gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" } }, /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Pre-counsel audit"), /* @__PURE__ */ React.createElement("p", null, "Run inbound drafts through the automated parser to neutralise common structural issues before professional review. Deliver pre-vetted, clean documents to counsel — and cut outside legal bills dramatically.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Playbook customisation"), /* @__PURE__ */ React.createElement("p", null, "Calibrate the checking rules to your organisation's risk appetite. The engine cross-examines every clause against your standard positions, so commercial teams never sign off unlimited liability or non-standard payment terms by accident.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Structural cross-referencing"), /* @__PURE__ */ React.createElement("p", null, "An active shield against drafting traps: cross-indemnity expansions that quietly pierce your liability caps, or notice windows that contradict each other across schedules — caught instantly.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Ask Cedric"), /* @__PURE__ */ React.createElement("p", null, "A conversational analyst on every contract. Ask about renewal dates, missing clauses, obligations due this quarter or the strongest negotiation lever — answered only from your ingested data, never invented.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "A–F risk grading"), /* @__PURE__ */ React.createElement("p", null, "Every analysed contract gets an instant risk grade so stakeholders can wave low-risk agreements through and focus attention where it's needed.")), /* @__PURE__ */ React.createElement("div", { className: "panel", style: { margin: 0 } }, /* @__PURE__ */ React.createElement("h4", null, "Boardroom-ready exports"), /* @__PURE__ */ React.createElement("p", null, "One click turns any analysis into a formatted Word report, PDF or presentation outline — cost position, compliance checklist, obligations register and negotiation plan included."))), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 36 } }, /* @__PURE__ */ React.createElement("button", { className: "btn", onClick: () => setPage("portfolio") }, "Open your portfolio")))) : page === "pricing" ? /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "hero" }, /* @__PURE__ */ React.createElement("h1", null, "Simple tiers.", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("em", null, "Serious analysis.")), /* @__PURE__ */ React.createElement("p", null, "Start free, scale as your contract estate grows. Unused audits roll over on paid plans.")), /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "grid", style: { gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" } }, ["sandbox", "growth", "scale", "enterprise"].map((k) => {
       const e = EDITIONS[k];
       const current = k === EDITION;
       return /* @__PURE__ */ React.createElement("div", { className: "card", key: k, style: {
@@ -4469,7 +4495,7 @@ ${list || "(none yet — create a Contract Record first)"}` }]);
         borderTopColor: current ? "#37D5C3" : void 0,
         border: current ? "2px solid #2F7BD9" : void 0,
         boxShadow: current ? "0 18px 44px rgba(47,123,217,0.16)" : void 0
-      } }, /* @__PURE__ */ React.createElement("div", { className: "cat" }, e.name), /* @__PURE__ */ React.createElement("h3", { style: { fontSize: 30, margin: "10px 0 2px" } }, e.price), /* @__PURE__ */ React.createElement("div", { className: "sup" }, k === "sandbox" ? "Permanently free · no card required" : k === "growth" ? "Most popular · cancel any time" : k === "scale" ? "For heavier contract estates" : "Tailored corporate pricing · invoiced annually"), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 16, fontSize: 14, lineHeight: 1.8, color: "#3D4F66" } }, e.features.map((f, n) => /* @__PURE__ */ React.createElement("div", { key: n }, f))), current ? /* @__PURE__ */ React.createElement("span", { className: "pill ok" }, "Your edition") : k === "growth" ? /* @__PURE__ */ React.createElement("span", { className: "pill blue" }, "Most popular") : null);
+      } }, /* @__PURE__ */ React.createElement("div", { className: "cat" }, e.name), /* @__PURE__ */ React.createElement("h3", { style: { fontSize: 30, margin: "10px 0 2px" } }, e.price), /* @__PURE__ */ React.createElement("div", { className: "sup" }, k === "sandbox" ? "Free to start · no card required" : k === "growth" ? "Most popular · cancel any time" : k === "scale" ? "For heavier contract estates" : "Tailored corporate pricing · invoiced annually"), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 16, fontSize: 14, lineHeight: 1.8, color: "#3D4F66" } }, e.features.map((f, n) => /* @__PURE__ */ React.createElement("div", { key: n }, f))), current ? /* @__PURE__ */ React.createElement("span", { className: "pill ok" }, "Your edition") : k === "growth" ? /* @__PURE__ */ React.createElement("span", { className: "pill blue" }, "Most popular") : null);
     })), /* @__PURE__ */ React.createElement("p", { style: { textAlign: "center", fontSize: 13, color: "#62748B", marginTop: 22 } }, "This workspace is on ", /* @__PURE__ */ React.createElement("b", null, ED.name), ". Your plan is held on your account, so a change of plan takes effect the next time you sign in — there is nothing to install or reinstall."))) : page === "actions" ? (() => {
       const q = actionSearch.trim().toLowerCase();
       const shown = CEDRIC_ACTIONS.filter((a) => (actionCat === "All" || a.cat === actionCat) && (!q || a.title.toLowerCase().includes(q) || a.what.toLowerCase().includes(q) || a.prompt.toLowerCase().includes(q)));

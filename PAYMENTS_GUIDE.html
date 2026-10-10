@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ContractIQ Platform — payments, end to end</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --navy:#0B1D33; --navy2:#13294A; --line:#25415F;
+    --paper:#F7FAFD; --card:#FFFFFF; --border:#DCE7F3;
+    --tx:#16283E; --tx2:#4A6280; --tx3:#7E96B2;
+    --teal:#2FA89E; --teal-d:#1E7A72;
+    --blue:#2F7BD9; --amber:#C7881B; --red:#C0453A;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--tx);
+       font-family:'Quicksand',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+       font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+
+  header{background:var(--navy);color:#EAF2FB;padding:44px 0 38px;margin-bottom:34px}
+  .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--teal);margin-bottom:12px}
+  h1{font-size:clamp(25px,4.4vw,36px);font-weight:700;margin:0 0 12px;letter-spacing:-.02em;line-height:1.15}
+  header p{margin:0;color:#A9C3DE;font-size:15.5px;max-width:64ch}
+  .meta{margin-top:18px;font-family:var(--mono);font-size:12px;color:#7FA0C4}
+
+  h2{font-size:20px;font-weight:700;margin:38px 0 4px;letter-spacing:-.01em;
+     padding-top:22px;border-top:1px solid var(--border)}
+  h2 .num{font-family:var(--mono);font-size:13px;color:var(--teal-d);margin-right:9px}
+  h2 + .lede{color:var(--tx2);font-size:14.5px;margin:0 0 18px;max-width:68ch}
+  h3{font-size:16px;margin:26px 0 8px}
+
+  ul.checks{list-style:none;margin:0 0 8px;padding:0}
+  ul.checks li{position:relative;padding:11px 14px 11px 42px;background:var(--card);
+      border:1px solid var(--border);border-radius:9px;margin-bottom:7px;font-size:14.5px;line-height:1.6}
+  ul.checks li::before{content:"";position:absolute;left:14px;top:14px;width:15px;height:15px;
+      border:2px solid #B9CCE0;border-radius:4px}
+  ul.checks li b{color:var(--tx)}
+  ul.checks li .why{display:block;color:var(--tx2);font-size:13px;margin-top:3px}
+  li.critical{border-left:4px solid var(--red)}
+  li.money{border-left:4px solid var(--amber)}
+
+  ol.steps{counter-reset:s;list-style:none;margin:0 0 8px;padding:0}
+  ol.steps li{position:relative;padding:12px 14px 12px 46px;background:var(--card);
+      border:1px solid var(--border);border-radius:9px;margin-bottom:7px;font-size:14.5px;line-height:1.6}
+  ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:13px;top:11px;
+      width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;
+      font-family:var(--mono);font-size:11.5px;display:grid;place-items:center}
+  ol.steps li .why{display:block;color:var(--tx2);font-size:13px;margin-top:3px}
+
+  code{font-family:var(--mono);font-size:.86em;background:#EDF3FA;padding:.13em .4em;
+       border-radius:4px;color:#1B365D;word-break:break-word}
+  pre{background:var(--navy2);color:#DCE9F7;border-radius:9px;padding:14px 16px;
+      overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.6;margin:10px 0}
+  pre code{background:none;padding:0;color:inherit;font-size:inherit}
+
+  .note{border-left:3px solid var(--blue);background:#F0F6FD;border-radius:0 8px 8px 0;
+        padding:13px 16px;margin:14px 0;font-size:14px;color:var(--tx2)}
+  .note b{color:var(--tx)}
+  .warn{border-left-color:var(--amber);background:#FDF7EA}
+  .stop{border-left-color:var(--red);background:#FDF0EE}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.8px;
+        background:var(--card);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+  th{text-align:left;padding:10px 13px;background:#EFF5FC;font-weight:700;font-size:12px;
+     text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);border-bottom:1px solid var(--border)}
+  td{padding:10px 13px;border-bottom:1px solid #EDF2F8;vertical-align:top;color:var(--tx2)}
+  td:first-child{color:var(--tx);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  .tw{overflow-x:auto}
+
+  .done{background:#EDF8F4;border:1px solid #BFE3D8;border-radius:10px;padding:16px 18px;margin:16px 0}
+  .done h3{margin:0 0 8px;font-size:15px;color:var(--teal-d)}
+  .done ul{margin:0;padding-left:20px;font-size:14px;color:var(--tx2);line-height:1.7}
+
+  footer{margin:46px 0 60px;padding-top:22px;border-top:1px solid var(--border);
+         font-size:12.6px;color:var(--tx3);line-height:1.7}
+  @media print{body{background:#fff}header{background:#fff;color:#000;border-bottom:2px solid #000}
+    header p,.meta{color:#333}ul.checks li,ol.steps li{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">ContractIQ Platform · payments</div>
+    <h1>Taking money, end to end</h1>
+    <p>Everything between a visitor seeing a price and the money being in your bank —
+       what is already built, the settings to make in Stripe, a dress rehearsal
+       you can run today with a fake card, and what to do when something breaks. Written
+       to be followed by someone who has never set up a payment system before.</p>
+    <div class="meta">CodeIQ Holdings Ltd · company 17454743 · 10 October 2026 · for ContractIQ v14.5</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2><span class="num">00</span>Does this version change your Stripe setup?</h2>
+<p class="lede">You said Stripe is already connected and tested. Short answer: nothing to redo in
+   Stripe, but two things in the code were broken and are now fixed, and both need a redeploy.</p>
+
+<p><b>Nothing changes in the Stripe dashboard.</b> Same webhook address, same signing secret, same
+   five events, same key. You do not need to touch the endpoint you already made.</p>
+
+<p><b>Two faults were found while writing this guide.</b> Both were in the path that money travels
+   down, and neither would have shown up in a first test:</p>
+
+<ul class="checks">
+  <li class="critical"><b>Month two never arrived.</b>
+    <span class="why">Stripe changed the shape of its invoice data in March 2025 (the version they
+    call "Basil"). The subscription reference moved. Our webhook read the old place, found nothing,
+    answered Stripe with a cheerful "200 OK" and did nothing at all. A customer would have paid in
+    month one, worked happily, then been charged again in month two and had <em>no credits added</em>.
+    The same fault silenced failed-payment alerts. The code now reads both the old and the new shape,
+    so it works whichever version your account is on.</span></li>
+  <li class="critical"><b>Pay-then-sign-up left customers on the free plan.</b>
+    <span class="why">Your pricing page asks for payment before the customer creates a login — that
+    is the normal order and it is the right one. The payment is parked against their email address,
+    and a database function called <code>claim_pending_subscription</code> is supposed to hand it over
+    when they sign up. It has existed since September and <em>nothing ever called it</em>. So a customer
+    could pay £79 and still be on the free Sandbox. Sign-up now calls it, and migration 008 goes back
+    and rescues anyone already stranded.</span></li>
+</ul>
+
+<div class="note stop">
+  <b>So, two things to do.</b> Run <code>supabase/MIGRATION_008_one_off_sandbox.sql</code> in the
+  Supabase SQL editor, and redeploy the <code>stripe-webhook</code> function with the new file from
+  this package. Everything in this guide assumes you have. If you only do one thing today, do these.
+</div>
+
+<h2><span class="num">01</span>The journey, in the order a customer meets it</h2>
+<p class="lede">Read this once before touching anything. Every setting later in the guide exists to
+   make one of these steps work.</p>
+
+<div class="tw">
+<table>
+  <thead><tr><th>What they see</th><th>What happens behind it</th></tr></thead>
+  <tbody>
+    <tr><td>1 · Pricing page</td><td>Four editions. Sandbox is free, Growth and Scale have a
+      "Choose" button, Enterprise says "Talk to sales" because it is not sold by card.</td></tr>
+    <tr><td>2 · Checkout form <br><code>checkout.html</code></td><td>Your own page, on your own
+      domain. Collects name, company, country, and the three tick-boxes that record their acceptance
+      of your terms. No card details here — that matters, because card details on your own page would
+      put you in a far heavier compliance bracket.</td></tr>
+    <tr><td>3 · Stripe's payment page</td><td>They are sent to Stripe. Stripe collects the card,
+      handles 3-D Secure with their bank, and takes the fraud risk. Your <code>create-checkout-session</code>
+      function builds this page, reading the price from your database so it can never disagree with
+      your pricing page.</td></tr>
+    <tr><td>4 · Money moves</td><td>Stripe charges the card and tells your <code>stripe-webhook</code>
+      function. That function writes the plan and the credits into your database. <b>This is the only
+      step that gives them anything</b> — a payment Stripe accepted but the webhook missed is a customer
+      who paid and got nothing.</td></tr>
+    <tr><td>5 · Success page <br><code>success.html</code></td><td>"You're on Growth." It tells them to
+      create their login.</td></tr>
+    <tr><td>6 · They create a login</td><td>They sign up with the same email they paid with. The parked
+      payment is claimed and their workspace is on the plan they bought, with its credits. (This is the
+      step that was broken.)</td></tr>
+    <tr><td>7 · Every month after</td><td>Stripe charges the card again and sends
+      <code>invoice.payment_succeeded</code>. The webhook rolls their allowance over: new credits,
+      unused ones banked up to the cap. (This is the other step that was broken.)</td></tr>
+    <tr><td>8 · A card fails</td><td>Stripe retries over about two weeks and emails them. Your database
+      marks the account <code>past_due</code> but <b>does not cut them off</b> — an expired card is not
+      a decision to leave.</td></tr>
+    <tr><td>9 · They cancel</td><td>Stripe sends <code>customer.subscription.deleted</code>. The account
+      drops to a read-only Sandbox: they can still open and export everything, but cannot run new
+      analyses. Credits they bought in packs survive.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <b>One thing worth understanding.</b> Stripe never tells your website that a payment worked — the
+  browser can be closed, the wifi can drop, a chancer can forge the "success" page. Stripe tells your
+  <em>server</em>, privately, in a signed message. That message is the webhook. It is why the webhook
+  matters more than anything else here, and why both bugs above were webhook-shaped.
+</div>
+
+<h2><span class="num">02</span>Part A · The settings to make in Stripe</h2>
+<p class="lede">About forty minutes, once. Do them in a sandbox or test mode first — the toggle is at
+   the top of the Stripe dashboard. Each one says what it is for, so you can skip anything you have
+   already done.</p>
+
+<h3>A1 · Your business details</h3>
+<ul class="checks">
+  <li><b>Settings → Business → Public details.</b> Business name <code>CodeIQ Holdings Ltd</code>,
+    support email <code>info@codeiqholdings.co.uk</code>, your website, and your address.
+    <span class="why">This is what appears on the payment page, on receipts, and on the customer's bank
+    statement. A payment from a name people do not recognise is the single most common cause of a
+    chargeback — someone sees "CODEIQ" on their statement, does not remember it, and rings their bank.</span></li>
+  <li><b>Set the statement descriptor to something obvious,</b> such as <code>CONTRACTIQ</code>.
+    <span class="why">Up to 22 characters, letters and spaces. It is what the cardholder actually sees.
+    Use the product name, not the company name, because the product is what they bought.</span></li>
+</ul>
+
+<h3>A2 · Branding</h3>
+<ul class="checks">
+  <li><b>Settings → Business → Branding.</b> Upload the ContractIQ logo and icon, set the accent colour
+    to your teal and the button colour to your blue.
+    <span class="why">The payment page, the billing portal and every emailed receipt use these. Ten
+    minutes here is the difference between "a professional company" and "a form I am not sure I trust
+    with my card".</span></li>
+</ul>
+
+<h3>A3 · Tax — do this even though you are not VAT registered</h3>
+<ul class="checks">
+  <li class="critical"><b>Settings → Tax.</b> Confirm your head office address (103 Battalion Drive,
+    Wootton, Northampton NN4 6RX) and choose a preset product tax code — <b>Software as a service (SaaS)</b>.
+    <span class="why"><b>Checkout will not work until you do.</b> The code asks Stripe to calculate tax on
+    every sale, and Stripe refuses that request if it does not know where you trade from. If you skip
+    this, customers see "Checkout is not configured for tax yet" instead of a payment page. That message
+    is deliberate — it tells you exactly what to fix.</span></li>
+  <li><b>Add no registrations.</b> Leave the Locations list empty.
+    <span class="why">Stripe only charges tax where you have told it you are registered. With no
+    registrations it calculates zero, which is correct: you are not VAT registered, and your Legal
+    Centre now says the price shown is the price payable. It also means Stripe Tax costs you nothing —
+    their fee applies to transactions in jurisdictions where you are registered.</span></li>
+</ul>
+<div class="note warn">
+  <b>When you do register for VAT</b> (currently at £90,000 of taxable turnover, but check the threshold
+  at the time), come back to this page, add the UK registration, and tell me — the prices, the checkout
+  page and two clauses in both Legal Centres have to change together, and there is 30 days' notice to give.
+</div>
+
+<h3>A4 · The emails Stripe sends for you</h3>
+<ul class="checks">
+  <li><b>Settings → Business → Customer emails.</b> Turn on receipts for successful payments and
+    emails for refunds.
+    <span class="why">You have no email system of your own for billing. Stripe's receipts are
+    well-designed, carry your logo, and cost nothing. Without them a customer has no record of what
+    they bought.</span></li>
+  <li><b>Settings → Billing → Subscriptions and emails.</b> Turn on the emails for failed payments
+    and for cards about to expire.
+    <span class="why">An expired card is the most common reason a paying customer silently stops
+    paying. Stripe will chase it for you.</span></li>
+</ul>
+
+<h3>A5 · What happens when a card keeps failing</h3>
+<ul class="checks">
+  <li><b>Settings → Billing → Subscriptions and emails → retries.</b> Leave Smart Retries on, and set
+    the end of the retry schedule to <b>cancel the subscription</b>.
+    <span class="why">Stripe retries for about two weeks, picking times a payment is more likely to
+    succeed. If it never does, cancelling sends <code>customer.subscription.deleted</code>, which puts
+    the account into read-only — the behaviour you chose. The alternative, "leave unpaid", would leave
+    someone marked past_due with full access for ever.</span></li>
+</ul>
+
+<h3>A6 · The billing portal — how customers cancel without emailing you</h3>
+<ul class="checks">
+  <li class="money"><b>Settings → Billing → Customer portal.</b> Turn on: cancel subscription, update
+    payment method, update billing details, and invoice history. Add your Legal Centre link as the
+    terms of service link, and your site as the return link.
+    <span class="why">Your pricing page says "cancel at any time". Without this, cancelling means
+    emailing you and waiting — which is both a worse experience and a reason for a chargeback. With it,
+    cancelling takes them thirty seconds and tells your database automatically.</span></li>
+  <li class="critical"><b>Leave "switch plan" OFF.</b>
+    <span class="why">Your plans are built in code at the moment the customer pays, not as saved Stripe
+    products, so the catalogue has no Stripe price IDs to match. If a customer upgraded Growth → Scale
+    in the portal, Stripe would charge them the higher amount and your app would leave them on Growth.
+    Until there are real Stripe prices and those IDs are in <code>plan_catalogue</code>, upgrades go
+    through you.</span></li>
+  <li><b>On the same page, turn on the portal login link and copy it.</b>
+    <span class="why">It is a <code>billing.stripe.com</code> address. A customer enters the email they
+    paid with and Stripe emails them a link in — no password, nothing for you to build. Put it in your
+    welcome email and on your contact page as "manage your billing".</span></li>
+</ul>
+
+<h3>A7 · The webhook (already done — two things to check)</h3>
+<ul class="checks">
+  <li><b>Confirm the five events are still listed:</b> <code>checkout.session.completed</code>,
+    <code>invoice.payment_succeeded</code>, <code>invoice.payment_failed</code>,
+    <code>customer.subscription.deleted</code>, <code>customer.subscription.updated</code>.
+    <span class="why">Your screenshot earlier said "listening to 6 events". A sixth does no harm — the
+    function ignores anything it does not recognise — but it is worth knowing which, in case one of the
+    five was swapped out.</span></li>
+  <li><b>Note the API version shown on the endpoint.</b>
+    <span class="why">Nothing to change: the fixed webhook now handles both the old and the new shape.
+    Worth knowing because it is what caused fault one, and because it will matter again the next time
+    Stripe changes a payload.</span></li>
+</ul>
+
+<h3>A8 · The secrets in Supabase</h3>
+<p>Supabase → Edge Functions → Secrets. These are project-wide, not per function.</p>
+<div class="tw">
+<table>
+  <thead><tr><th>Secret</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td><code>STRIPE_SECRET_KEY</code></td><td><code>sk_test_…</code> while testing. The live key only on launch day.</td></tr>
+    <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td><code>whsec_…</code>, from the endpoint you created. <b>Test mode and live mode have different ones.</b></td></tr>
+    <tr><td><code>STRIPE_ALLOW_LIVE</code></td><td>Leave unset until launch day. A live key with this unset is refused outright — a deliberate seatbelt.</td></tr>
+    <tr><td><code>ALLOWED_ORIGIN</code></td><td><code>https://contractiqplatform.co.uk</code> — no path, no trailing slash.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="note"><b>After changing any secret, redeploy the function that uses it.</b> Secrets are read
+  once when a function first wakes up, so an old copy can keep running with the old value for a while.</div>
+
+<h2><span class="num">03</span>Part B · The dress rehearsal</h2>
+<p class="lede">Do the whole journey yourself with a fake card, in test mode, before any real customer
+   sees it. It takes about half an hour and it is the only way to know the chain works end to end.
+   Keep the Supabase SQL editor open in another tab.</p>
+
+<div class="note warn"><b>Check you are in test mode</b> before every step: the Stripe dashboard shows a
+  banner, and your key starts <code>sk_test_</code>. Real money cannot move while both are true.</div>
+
+<ol class="steps">
+  <li><b>Sign up for a free Sandbox with an address you have never used.</b> Use the Start free button, which now opens the create-account form directly. Use the plus trick —
+    <code>you+test1@codeiqholdings.co.uk</code> — so you can do this as many times as you like with one inbox.
+    <span class="why">Then check it:</span>
+<pre><code>select name, plan, credits_included, billing_email
+  from accounts order by created_at desc limit 1;</code></pre>
+    <span class="why">Expect <code>sandbox</code> and <code>100</code>.</span></li>
+
+  <li><b>Open the app and run one analysis.</b>
+    <span class="why">You are checking the free experience works before asking anyone to pay for it.
+    Ten credits should disappear.</span></li>
+
+  <li class="money"><b>Go to the pricing page, choose Growth, and fill in the checkout form</b> with a
+    <em>different</em> new email, <code>you+test2@codeiqholdings.co.uk</code>.
+    <span class="why">A different email on purpose: this tests the normal journey, where somebody pays
+    before they have an account. It is the path that was broken.</span></li>
+
+  <li class="money"><b>Pay with <code>4242 4242 4242 4242</code>,</b> any future expiry, any 3-digit CVC,
+    any postcode.
+    <span class="why">Stripe's test card. It always succeeds.</span></li>
+
+  <li><b>You land on the success page. Now check the money landed in the database.</b>
+<pre><code>select id, type, received_at from stripe_events order by received_at desc limit 5;
+select email, plan, claimed_at from pending_subscriptions order by created_at desc limit 5;</code></pre>
+    <span class="why">You want a <code>checkout.session.completed</code> row in the first, and a row in
+    the second with <code>claimed_at</code> still empty. That is the payment parked and waiting.</span></li>
+
+  <li class="critical"><b>Create a login with that same email, then run the query again.</b>
+<pre><code>select a.plan, a.credits_included, a.stripe_subscription_id, p.claimed_at
+  from accounts a
+  left join pending_subscriptions p on p.email = lower(a.billing_email)
+ order by a.created_at desc limit 1;</code></pre>
+    <span class="why">Expect <code>growth</code>, <code>500</code>, a <code>sub_…</code> id, and a
+    <code>claimed_at</code> with a time in it. Before this version, that query returned
+    <code>sandbox</code> and <code>100</code> — the customer had paid and got nothing. If you see that,
+    migration 008 has not been run.</span></li>
+
+  <li><b>Inside the app, buy a credit pack</b> — Settings → Buy 100 credits — with the same test card.
+    <span class="why">A different route through the code: the buyer is signed in, so the credits go
+    straight to their workspace. Expect the balance to go up by 100 and a line in the credit history.</span></li>
+
+  <li class="critical"><b>Test the renewal without waiting a month.</b> In the Stripe dashboard, Billing
+    → Subscriptions → <b>test clocks</b>: create a clock, attach a new test subscription to it, then
+    advance it by a month.
+    <span class="why">This is the only honest way to prove month two works, and month two is where the
+    first fault lived. After advancing, the account's credits should be back to 500 and a
+    <code>rollover</code> line should appear in its credit history. If you would rather not learn test
+    clocks, at minimum satisfy yourself that the renewal arrives in the webhook log as a 200 with a
+    "renewed" line — the function logs one.</span></li>
+
+  <li><b>Test a failed payment.</b> Start a second test subscription using
+    <code>4000 0000 0000 0341</code>.
+    <span class="why">This card attaches successfully and then fails when charged — exactly what an
+    expired card does in real life. Expect <code>billing_status = 'past_due'</code> on the account and,
+    importantly, <em>the customer can still work</em>.</span></li>
+
+  <li><b>Cancel the subscription in Stripe, then look at the account.</b>
+<pre><code>select plan, credits_included, billing_status from accounts
+ where billing_email = 'you+test2@codeiqholdings.co.uk';</code></pre>
+    <span class="why">Expect <code>sandbox</code>, <code>0</code> credits. Sign in as that user: the red
+    banner appears, contracts still open and export, and Run analysis is refused. That is read-only
+    working.</span></li>
+
+  <li><b>Last, cancel through the billing portal link</b> rather than the dashboard, as a customer would.
+    <span class="why">Proves A6 is wired up and that the same thing happens when they do it themselves.</span></li>
+</ol>
+
+<div class="done">
+  <h3>If all eleven behaved, you have proved</h3>
+  <ul>
+    <li>Someone can buy without an account, and get what they paid for when they make one.</li>
+    <li>They are charged again next month and their credits come back.</li>
+    <li>A failed card chases itself and does not lock anyone out on day one.</li>
+    <li>Cancelling leaves them their data and takes away the AI, which is what your legals say.</li>
+  </ul>
+</div>
+
+<h2><span class="num">04</span>Part C · Going live</h2>
+<p class="lede">Only when Part B passed. Twenty minutes, in this order — the order matters.</p>
+
+<ol class="steps">
+  <li><b>Activate the Stripe account properly</b> if you have not: company number, your identity
+    documents, and the business bank account the money is paid into.
+    <span class="why">Stripe will not pay out until this is complete. Allow a day or two for checks.</span></li>
+  <li><b>Switch the dashboard to live mode and create the webhook endpoint again.</b> Same address,
+    same five events.
+    <span class="why">Test and live are two separate worlds. The endpoint you already made exists only
+    in test mode and will never see a real payment.</span></li>
+  <li class="critical"><b>Copy the live signing secret and the live secret key into Supabase,</b>
+    then set <code>STRIPE_ALLOW_LIVE</code> to <code>true</code>, then redeploy all four functions.
+    <span class="why">The order matters: the key alone, without the flag, refuses to take money. That is
+    the seatbelt working, not a fault.</span></li>
+  <li class="money"><b>Buy Growth yourself, with your own real card, on the real site.</b>
+    <span class="why">The only test that proves the live chain. Expect £79 to leave your account.</span></li>
+  <li><b>Refund yourself in the Stripe dashboard, then cancel it.</b>
+    <span class="why">A full refund costs you nothing in fees on a UK card. Cancelling is also your test
+    of the live cancellation path.</span></li>
+  <li><b>Check the payout.</b> Stripe pays out on a rolling schedule — the first one takes about a week
+    for a new account, then it settles into a few days.</li>
+</ol>
+
+<h2><span class="num">05</span>Part D · What each sale actually puts in your pocket</h2>
+<p class="lede">Stripe takes two cuts, not one: card processing, and Stripe Billing for running the
+   subscription. Figures below are their published UK rates at the date of this guide, on a standard
+   UK card.</p>
+
+<div class="tw">
+<table>
+  <thead><tr><th>Sale</th><th>Card fee</th><th>Billing fee</th><th>You keep</th></tr></thead>
+  <tbody>
+    <tr><td>Growth, £79/month</td><td>£1.39 <span style="font-weight:400">(1.5% + 20p)</span></td><td>£0.55 <span style="font-weight:400">(0.7%)</span></td><td><b>£77.06</b></td></tr>
+    <tr><td>Scale, £270/month</td><td>£4.25</td><td>£1.89</td><td><b>£263.86</b></td></tr>
+    <tr><td>Credit pack, £25</td><td>£0.58</td><td>none <span style="font-weight:400">(not a subscription)</span></td><td><b>£24.42</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<ul class="checks">
+  <li><b>Overseas cards cost more.</b> An EEA card is 2.5% + 20p and a non-European one about 3.15% + 20p,
+    so Growth on an American card nets about £75.76 rather than £77.06.</li>
+  <li><b>A chargeback costs £20 plus the sale,</b> win or lose. Clear branding (A1 and A2) is the cheapest
+    insurance against them.</li>
+  <li><b>The profit model now includes all of this.</b> <code>PROFIT_SCENARIOS.md</code> was missing the
+    0.7% Billing fee until today. Adding it did not move breakeven, which stays at 20 users at full
+    utilisation.</li>
+</ul>
+
+<h2><span class="num">06</span>Part E · When something goes wrong</h2>
+<p class="lede">Symptoms you might actually see, and where to look. Start every one of these in Stripe →
+   Developers → Webhooks → your endpoint, where every delivery is listed with the response it got.</p>
+
+<div class="tw">
+<table>
+  <thead><tr><th>Symptom</th><th>Almost always</th><th>What to do</th></tr></thead>
+  <tbody>
+    <tr><td>"Checkout is not configured for tax"</td><td>Stripe Tax has no head office address</td><td>Step A3. Thirty seconds.</td></tr>
+    <tr><td>Webhook shows 500 "Webhook secret not configured"</td><td><code>STRIPE_WEBHOOK_SECRET</code> missing, or the function was not redeployed after it was added</td><td>Add it, redeploy, then use "Resend" on the failed delivery.</td></tr>
+    <tr><td>Webhook shows 400 "Signature verification failed"</td><td>The test secret is in Supabase but the event came from live mode, or the other way round</td><td>Match the mode of the key, the mode of the endpoint, and the secret.</td></tr>
+    <tr><td>Webhook shows 404</td><td>The function is deployed under a different name than the URL you gave Stripe</td><td>The function must be called exactly <code>stripe-webhook</code>. A name cannot be changed after deployment — delete it and deploy again.</td></tr>
+    <tr><td>Customer paid, still on Sandbox</td><td>They signed up with a different email than they paid with</td><td><pre><code>select * from pending_subscriptions where claimed_at is null;</code></pre>Find their row, then ask me to hand it over to the right workspace — it is one safe SQL statement, but it should be written for the specific account rather than guessed.</td></tr>
+    <tr><td>Month two: charged, no credits</td><td>The webhook was not redeployed with this version's fix</td><td>Redeploy <code>stripe-webhook</code>, then "Resend" that <code>invoice.payment_succeeded</code> delivery from the Stripe dashboard. The credits land immediately.</td></tr>
+    <tr><td>Webhook shows 500 "Handler failed"</td><td>A database function is missing — usually a migration that was not run</td><td>Run the migrations in order. Stripe retries for three days by itself, so there is no rush and nothing is lost.</td></tr>
+    <tr><td>Everything is 200 but nothing changes</td><td>Stripe is pointed at a different Supabase project than the one your site uses</td><td>Compare the project reference in the webhook URL with the one in <code>app/index.html</code>.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <b>Stripe retries failed deliveries for three days,</b> and keeps every delivery so you can resend one
+  by hand. A payment is almost never lost — it is usually sitting in that list waiting for you to fix the
+  thing it hit and press Resend.
+</div>
+
+<h2><span class="num">07</span>Part F · What is deliberately not built</h2>
+<p class="lede">So you know where the edges are before a customer finds one.</p>
+
+<ul class="checks">
+  <li><b>Upgrades and downgrades inside the app.</b> A customer on Growth who wants Scale has to talk to
+    you. Doing it properly means creating real products and prices in Stripe and putting those IDs in
+    <code>plan_catalogue</code> — half a day, worth doing once you have customers who want it.</li>
+  <li><b>Annual billing.</b> Monthly only. Annual is usually offered at ten months' price for twelve and
+    is the single easiest way to improve cash flow, but it needs the same price-ID work.</li>
+  <li><b>Enterprise by card.</b> Deliberate: £700 flat is marked "talk to sales" and invoiced by hand.</li>
+  <li><b>Your own billing emails.</b> Stripe sends receipts and dunning. You send nothing. That is fine
+    to launch with.</li>
+  <li><b>Deleting the data of Sandboxes that never convert.</b> Nothing deletes them today. Your Beta
+    terms allow it; decide a period — ninety days after the Sandbox ends is normal — and it becomes a
+    small scheduled job.</li>
+  <li><b>VAT.</b> Everything is built for not-registered. When you register, several things change together.</li>
+</ul>
+
+<footer>
+  ContractIQ Platform · CodeIQ Holdings Ltd, registered in England and Wales, company number 17454743.
+  Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.<br>
+  Stripe fees and dashboard menu names are as published on 6 October 2026 and do change; the figures are
+  theirs, not mine. Nothing here is tax or legal advice — the Legal Centre still needs a solicitor's eye
+  before you take real money.
+</footer>
+
+</div>
+</body>
+</html>

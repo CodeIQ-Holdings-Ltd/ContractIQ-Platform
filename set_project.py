@@ -13,7 +13,6 @@ Run, from this folder:
 It updates, and tells you it has updated:
     contractiq.jsx   (the app's two constants)    → then rebuilds app/ and demo/
     checkout.html    (where Stripe payments start)
-    pricing.html     (the live founding-places counter)
 """
 import re, subprocess, sys, os
 
@@ -44,8 +43,6 @@ def edit(path, pattern, replacement, expect=1):
 edit("contractiq.jsx", r'^const SUPABASE_URL = "[^"]*";', f'const SUPABASE_URL = "{url}";')
 edit("contractiq.jsx", r'^const SUPABASE_PUBLISHABLE_KEY = "[^"]*";', f'const SUPABASE_PUBLISHABLE_KEY = "{key}";')
 edit("checkout.html", r'var CHECKOUT_ENDPOINT = "[^"]*";', f'var CHECKOUT_ENDPOINT = "{url}/functions/v1/create-checkout-session";')
-edit("pricing.html", r"var SUPABASE_URL = '[^']*';", f"var SUPABASE_URL = '{url}';")
-edit("pricing.html", r"var SUPABASE_PUBLISHABLE_KEY = '[^']*';", f"var SUPABASE_PUBLISHABLE_KEY = '{key}';")
 
 print("  rebuilding the app…")
 r = subprocess.run([sys.executable, os.path.join(HERE, "build.py")], capture_output=True, text=True)

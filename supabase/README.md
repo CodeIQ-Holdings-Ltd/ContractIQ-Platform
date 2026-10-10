@@ -16,11 +16,13 @@ dashboard, the AWS console or the Stripe dashboard.
 | File | What it is | Where it goes |
 |---|---|---|
 | `SETUP.sql` | The whole schema — tables, security rules, the job queue | SQL Editor, run once |
-| `MIGRATION_003_founding.sql` | The ten free founding places | SQL Editor, after SETUP |
+| `MIGRATION_003_founding.sql` | Founding-offer tables. The offer is withdrawn (008 stops it); kept so the order stays unbroken | SQL Editor, after SETUP |
 | `MIGRATION_004_credits_and_billing.sql` | Credits that deduct, and Stripe | SQL Editor, after 003 |
 | `MIGRATION_005_rollover_and_naming.sql` | Roll-over caps, plan names | SQL Editor, after 004 |
 | `MIGRATION_006_revision_window.sql` | Free re-runs inside the revision window | SQL Editor, after 005 |
 | `MIGRATION_007_bedrock_and_data_safety.sql` | **v13.** Locks back-office functions, deletes queued text after use, Zero-Retention per workspace, data region, Sandbox 100 | SQL Editor, after 006 |
+| `MIGRATION_008_one_off_sandbox.sql` | **v14.4.** Sandbox is a one-off 100 credits (used up or 90 days, then read-only); lapsed subscriptions get no free credits; no founding seat at sign-up; **a subscription bought before sign-up is now actually claimed**, and anyone already stranded is rescued | SQL Editor, after 007 |
+| `MIGRATION_009_sandbox_10_days.sql` | **v14.5.** The free Sandbox window: 90 days → **10 days**. One row; the rest of the product reads it | SQL Editor, after 008 |
 | `functions/anthropic-proxy/index.ts` | The AI call — now through **Amazon Bedrock (EU)** | Edge Functions |
 | `functions/job-worker/index.ts` | Runs queued analyses — all five stages | Edge Functions |
 | `functions/create-checkout-session/index.ts` | Starts a Stripe payment | Edge Functions |
@@ -30,8 +32,8 @@ dashboard, the AWS console or the Stripe dashboard.
 Every SQL file can be run again safely. If you are unsure whether one
 finished, run it again.
 
-**If you ever re-run an earlier file (SETUP, 003–006), run MIGRATION_007 again
-straight afterwards.** The earlier files redefine some of the same functions, and
+**If you ever re-run an earlier file (SETUP, 003–007), run MIGRATION_008 and then
+009 again straight afterwards (and 007 before them for 003–006).** The earlier files redefine some of the same functions, and
 would otherwise quietly undo 007's protections.
 
 ---
@@ -55,7 +57,8 @@ SQL Editor → New query → paste the whole file → Run. Wait for each to fini
 
 1. `SETUP.sql` 2. `MIGRATION_003_founding.sql` 3. `MIGRATION_004_credits_and_billing.sql`
 4. `MIGRATION_005_rollover_and_naming.sql` 5. `MIGRATION_006_revision_window.sql`
-6. `MIGRATION_007_bedrock_and_data_safety.sql`
+6. `MIGRATION_007_bedrock_and_data_safety.sql` 7. `MIGRATION_008_one_off_sandbox.sql`
+8. `MIGRATION_009_sandbox_10_days.sql`
 
 `NOTICE: … does not exist, skipping` lines are normal.
 

@@ -72,7 +72,6 @@
           <a href="index.html#fit"><b>Where we fit</b><span>Against a spreadsheet, and against a six-figure CLM</span></a>
           <a href="checkout.html?plan=growth"><b>Start a subscription</b><span>Growth at £79, Scale at £270, by card</span></a>
           <a href="index.html#roi"><b>What you could recover</b><span>Put your own spend through the calculator</span></a>
-          <a class="full" href="index.html#founding"><b>Ten founding places →</b><span>200 credits a month, free for six months</span></a>
         </div>
       </li>
       <li><a href="about.html">About</a></li>
@@ -81,7 +80,7 @@
     </ul>
     <div class="nav-cta">
       <a class="btn ghost" href="demo/">Live demo</a>
-      <a class="btn pri" href="app/"><span class="sheen"></span>Start free</a>
+      <a class="btn pri" href="app/?signup=1"><span class="sheen"></span>Start free</a>
       <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
     </div>
   </div>
@@ -144,7 +143,7 @@
     © 2026 ContractIQ Platform. All rights reserved. Automated screening aid — not legal advice.<br />
     ContractIQ Platform is a product of <strong>CodeIQ Holdings Ltd</strong>, registered in England and
     Wales, company number 17454743. Registered office: 103 Battalion Drive, Wootton, Northampton NN4 6RX.
-    ICO registration ICO00015500673.
+    ICO registration ICO:00015500673.
   </div>
 </footer>
 
@@ -152,7 +151,7 @@
 (function () {
   var plan = new URLSearchParams(location.search).get("plan") || "growth";
   var COPY = {
-    sandbox: { h: "Your free workspace is ready.", s: "100 credits every 90 days — no card, no expiry date, no catch." },
+    sandbox: { h: "Your free workspace is ready.", s: "100 credits to try it, valid for 10 days — no card needed." },
     growth:  { h: "You're on Growth. Welcome aboard.", s: "500 credits a month, playbook rules and cross-document analysis — as soon as you create your sign-in." },
     scale:   { h: "You're on Scale. Welcome aboard.", s: "1,800 credits a month and priority analysis — as soon as you create your sign-in." }
   };
@@ -182,8 +181,8 @@
   document.getElementById("sub").textContent = c.s;
   if (plan === "sandbox") {
     document.getElementById("billingNote").innerHTML =
-      "<b>No payment taken</b><br />The Evaluation Sandbox is permanently free. When you need more volume, " +
-      "upgrading takes a minute and your contracts, documents and analyses come with you.";
+      "<b>No payment taken</b><br />The Evaluation Sandbox gives you 100 credits, once, valid for 10 days or until they are used. " +
+      "When it ends you can still open and export your contracts; to run more analyses, choose a plan and everything comes with you.";
   }
 })();
 </script>

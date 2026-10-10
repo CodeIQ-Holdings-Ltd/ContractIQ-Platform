@@ -5,6 +5,7 @@ fake Amazon Bedrock endpoints, and check every outbound request.
 
     deno run -A --config deno.json test_proxy.ts     # needs env vars, see below
     deno run -A --config deno.json test_worker.ts
+    deno run -A --config deno.json test_webhook.ts   # STRIPE_WEBHOOK_SECRET + PORT
 
 Environment (fake values — never real keys):
     SUPABASE_URL=https://sb.test SUPABASE_ANON_KEY=sb_publishable_testtesttesttest

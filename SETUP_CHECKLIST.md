@@ -15,13 +15,13 @@ Tick in order. The guide (`ContractIQ_Go_Live_Guide.docx`) explains every line.
 ## B · Supabase (about an hour)
 - [ ] Project region is London (eu-west-2) — if not, new project + `set_project.py`
 - [ ] Extensions: pg_cron, pg_net, supabase_vault
-- [ ] SQL: SETUP, 003, 004, 005, 006, 007 — in that order
+- [ ] SQL: SETUP, 003, 004, 005, 006, 007, 008, 009 — in that order
 - [ ] Functions: anthropic-proxy (JWT ON), job-worker (JWT OFF), create-checkout-session (OFF), stripe-webhook (OFF)
 - [ ] Secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, ALLOWED_ORIGIN, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
 - [ ] Vault secrets + three cron jobs (dispatch, maintenance, holds)
 - [ ] Auth: Site URL, Confirm email ON, 6-digit code template, own SMTP
 
-## C · Stripe (30 minutes)
+## C · Stripe (30 minutes) — see `PAYMENTS_GUIDE.html` for the full walkthrough
 - [ ] Test mode: secret key in Supabase; webhook endpoint with five events; signing secret in Supabase
 - [ ] Test purchase with card 4242 4242 4242 4242 → plan applied
 - [ ] Launch day: live key, live webhook, STRIPE_ALLOW_LIVE = true
